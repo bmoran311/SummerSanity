@@ -16,8 +16,8 @@ class FirmSeeder extends Seeder
     public function run()
     {
         DB::table('firm')->insert([
-            'name' => 'Taylor Law',
-            'url' => 'https://www.taylorfoleylaw.com',
+            'name' => 'Summer Sanity',
+            'url' => 'https://www.summersanity.com',
             'parent_id' => null, // Top-level firm has no parent
             'created_at' => now(),
             'updated_at' => now(),

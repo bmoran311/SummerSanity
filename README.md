@@ -1,4 +1,4 @@
-# Taylor Law
+# Summer Sanity
 
 Admin template is based upon tailadmin -> https://tailadmin.com
 If we really likes it -  there's a pro version (should be like 35/40 bucks)

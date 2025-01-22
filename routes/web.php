@@ -21,6 +21,9 @@ use App\Http\Controllers\Admin\FaqCategoryController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\ResourceController;
 use App\Http\Controllers\Admin\ResourceCategoryController;
+use App\Http\Controllers\Admin\CampController;
+use App\Http\Controllers\Admin\GuardianController;
+use App\Http\Controllers\Admin\CamperController;
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -72,6 +75,12 @@ Route::resource('blog_post', BlogPostController::class);
 Route::resource('blog_category', BlogCategoryController::class);
 Route::resource('resource', ResourceController::class);
 Route::resource('resource_category', ResourceCategoryController::class);
+Route::resource('camp', CampController::class);
+Route::resource('guardian', GuardianController::class);
+Route::resource('camper', CamperController::class);
+
+Route::get('/calendar/index', 'App\Http\Controllers\Admin\CalendarController@index')->name('calendar.index');
+
 Route::get('/blog_category/order/{direction}/{id}/{currPos}', 'App\Http\Controllers\Admin\BlogCategoryController@sort')->name('orderBlogCategory');
 Route::get('/faq_category/order/{direction}/{id}/{currPos}', 'App\Http\Controllers\Admin\FaqCategoryController@sort')->name('orderFaqCategory');
 Route::get('/resource_category/order/{direction}/{id}/{currPos}', 'App\Http\Controllers\Admin\ResourceCategoryController@sort')->name('orderResourceCategory');

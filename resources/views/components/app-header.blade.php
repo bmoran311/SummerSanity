@@ -264,9 +264,9 @@
 
                   <div>
                     <h6 class="text-sm font-medium text-black dark:text-white">
-                      Mariya Desoja
+                      Megan Spivey
                     </h6>
-                    <p class="text-sm">I like your confidence 💪</p>
+                    <p class="text-sm">My daughter is available to pick-up and baysit</p>
                     <p class="text-xs">2min ago</p>
                   </div>
                 </a>
@@ -282,7 +282,7 @@
 
                   <div>
                     <h6 class="text-sm font-medium text-black dark:text-white">
-                      Robert Jhon
+                      Brian Moran
                     </h6>
                     <p class="text-sm">Can you share your offer?</p>
                     <p class="text-xs">10min ago</p>
@@ -300,9 +300,9 @@
 
                   <div>
                     <h6 class="text-sm font-medium text-black dark:text-white">
-                      Henry Dholi
+                      Eddie Zielinski
                     </h6>
-                    <p class="text-sm">I cam across your profile and...</p>
+                    <p class="text-sm">Thanks for letting Jax join Will in UNC bball camp...</p>
                     <p class="text-xs">1day ago</p>
                   </div>
                 </a>
@@ -318,9 +318,9 @@
 
                   <div>
                     <h6 class="text-sm font-medium text-black dark:text-white">
-                      Cody Fisher
+                      Amy Moran
                     </h6>
-                    <p class="text-sm">I’m waiting for you response!</p>
+                    <p class="text-sm">I’m waiting for you response</p>
                     <p class="text-xs">5days ago</p>
                   </div>
                 </a>
@@ -336,9 +336,9 @@
 
                   <div>
                     <h6 class="text-sm font-medium text-black dark:text-white">
-                      Mariya Desoja
+                      Lexi Moran
                     </h6>
-                    <p class="text-sm">I like your confidence 💪</p>
+                    <p class="text-sm">Willing to ref! Put me in coach!</p>
                     <p class="text-xs">2min ago</p>
                   </div>
                 </a>
