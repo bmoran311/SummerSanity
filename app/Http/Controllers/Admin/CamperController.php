@@ -31,8 +31,10 @@ class CamperController extends Controller
     }
 
     public function create()
-    {       
-        return view('admin.campers.form');
+    {      
+        $guardians = Guardian::orderBy('last_name')->orderBy('first_name')->get();
+        
+        return view('admin.campers.form', compact('guardians'));
     }
 
     public function store(Request $request)
@@ -46,7 +48,7 @@ class CamperController extends Controller
         $camper = new Camper();
         
         $camper->first_name = $request->input('first_name');	
-        $camper->guardian_id = '1';
+        $camper->guardian_id = $request->input('guardian_id');
 		$camper->last_name = $request->input('last_name');       
 		$camper->birth_date = $request->input('birth_date');		
         $camper->save();
@@ -56,7 +58,9 @@ class CamperController extends Controller
 
     public function edit(camper $camper)
     {        
-        return view('admin.campers.form', compact('camper') );
+        $guardians = Guardian::orderBy('last_name')->orderBy('first_name')->get();
+
+        return view('admin.campers.form', compact('camper', 'guardians') );
     }
 
     public function update(Request $request, camper $camper)

@@ -36,18 +36,15 @@
             <table class="w-full table-auto summer-sanity-table sortable clickable-rows">
                 <thead>
                     <tr class="bg-gray-2 text-left dark:bg-meta-4">                        
-                        <th class="min-w-[220px]  xl:pl-11">
+                        <th class="min-w-[180px]  xl:pl-11">
                             Name
                         </th>
-						<th class="min-w-[220px]  xl:pl-11">
+						<th class="min-w-[180px]  xl:pl-11">
                             Email
                         </th>
-						<th class="min-w-[220px]  xl:pl-11">
+						<th class="min-w-[180px]  xl:pl-11">
                             Phone
-                        </th>
-                        <th class="min-w-[150px]">
-                            Created Date
-                        </th>                        
+                        </th>                                            
                         <th class="no-sort">
                             Actions
                         </th>
@@ -64,10 +61,7 @@
                             </td>
 							<td class="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
                                 <h5 class="font-medium text-black dark:text-white">{{ $guardian->phone_number }}</h5>
-                            </td>
-                            <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                                <p class="text-black dark:text-white">{{ $guardian->created_at->format('M d, Y') }}</p>
-                            </td>                            
+                            </td>                                                 
                             <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                                 <div class="flex items-center space-x-3.5">
                                     <button class="hover:text-primary">
@@ -80,8 +74,9 @@
                                             <x-icon-delete />
                                         </button>
                                     </form>
+                                    <a href="{{ route('guardian.friends', ['guardian_id' => $guardian->id]) }}">Friends</a>
                                     <a href="{{ route('camper.index') }}?guardian_id={{ $guardian->id }}">Campers</a>
-                                    <a href="{{ route('calendar.index') }}?guardian_id={{ $guardian->id }}">Calendar</a>
+                                    <a href="{{ route('calendar.index', ['guardian_id' => $guardian->id]) }}">Calendar</a>
                                 </div>
                             </td>
                         </tr>

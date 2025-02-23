@@ -24,7 +24,9 @@
 </div>
 
 <section class="flex justify-end mb-4">
-    <x-create-button href="{{ route('camper.create') }}">Add New Camper</x-create-button>
+    <x-create-button href="{{ route('camper.create', request()->only('guardian_id')) }}">
+        Add New Camper
+    </x-create-button>
 </section>
 
 <div class="flex flex-col gap-10">

@@ -3,17 +3,65 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Guardian, App\Models\Camper;
+use App\Models\Guardian, App\Models\Camper, App\Models\Friend, App\Models\Week, App\Models\CampEnrollment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class CalendarController extends Controller
 {
-    public function index()
-    {
-        $campers = Camper::where('guardian_id', request('guardian_id') )->orderBy('last_name')->orderBy('first_name');
-        $guardian = Guardian::find(request('guardian_id'));
+    public function index($guardian_id)
+    {       
+        $campers = Camper::where('guardian_id', $guardian_id )->orderBy('last_name')->orderBy('first_name')->get();                                
+        $guardian = Guardian::find( $guardian_id );
+        $time_slots = "AM,PM,Night";
+        $time_slots = explode(',', $time_slots);
+        $weeks = Week::orderBy('week_number')->get();
+
+        $friends = Guardian::whereIn('id', function ($query) use ($guardian_id) {
+            $query->select('guardian_id2')->from('friends')->where('guardian_id1', $guardian_id);
+        })->get(); 
+        
+        $friend_guardian_ids = $friends->pluck('id');
        
-        return view('admin.calendar.index', compact('campers', 'guardian'));
+        $friends_campers = Camper::whereIn('guardian_id', $friend_guardian_ids)->orderBy('last_name')->get();       
+
+        $camp_enrollment_array = [];
+        $camp_enrollment_color_array = [];
+
+        foreach($campers as $camper) 
+        {
+            foreach($time_slots as $time_slot) 
+            {
+                foreach($weeks as $week) 
+                {
+                    $enrollment = CampEnrollment::where('camper_id', $camper->id)
+                        ->where('week_id', $week->id)
+                        ->where('time_slot', $time_slot)
+                        ->first();
+
+                    $camp_enrollment_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->camp_name : "";
+                    $camp_enrollment_color_array[$camper->id][$time_slot][$week->week_number] = ($enrollment && $enrollment->booked) ? "yellow" : "";            
+                }
+            }
+        }
+
+        foreach($friends_campers as $camper) 
+        {
+            foreach($time_slots as $time_slot) 
+            {
+                foreach($weeks as $week) 
+                {
+                    $enrollment = CampEnrollment::where('camper_id', $camper->id)
+                        ->where('week_id', $week->id)
+                        ->where('time_slot', $time_slot)
+                        ->first();
+
+                    $camp_enrollment_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->camp_name : "";
+                    $camp_enrollment_color_array[$camper->id][$time_slot][$week->week_number] = ($enrollment && $enrollment->booked) ? "yellow" : "";            
+                }
+            }
+        }
+
+        return view('admin.calendar.index', compact('campers', 'time_slots', 'guardian', 'friends_campers', 'weeks', 'camp_enrollment_array', 'camp_enrollment_color_array'));
     }
 }

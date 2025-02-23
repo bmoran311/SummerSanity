@@ -28,7 +28,7 @@
                         @method('PUT')
                     @else
                         @method('POST')
-                    @endif
+                    @endif                    
                     <div class="mb-5.5 grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
 							<x-label>First Name</x-label>
@@ -43,6 +43,21 @@
                     </div>
 
 					<div class="mb-5.5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+							<x-label>Guardian</x-label>
+                            @php
+                                $selected_guardian_id = old('guardian_id', $camper->guardian_id ?? request('guardian_id'));
+                            @endphp
+							<select name="guardian_id" id="guardian_id" required class="w-full rounded-md border border-gray-300 p-2">     
+                                <option value="">Select Guardian</option>               
+                                @foreach($guardians as $guardian)
+                                <option value="{{ $guardian->id }}" 
+                                    {{ $selected_guardian_id == $guardian->id ? 'selected' : '' }}>
+                                    {{ $guardian->first_name }} {{ $guardian->last_name }} 
+                                </option>
+                                @endforeach
+                            </select>
+                        </div> 
                         <div>
 							<x-label>Birth Date</x-label>
 							<input

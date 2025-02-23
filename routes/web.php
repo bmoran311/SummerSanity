@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\ResourceCategoryController;
 use App\Http\Controllers\Admin\CampController;
 use App\Http\Controllers\Admin\GuardianController;
 use App\Http\Controllers\Admin\CamperController;
+use App\Http\Controllers\Admin\CampEnrollmentController;
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -78,8 +79,12 @@ Route::resource('resource_category', ResourceCategoryController::class);
 Route::resource('camp', CampController::class);
 Route::resource('guardian', GuardianController::class);
 Route::resource('camper', CamperController::class);
+Route::resource('camp_enrollment', CampEnrollmentController::class);
 
-Route::get('/calendar/index', 'App\Http\Controllers\Admin\CalendarController@index')->name('calendar.index');
+Route::get('/calendar/index/{guardian_id}', 'App\Http\Controllers\Admin\CalendarController@index')->name('calendar.index');
+
+Route::get('/guardian/friends/{guardian_id}', 'App\Http\Controllers\Admin\GuardianController@friends')->name('guardian.friends');
+Route::post('/guardian/friends/{guardian_id}', 'App\Http\Controllers\Admin\GuardianController@assign_friends')->name('guardian.assign_friends');
 
 Route::get('/blog_category/order/{direction}/{id}/{currPos}', 'App\Http\Controllers\Admin\BlogCategoryController@sort')->name('orderBlogCategory');
 Route::get('/faq_category/order/{direction}/{id}/{currPos}', 'App\Http\Controllers\Admin\FaqCategoryController@sort')->name('orderFaqCategory');
