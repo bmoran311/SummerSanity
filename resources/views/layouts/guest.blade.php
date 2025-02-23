@@ -15,10 +15,10 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-300 bg-cover bg-no-repeat bg-blend-overlay" style="background-image: url('/img/auth-bg.jpg')">
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-cover bg-no-repeat bg-[#c9c4b6]">
             <div>
                 <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+                    <img src="/img/summer_sanity_logo.png" alt="Summer Sanity Logo" class="w-[200px] h-auto" />
                 </a>
             </div>
 
