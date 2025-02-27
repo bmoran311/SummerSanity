@@ -24,12 +24,14 @@
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
+		<!---
 		<div class="mt-4">
             <x-input-label for="firm" :value="__('Firm')" />
             <select name="firm_id" class="select-input">
 				<option value="1">The Summer Sanity</option>
 			</select>
         </div>
+		--->
 
         <!-- Remember Me -->
         <div class="block mt-4">

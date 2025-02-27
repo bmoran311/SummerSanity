@@ -11,6 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('camper_id')->constrained('camper')->onDelete('cascade');
             $table->foreignId('week_id')->constrained('week')->onDelete('cascade');
+            $table->uuid('group_id')->default(Str::uuid());
             $table->string('camp_name');
             $table->enum('time_slot', ['AM', 'PM', 'Night']);
             $table->boolean('booked')->default(false);

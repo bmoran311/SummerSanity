@@ -8,6 +8,7 @@ use App\Models\Camper;
 use App\Models\Week;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str; 
 
 class CampEnrollmentController extends Controller
 {
@@ -18,22 +19,40 @@ class CampEnrollmentController extends Controller
         return view('admin.camp_enrollment.list', compact('enrollments'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        $campers = Camper::orderBy('last_name')->get();
-        $weeks = Week::orderBy('week_number')->get();
-        $camp_names = CampEnrollment::distinct()->pluck('camp_name');       
+        $selected_guardian_id = $request->input('guardian_id');
+
+        $selectedCamperId = $request->input('camper_id');    
+        $selected_camper_ids = $selectedCamperId ? (array) $selectedCamperId : [];
+
+        $selectedTimeSlot = $request->input('time_slot');    
+        $selected_time_slots = $selectedTimeSlot ? (array) $selectedTimeSlot : [];
+
+        $selectedWeek = $request->input('week');    
+        $selected_week_ids = $selectedWeek ? (array) $selectedWeek : [];              
+
+        $campers = Camper::where('guardian_id', $selected_guardian_id )->orderBy('last_name')->orderBy('first_name')->get();   
+        $weeks = Week::orderBy('week_number')->get();          
 
         $camp_names = DB::select("
             SELECT 
-                CONCAT(camper.first_name, ' ', camper.last_name, ' ', camp_name, ' ', time_slot) AS camp_fill, 
-                camp_name
-            FROM summer_sanity.camp_enrollment
-            INNER JOIN summer_sanity.camper 
-                ON camp_enrollment.camper_id = camper.id
-        ");        
+                distinct camp_name AS camp_fill,
+                camp_name 
+            FROM summer_sanity.camp_enrollment 
+            INNER JOIN summer_sanity.camper ON camp_enrollment.camper_id = camper.id
+            WHERE camper.guardian_id IN (
+                SELECT 
+                    CASE 
+                        WHEN guardian_id1 = ? THEN guardian_id2 
+                        ELSE guardian_id1 
+                    END
+                FROM summer_sanity.friends
+                WHERE guardian_id1 = ? OR guardian_id2 = ?
+            )
+        ", [$selected_guardian_id, $selected_guardian_id, $selected_guardian_id]);       
 
-        return view('admin.camp_enrollment.form', compact('campers', 'weeks', 'camp_names'));
+        return view('admin.camp_enrollment.form', compact('campers', 'weeks', 'camp_names', 'selected_guardian_id', 'selected_camper_ids', 'selected_time_slots', 'selected_week_ids'));
     }
 
     public function store(Request $request)
@@ -45,13 +64,16 @@ class CampEnrollmentController extends Controller
             'time_slot' => 'required|in:AM,PM,Night',
         ]);   */       
 
-        $enrollments = [];
+        $enrollments = [];       
+        $group_id = Str::uuid(); 
+
         foreach ($request->input('camper_id') as $camperId) {
             foreach ($request->input('week_id') as $weekId) {
                 foreach ($request->input('time_slot') as $timeSlot) {
                     $enrollments[] = [
                         'camper_id' => $camperId,
                         'week_id' => $weekId,
+                        'group_id' => $group_id,
                         'camp_name' => $request->input('camp_name'),
                         'time_slot' => $timeSlot,
                         'booked' => $request->input('booked'), 
@@ -60,46 +82,87 @@ class CampEnrollmentController extends Controller
                     ];
                 }
             }
-        }
-       
+        }       
         CampEnrollment::insert($enrollments);
 
-        return back()->with('success', 'Camp Enrollments Created Successfully');
+        return redirect()->route('calendar.index', ['guardian_id' => $request->guardian_id])->with('success', 'Camp Enrollment successfully added!');    
     }
 
     public function edit(CampEnrollment $camp_enrollment)
     {
-        $campers = Camper::orderBy('last_name')->get();
+        $camper = Camper::find($camp_enrollment->camper_id);
+        $selected_guardian_id = $camper->guardian_id;
+
+        $camp_enrollments = CampEnrollment::where('group_id', $camp_enrollment->group_id)->get();
+
+        $selected_camper_ids = $camp_enrollments->pluck('camper_id')->toArray();
+        $selected_week_ids = $camp_enrollments->pluck('week_id')->toArray();
+        $selected_time_slots = $camp_enrollments->pluck('time_slot')->toArray();
+
+        $campers = Camper::where('guardian_id', $selected_guardian_id )->orderBy('last_name')->orderBy('first_name')->get();   
         $weeks = Week::orderBy('week_number')->get();
 
-        return view('admin.camp_enrollment.form', compact('camp_enrollment', 'campers', 'weeks'));
+        $camp_names = DB::select("
+            SELECT 
+                CONCAT(camper.first_name, ' ', camper.last_name, ' ', camp_name, ' ', time_slot) AS camp_fill,
+                camp_name 
+            FROM summer_sanity.camp_enrollment 
+            INNER JOIN summer_sanity.camper ON camp_enrollment.camper_id = camper.id
+            WHERE camper.guardian_id IN (
+                SELECT 
+                    CASE 
+                        WHEN guardian_id1 = ? THEN guardian_id2 
+                        ELSE guardian_id1 
+                    END
+                FROM summer_sanity.friends
+                WHERE guardian_id1 = ? OR guardian_id2 = ?
+            )
+        ", [$selected_guardian_id, $selected_guardian_id, $selected_guardian_id]);
+
+        return view('admin.camp_enrollment.form', compact('camp_enrollment', 'campers', 'weeks', 'camp_names', 'selected_guardian_id', 'selected_camper_ids', 'selected_week_ids', 'selected_time_slots'));
     }
 
-    public function update(Request $request, CampEnrollment $enrollment)
+    
+    public function update(Request $request, CampEnrollment $camp_enrollment)
     {
-        /*$request->validate([
-            'camper_id'   => 'required|array',
-            'camper_id.*' => 'exists:campers,id', 
-            'week_id'     => 'required|array',
-            'week_id.*'   => 'exists:weeks,id', 
-            'camp_name'   => 'required|string|max:255',
-            'time_slot'   => 'required|in:AM,PM,Night',
-        ]);      */
+        $group_id = $camp_enrollment->group_id;       
+        CampEnrollment::where('group_id', $group_id)->delete();        
 
-        $enrollment->camper_id = $request->input('camper_id');
-        $enrollment->week_id = $request->input('week_id');
-        $enrollment->camp_name = $request->input('camp_name');
-        $enrollment->time_slot = $request->input('time_slot');
-        $enrollment->booked = $request->input('booked');
-        $enrollment->save();
+        $enrollments = [];
+            foreach ($request->input('camper_id') as $camperId) {
+                foreach ($request->input('week_id') as $weekId) {
+                    foreach ($request->input('time_slot') as $timeSlot) {
+                        $enrollments[] = [
+                            'group_id' => $group_id, 
+                            'camper_id' => $camperId,
+                            'week_id' => $weekId,
+                            'camp_name' => $request->input('camp_name'),
+                            'time_slot' => $timeSlot,
+                            'booked' => $request->input('booked'), 
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ];
+                    }
+                }
+            }            
+       
+        CampEnrollment::upsert(
+                $enrollments,
+                ['camper_id', 'week_id', 'time_slot'], // Keys to check for duplicates
+                ['camp_name', 'booked', 'updated_at'] // Fields to update if a duplicate exists
+            );
 
-        return back()->with('success', 'Camp Enrollment Updated');
+            return redirect()->route('calendar.index', ['guardian_id' => $request->guardian_id])->with('success', 'Camp Enrollment successfully Updated');  
     }
 
-    public function destroy(CampEnrollment $camp_enrollment)
-    {
-        $camp_enrollment->delete();
-
-        return back()->with('danger', 'Camp Enrollment Deleted');
+    public function destroy($group_id)
+    {                   
+        $first_enrollment = CampEnrollment::where('group_id', $group_id)->first();   
+        $camper = Camper::find($first_enrollment->camper_id);
+        $guardian_id = $camper->guardian_id;
+                   
+        CampEnrollment::where('group_id', $group_id)->delete();
+              
+        return redirect()->route('calendar.index', ['guardian_id' => $guardian_id])->with('success', 'Camp Enrollment successfully Updated');
     }
 }

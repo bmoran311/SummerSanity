@@ -74,7 +74,7 @@ class BoxCandleStick extends Bar {
         translationsIndex = realIndex
       }
 
-      let initPositions = this.barHelpers.initialPositions()
+      let initPositions = this.barHelpers.initialPositions(realIndex)
 
       y = initPositions.y
       barHeight = initPositions.barHeight
@@ -216,24 +216,26 @@ class BoxCandleStick extends Bar {
     let i = indexes.i
     let j = indexes.j
 
-    let isPositive = true
-    let colorPos = w.config.plotOptions.candlestick.colors.upward
-    let colorNeg = w.config.plotOptions.candlestick.colors.downward
-    let color = ''
+    const { colors: candleColors } = w.config.plotOptions.candlestick
+    const { colors: boxColors } = this.boxOptions
+    const realIndex = indexes.realIndex
 
-    if (this.isBoxPlot) {
-      color = [this.boxOptions.colors.lower, this.boxOptions.colors.upper]
-    }
+    const getColor = (color) =>
+      Array.isArray(color) ? color[realIndex] : color
+
+    const colorPos = getColor(candleColors.upward)
+    const colorNeg = getColor(candleColors.downward)
 
     const yRatio = this.yRatio[indexes.translationsIndex]
-    let realIndex = indexes.realIndex
 
     const ohlc = this.getOHLCValue(realIndex, j)
     let l1 = zeroH
     let l2 = zeroH
 
-    if (ohlc.o > ohlc.c) {
-      isPositive = false
+    let color = ohlc.o < ohlc.c ? [colorPos] : [colorNeg]
+
+    if (this.isBoxPlot) {
+      color = [getColor(boxColors.lower), getColor(boxColors.upper)]
     }
 
     let y1 = Math.min(ohlc.o, ohlc.c)
@@ -331,7 +333,7 @@ class BoxCandleStick extends Bar {
         indexes.translationsIndex
       ),
       barXPosition,
-      color: this.isBoxPlot ? color : isPositive ? [colorPos] : [colorNeg],
+      color,
     }
   }
 
@@ -440,21 +442,18 @@ class BoxCandleStick extends Bar {
   }
   getOHLCValue(i, j) {
     const w = this.w
-
+    const coreUtils = new CoreUtils(this.ctx, w)
+    const h = coreUtils.getLogValAtSeriesIndex(w.globals.seriesCandleH[i][j], i)
+    const o = coreUtils.getLogValAtSeriesIndex(w.globals.seriesCandleO[i][j], i)
+    const m = coreUtils.getLogValAtSeriesIndex(w.globals.seriesCandleM[i][j], i)
+    const c = coreUtils.getLogValAtSeriesIndex(w.globals.seriesCandleC[i][j], i)
+    const l = coreUtils.getLogValAtSeriesIndex(w.globals.seriesCandleL[i][j], i)
     return {
-      o: this.isBoxPlot
-        ? w.globals.seriesCandleH[i][j]
-        : w.globals.seriesCandleO[i][j],
-      h: this.isBoxPlot
-        ? w.globals.seriesCandleO[i][j]
-        : w.globals.seriesCandleH[i][j],
-      m: w.globals.seriesCandleM[i][j],
-      l: this.isBoxPlot
-        ? w.globals.seriesCandleC[i][j]
-        : w.globals.seriesCandleL[i][j],
-      c: this.isBoxPlot
-        ? w.globals.seriesCandleL[i][j]
-        : w.globals.seriesCandleC[i][j],
+      o: this.isBoxPlot ? h : o,
+      h: this.isBoxPlot ? o : h,
+      m: m,
+      l: this.isBoxPlot ? c : l,
+      c: this.isBoxPlot ? l : c,
     }
   }
 }

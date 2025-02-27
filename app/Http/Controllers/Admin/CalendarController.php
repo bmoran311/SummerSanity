@@ -26,6 +26,7 @@ class CalendarController extends Controller
         $friends_campers = Camper::whereIn('guardian_id', $friend_guardian_ids)->orderBy('last_name')->get();       
 
         $camp_enrollment_array = [];
+        $camp_enrollment_id_array = [];
         $camp_enrollment_color_array = [];
 
         foreach($campers as $camper) 
@@ -40,6 +41,7 @@ class CalendarController extends Controller
                         ->first();
 
                     $camp_enrollment_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->camp_name : "";
+                    $camp_enrollment_id_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->id : "";
                     $camp_enrollment_color_array[$camper->id][$time_slot][$week->week_number] = ($enrollment && $enrollment->booked) ? "yellow" : "";            
                 }
             }
@@ -57,11 +59,12 @@ class CalendarController extends Controller
                         ->first();
 
                     $camp_enrollment_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->camp_name : "";
+                    $camp_enrollment_id_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->id : "";
                     $camp_enrollment_color_array[$camper->id][$time_slot][$week->week_number] = ($enrollment && $enrollment->booked) ? "yellow" : "";            
                 }
             }
-        }
+        }        
 
-        return view('admin.calendar.index', compact('campers', 'time_slots', 'guardian', 'friends_campers', 'weeks', 'camp_enrollment_array', 'camp_enrollment_color_array'));
+        return view('admin.calendar.index', compact('campers', 'time_slots', 'guardian', 'friends_campers', 'weeks', 'camp_enrollment_id_array', 'camp_enrollment_array', 'camp_enrollment_color_array'));
     }
 }

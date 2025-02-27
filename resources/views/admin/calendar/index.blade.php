@@ -48,20 +48,36 @@
                     return `<strong>${cell.getValue()}</strong>`;
                 } 
             },
-            { title: "Time Slot", field: "timeslot", 
+            { 
+                title: "Time Slot", 
+                field: "timeslot", 
                 formatter: function(cell) {
                     return `<strong>${cell.getValue()}</strong>`;
                 } 
             },
             @foreach($weeks as $week)
-                { title: "{{ \Carbon\Carbon::parse($week->start_date)->format('n/j') }}-{{ \Carbon\Carbon::parse($week->end_date)->format('n/j') }}", field: "week{{ $week->week_number }}", editor: "input", 
+                { 
+                    title: "{{ \Carbon\Carbon::parse($week->start_date)->format('n/j') }}-{{ \Carbon\Carbon::parse($week->end_date)->format('n/j') }}", 
+                    field: "week{{ $week->week_number }}", 
+                    editor: "input", 
                     formatter: function(cell) {                    
-                        const colorKey = "week{{ $week->week_number }}_color";
+                        const field = cell.getField();
                         const rowData = cell.getRow().getData();
+                        const colorKey = `${field}_color`; 
+                        const cellValue = cell.getValue() || '';
+
+                        // Retrieve the pre-built URL from the data row
+                        const link = rowData[`${field}_link`] || '/camp_enrollment';
+
+                        // Set background color if defined
                         if (rowData[colorKey]) {
                             cell.getElement().style.backgroundColor = rowData[colorKey];
                         }
-                        return cell.getValue();
+
+                        // Make the cell clickable with the dynamic link
+                        return `<a href="${link}" style="display: block; width: 100%; height: 100%; text-align: center; text-decoration: none; color: black;">
+                            ${cellValue}
+                        </a>`;
                     }
                 },
             @endforeach                         
@@ -69,10 +85,16 @@
         data: [
             @foreach($campers as $camper)
                 @foreach($time_slots as $time_slot)
-                    { camper: "{{ $camper->first_name }}", 
+                    { 
+                        camper: "{{ $camper->first_name }}", 
                         timeslot: "{{ $time_slot }}", 
                         @foreach($weeks as $week)
                             week{{ $week->week_number }}: "{{ $camp_enrollment_array[$camper->id][$time_slot][$week->week_number] ?? '' }}", 
+                            @if(strlen($camp_enrollment_id_array[$camper->id][$time_slot][$week->week_number]))
+                                week{{ $week->week_number }}_link: "/camp_enrollment/{{ $camp_enrollment_id_array[$camper->id][$time_slot][$week->week_number] }}/edit", 
+                            @else
+                                week{{ $week->week_number }}_link: "/camp_enrollment/create?week={{ $week->id }}&time_slot={{ urlencode($time_slot) }}&guardian_id={{ $guardian->id }}&camper_id={{ $camper->id }}", 
+                            @endif
                         @endforeach  
                         @foreach($weeks as $week)                                        
                             week{{ $week->week_number }}_color: "{{ $camp_enrollment_color_array[$camper->id][$time_slot][$week->week_number] ?? '' }}", 
@@ -81,15 +103,6 @@
                 @endforeach                
             @endforeach            
         ],
-        cellFormatter: function (cell) {            
-            const field = cell.getField();
-            const rowData = cell.getRow().getData();
-            const colorKey = `${field}_color`; 
-            if (rowData[colorKey]) {
-                cell.getElement().style.backgroundColor = rowData[colorKey];
-            }
-            return cell.getValue();
-        },
     });
 </script>
 

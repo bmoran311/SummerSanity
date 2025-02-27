@@ -14,6 +14,17 @@
     </nav>
 </div>
 
+@if(isset($camp_enrollment))
+    <form method="POST" action="{{ route('camp_enrollment.destroy', $camp_enrollment->group_id) }}" onsubmit="return confirm('Are you sure you want to delete this entire enrollment batch?');">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="px-4 py-2 text-white bg-red-600 rounded-md hover:bg-red-700">
+            Delete Enrollment Batch
+        </button>
+    </form>
+    <br><br>
+@endif
+
 <div class="rounded-lg border border-stroke bg-white p-6 shadow-lg dark:border-strokedark dark:bg-boxdark">
     <form method="POST" action="{{ isset($camp_enrollment) ? route('camp_enrollment.update', $camp_enrollment) : route('camp_enrollment.store') }}">
         @csrf
@@ -21,25 +32,27 @@
             @method('PUT')
         @endif
 
+        <input type="hidden" name="guardian_id" value="{{$selected_guardian_id}}">
+
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">           
             <div>
                 <label for="camper_id" class="block text-sm font-medium text-gray-700">Camper</label>
-                <select multiple name="camper_id[]" id="camper_id" required class="w-full rounded-md border border-gray-300 p-2">                    
+                <select multiple name="camper_id[]" id="camper_id" required class="w-full rounded-md border border-gray-300 p-2">
                     @foreach($campers as $camper)
                         <option value="{{ $camper->id }}" 
-                            {{ isset($camp_enrollment) && $camp_enrollment->camper_id == $camper->id ? 'selected' : '' }}>
+                            {{ in_array($camper->id, $selected_camper_ids) ? 'selected' : '' }}>
                             {{ $camper->first_name }} {{ $camper->last_name }}
                         </option>
                     @endforeach
                 </select>
-            </div>            
+            </div>           
             <div>
                 <label for="week_id" class="block text-sm font-medium text-gray-700">Week</label>
-                <select multiple name="week_id[]" id="week_id" required class="w-full rounded-md border border-gray-300 p-2">                    
+                <select multiple name="week_id[]" id="week_id" required class="w-full rounded-md border border-gray-300 p-2">
                     @foreach($weeks as $week)
                         <option value="{{ $week->id }}" 
-                            {{ isset($camp_enrollment) && $camp_enrollment->week_id == $week->id ? 'selected' : '' }}>
-                            Week {{ $week->week_number }} ({{ $week->start_date }} - {{ $week->end_date }})
+                            {{ in_array($week->id, $selected_week_ids) ? 'selected' : '' }}>
+                            Week {{ $week->week_number }} ({{ \Carbon\Carbon::parse($week->start_date)->format('n/j') }} - {{ \Carbon\Carbon::parse($week->end_date)->format('n/j') }})
                         </option>
                     @endforeach
                 </select>
@@ -76,9 +89,12 @@
             <div>
                 <label for="time_slot" class="block text-sm font-medium text-gray-700">Time Slot</label>
                 <select multiple name="time_slot[]" id="time_slot" required class="w-full rounded-md border border-gray-300 p-2">
-                    <option value="AM" {{ isset($camp_enrollment) && $camp_enrollment->time_slot == 'AM' ? 'selected' : '' }}>AM</option>
-                    <option value="PM" {{ isset($camp_enrollment) && $camp_enrollment->time_slot == 'PM' ? 'selected' : '' }}>PM</option>
-                    <option value="Night" {{ isset($camp_enrollment) && $camp_enrollment->time_slot == 'Night' ? 'selected' : '' }}>Night</option>
+                    @foreach(['AM', 'PM', 'Night'] as $slot)
+                        <option value="{{ $slot }}" 
+                            {{ in_array($slot, $selected_time_slots) ? 'selected' : '' }}>
+                            {{ $slot }}
+                        </option>
+                    @endforeach
                 </select>
             </div>
             <div>
