@@ -122,7 +122,6 @@
 
             return;
         }
-        // Emit the Livewire event with the ID
 
     }
 </script>
