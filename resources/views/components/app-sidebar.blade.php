@@ -1,8 +1,8 @@
 <aside
   :class="sidebarToggle ? 'translate-x-0' : '-translate-x-full'"
-  class="absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-[#c9c4b6] duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0"
+  class="absolute left-0 top-0 z-10 flex h-screen w-72.5 flex-col overflow-y-hidden bg-[#c9c4b6] duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0"
   @click.outside="sidebarToggle = false"
-> 
+>
   <!-- SIDEBAR HEADER -->
   <div class="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
     <a href="{{ route('dashboard') }}">
@@ -126,14 +126,14 @@
                     href="{{ route('guardian.index') }}"
                     >Guardians
                   </a>
-                </li> 
+                </li>
                 <li>
                   <a
                     class="@if(request()->routeIs('camper*')) !text-white @endif group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white"
                     href="{{ route('camper.index') }}"
                     >Camper
                   </a>
-                </li> 
+                </li>
 				<!---
                 <li>
                   <a
@@ -146,7 +146,7 @@
               </ul>
             </div>
             <!-- Dropdown Menu End -->
-          </li>         
+          </li>
         </ul>
       </div>
 

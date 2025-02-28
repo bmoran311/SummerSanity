@@ -29,7 +29,8 @@ class DatabaseSeeder extends Seeder
             PracticeAreaSeeder::class,
             // ResourceCategorySeeder::class,
             StatesTableSeeder::class,
-            UserSeeder::class
+            UserSeeder::class,
+            WeeksSeeder::class,
         ]);
     }
 }
