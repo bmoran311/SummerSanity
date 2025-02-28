@@ -27,24 +27,69 @@
     </div>
 </x-modal>
 
-<div style="position: fixed; top: 100px; left: 370px; background-color: #fff; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-    <div style="font-weight: bold; margin-bottom: 8px;">Select friends:</div>
-    @foreach($friends_campers as $friends_camper)
-        <label style="display: block; margin-bottom: 5px;">
-            <input type="checkbox" class="friend-checkbox" data-index="{{ $loop->index }}" style="margin-right: 5px;" checked>
-            {{ $friends_camper->last_name }}, {{ $friends_camper->first_name }}
-        </label>
-    @endforeach
+<div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <h2 class="text-title-md2 font-bold text-black dark:text-white">
+       Summer Calendar
+    </h2>
 </div>
 
-<br><br><br><br><br><br><br><br><br>
-<div id="campersTable"></div>
-@foreach($friends_campers as $friends_camper)
-    <br>
-    <div id="campersTableFriend{{ $loop->index }}" class="campersTableFriend">
-        Content for {{ $friends_camper->first_name }} {{ $friends_camper->last_name }}
+
+
+
+
+<div x-data="{selectedItems: [], open: false}">
+
+    <div class="flex justify-end">
+        <div class="relative inline-block text-left" @click.away="open = false">
+            <div>
+            <button @click="open = !open" type="button" class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" id="menu-button" aria-expanded="true" aria-haspopup="true">
+                Friend's Calendars
+                <svg class="-mr-1 size-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                </svg>
+            </button>
+            </div>
+
+            <div x-cloak x-show="open"
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 scale-95"
+                x-transition:enter-end="opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-75"
+                x-transition:leave-start="opacity-100 scale-100"
+                x-transition:leave-end="opacity-0 scale-95"
+                class="absolute right-0 z-10 mt-2 w-56 origin-top-right bg-white shadow-lg ring-1 ring-black/5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+                <div class="p-3 text-sm" role="none">
+                    @foreach($friends_campers as $friends_camper)
+                        <label class="block space-x-2 items-center flex">
+                            <input type="checkbox" class="inline-block" value="{{ $friends_camper->id }}" @change="selectedItems.includes($event.target.value) ? selectedItems = selectedItems.filter(i => i !== $event.target.value) : selectedItems.push($event.target.value)">
+                            <span>{{ $friends_camper->first_name }} {{ $friends_camper->last_name }}</span>
+                        </label>
+                    @endforeach
+                </div>
+            </div>
+        </div>
     </div>
-@endforeach
+{{-- TODO: PULL OUT EXISTING JS TO HANDLE FRIEND CLICK... --}}
+{{-- TODO: finish the array implementation... --}}
+    <div class="space-y-12">
+        <div class="space-y-2">
+            <h4 class="font-bold text-lg">Campers of {{ $guardian->first_name }} {{ $guardian->last_name }}</h4>
+            <div id="campersTable"></div>
+        </div>
+
+        @foreach($friends_campers as $friends_camper)
+        <div class="space-y-2" x-show="selectedItems.includes('{{ $friends_camper->id }}')" x-cloak>
+            <h4 class="font-bold text-lg">Campers of {{ $friends_camper->first_name }} {{ $friends_camper->last_name }}</h4>
+            <div id="campersTableFriend{{ $loop->index }}" class="campersTableFriend">
+                Content for {{ $friends_camper->first_name }} {{ $friends_camper->last_name }}
+            </div>
+        </div>
+        @endforeach
+    </div>
+</div>
+
+
+
 
 @push('foot')
 
@@ -55,8 +100,11 @@
         const cellValue = cell.getValue();
 
         if(cellValue) {
-            //this is where future edit could trigger
-            return;
+            const column = cell.getColumn()
+            let week_num = column.getField().replace('week', '');
+            let url = cell.getRow().getData()[`week${week_num}_link`];
+
+            return window.location.href = url;
         }else{
             //create new enrollment
             const column = cell.getColumn()
@@ -104,7 +152,6 @@
                 {
                     title: "Camper",
                     field: "camper",
-                    rowSpan: 3,
                     formatter: function(cell) {
                         return `<strong>${cell.getValue()}</strong>`;
                     }
@@ -120,7 +167,7 @@
                     {
                         title: "{{ \Carbon\Carbon::parse($week->start_date)->format('n/j') }}-{{ \Carbon\Carbon::parse($week->end_date)->format('n/j') }}",
                         field: "week{{ $week->week_number }}",
-                        editor: "input",
+                        // editor: "input",
                         cellClick: handleCellClick,
                         formatter: function(cell) {
                             const field = cell.getField();
