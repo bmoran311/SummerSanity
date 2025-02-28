@@ -69,8 +69,7 @@
             </div>
         </div>
     </div>
-{{-- TODO: PULL OUT EXISTING JS TO HANDLE FRIEND CLICK... --}}
-{{-- TODO: finish the array implementation... --}}
+
     <div class="space-y-12">
         <div class="space-y-2">
             <h4 class="font-bold text-lg">Campers of {{ $guardian->first_name }} {{ $guardian->last_name }}</h4>
@@ -127,22 +126,6 @@
 
     }
 </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            document.querySelectorAll(".friend-checkbox").forEach(function (checkbox) {
-                checkbox.addEventListener("change", function () {
-                    let index = this.getAttribute("data-index");
-                    let targetDiv = document.getElementById("campersTableFriend" + index);
-                    if (this.checked) {
-                        targetDiv.style.display = "block";
-                    } else {
-                        targetDiv.style.display = "none";
-                    }
-                });
-            });
-        });
-    </script>
 
     <script>
         // Tabulator initialization
