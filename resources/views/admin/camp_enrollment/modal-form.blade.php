@@ -25,8 +25,32 @@
         <div class="col-span-2">
             <label for="camp_name" class="block text-sm font-medium text-gray-700">Camp Name</label>
             <input type="text" name="camp_name" required id="camp_input"
-                class="w-full rounded-md border border-gray-300 p-2">
+                class="w-full rounded-md border border-gray-300 p-2"
+                list="camp_name_list"
+                >
         </div>
+        <datalist id="camp_name_list">
+            @foreach($camp_names as $camp)
+                <option value="{{ $camp->camp_fill }}" data-camp-name="{{ $camp->camp_name }}"></option>
+            @endforeach
+        </datalist>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                let campInput = document.getElementById("camp_input");
+
+                campInput.addEventListener("input", function () {
+                    let datalistOptions = document.querySelectorAll("#camp_name_list option");
+
+                    datalistOptions.forEach(option => {
+                        if (option.value === campInput.value) {
+                            // Set the input field to just the camp_name
+                            campInput.value = option.getAttribute("data-camp-name");
+                        }
+                    });
+                });
+            });
+        </script>
 
         <div>
             <label for="time_slot" class="block text-sm font-medium text-gray-700">Time Slot</label>
