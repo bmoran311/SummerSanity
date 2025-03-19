@@ -33,12 +33,7 @@
     </h2>
 </div>
 
-
-
-
-
 <div x-data="{selectedItems: [], open: false}">
-
     <div class="flex justify-end">
         <div class="relative inline-block text-left" @click.away="open = false">
             <div>
@@ -87,44 +82,41 @@
     </div>
 </div>
 
-
-
-
 @push('foot')
 
-<script>
-    // Cell click handler
-    function handleCellClick(e, cell) {
-        const id = cell.getRow().getData().id; // Get the ID from the row data
-        const cellValue = cell.getValue();
+    <script>
+        // Cell click handler
+        function handleCellClick(e, cell) {
+            const id = cell.getRow().getData().id; // Get the ID from the row data
+            const cellValue = cell.getValue();
 
-        if(cellValue) {
-            const column = cell.getColumn()
-            let week_num = column.getField().replace('week', '');
-            let url = cell.getRow().getData()[`week${week_num}_link`];
+            if(cellValue) {
+                const column = cell.getColumn()
+                let week_num = column.getField().replace('week', '');
+                let url = cell.getRow().getData()[`week${week_num}_link`];
 
-            return window.location.href = url;
-        }else{
-            //create new enrollment
-            const column = cell.getColumn()
-            const time_slot = document.getElementById('modal_time_slot');
-            const camper_id = document.getElementById('modal_camper_id');
-            const week_id = document.getElementById('modal_week_id');
+                return window.location.href = url;
+            }else{
+                //create new enrollment
+                const column = cell.getColumn()
+                const time_slot = document.getElementById('modal_time_slot');
+                const camper_id = document.getElementById('modal_camper_id');
+                const week_id = document.getElementById('modal_week_id');
 
-            let week_num = column.getField().replace('week', '');
+                let week_num = column.getField().replace('week', '');
 
-            time_slot.value = cell.getRow().getData().timeslot;
-            camper_id.value = cell.getRow().getData().id;
-            week_id.value = week_num;
+                time_slot.value = cell.getRow().getData().timeslot;
+                camper_id.value = cell.getRow().getData().id;
+                week_id.value = week_num;
 
 
-            window.dispatchEvent(new CustomEvent('open-modal', {detail: 'enrollment_create'}));
+                window.dispatchEvent(new CustomEvent('open-modal', {detail: 'enrollment_create'}));
 
-            return;
-        }
+                return;
+            }
 
-    }
-</script>
+        }        
+    </script>
 
     <script>
         // Tabulator initialization
@@ -156,13 +148,28 @@
                             const rowData = cell.getRow().getData();
                             const colorKey = `${field}_color`;
                             const cellValue = cell.getValue() || '';
+                            const row = cell.getRow();
+                            const table = row.getTable();
+                            const prevRow = table.getRowFromPosition(row.getPosition() - 1); // Get the previous row
 
-                            // Set background color if defined
+                            // Apply background color if defined
                             if (rowData[colorKey]) {
                                 cell.getElement().style.backgroundColor = rowData[colorKey];
                             }
 
-                            // Make the cell clickable with the dynamic link
+                            // Check if the previous row has the same camp name (to hide duplicates)
+                            if (prevRow && prevRow.getData()[field] === cellValue && cellValue !== '') {
+                                return ''; // Hide duplicate occurrences
+                            }
+
+                            // Make the first occurrence of the camp name clickable
+                            if (cellValue) {
+                                return `<div class="merged-cell"><a href="${rowData[field + '_link'] || '#'}" 
+                                        style="text-decoration: none; color: inherit; display: block; width: 100%; height: 100%;">
+                                        ${cellValue}
+                                    </a></div>`;
+                            }
+
                             return cellValue;
                         }
                     },
@@ -212,12 +219,33 @@
                     @foreach($weeks as $week)
                         { title: "{{ \Carbon\Carbon::parse($week->start_date)->format('n/j') }}-{{ \Carbon\Carbon::parse($week->end_date)->format('n/j') }}", field: "week{{ $week->week_number }}", editor: "input",
                             formatter: function(cell) {
-                                const colorKey = "week{{ $week->week_number }}_color";
+                                const field = cell.getField();
                                 const rowData = cell.getRow().getData();
+                                const colorKey = `${field}_color`;
+                                const cellValue = cell.getValue() || '';
+                                const row = cell.getRow();
+                                const table = row.getTable();
+                                const prevRow = table.getRowFromPosition(row.getPosition() - 1); // Get the previous row
+
+                                // Apply background color if defined
                                 if (rowData[colorKey]) {
                                     cell.getElement().style.backgroundColor = rowData[colorKey];
                                 }
-                                return cell.getValue();
+
+                                // Check if the previous row has the same camp name (to hide duplicates)
+                                if (prevRow && prevRow.getData()[field] === cellValue && cellValue !== '') {
+                                    return ''; // Hide duplicate occurrences
+                                }
+
+                                // Make the first occurrence of the camp name clickable
+                                if (cellValue) {
+                                    return `<div class="merged-cell"><a href="${rowData[field + '_link'] || '#'}" 
+                                            style="text-decoration: none; color: inherit; display: block; width: 100%; height: 100%;">
+                                            ${cellValue}
+                                        </a></div>`;
+                                }
+
+                                return cellValue;
                             }
                         },
                     @endforeach

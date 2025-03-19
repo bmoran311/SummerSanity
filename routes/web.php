@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AwardController;
 use App\Http\Controllers\Admin\BioController;
 use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\BlogPostController;
+use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\CareersController;
 use App\Http\Controllers\Admin\EducationController;
 use App\Http\Controllers\Admin\EngagementController;
@@ -55,6 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::resource('admin_user', AdminUserController::class);
 Route::resource('career', CareersController::class);
 Route::resource('firm', FirmController::class);
 Route::resource('bio', BioController::class);

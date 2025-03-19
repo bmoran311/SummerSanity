@@ -363,13 +363,12 @@
         >
           <span class="hidden text-right lg:block">
             <span class="block text-sm font-medium text-black dark:text-white"
-              >Brian Moran</span
-            >
-            <span class="block text-xs font-medium">Tech Lead</span>
+              >{{ auth()->user()->name }}</span
+            >            
           </span>
 
           <span class="h-12 w-12 rounded-full">
-            <img src="/images/user/enertia-circle.png" alt="User" />
+            <img src="{{ asset('storage/' . auth()->user()->logo) }}" alt="User" />
           </span>
 
           <svg
