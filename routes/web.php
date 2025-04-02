@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\CampController;
 use App\Http\Controllers\Admin\GuardianController;
 use App\Http\Controllers\Admin\CamperController;
 use App\Http\Controllers\Admin\CampEnrollmentController;
+use App\Http\Controllers\Admin\CalendarController;
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -84,6 +85,11 @@ Route::resource('camper', CamperController::class);
 Route::resource('camp_enrollment', CampEnrollmentController::class);
 
 Route::get('/calendar/index/{guardian_id}', 'App\Http\Controllers\Admin\CalendarController@index')->name('calendar.index');
+Route::get('/calendar_only/index/{guardian_id}', 'App\Http\Controllers\Admin\CalendarController@index_only')->name('calendar.index_only');
+
+Route::post('/upload-screenshot', [CalendarController::class, 'uploadScreenshot']);
+Route::get('/invite-friends', [CalendarController::class, 'showInvitePage']);
+Route::post('/send-invites', [CalendarController::class, 'sendInvites'])->name('send-invites');
 
 Route::get('/guardian/friends/{guardian_id}', 'App\Http\Controllers\Admin\GuardianController@friends')->name('guardian.friends');
 Route::post('/guardian/friends/{guardian_id}', 'App\Http\Controllers\Admin\GuardianController@assign_friends')->name('guardian.assign_friends');
@@ -91,5 +97,19 @@ Route::post('/guardian/friends/{guardian_id}', 'App\Http\Controllers\Admin\Guard
 Route::get('/blog_category/order/{direction}/{id}/{currPos}', 'App\Http\Controllers\Admin\BlogCategoryController@sort')->name('orderBlogCategory');
 Route::get('/faq_category/order/{direction}/{id}/{currPos}', 'App\Http\Controllers\Admin\FaqCategoryController@sort')->name('orderFaqCategory');
 Route::get('/resource_category/order/{direction}/{id}/{currPos}', 'App\Http\Controllers\Admin\ResourceCategoryController@sort')->name('orderResourceCategory');
+
+Route::get('/test-email', function () {
+    try {
+        Mail::raw('Test email from Summer Sanity using Mailtrap.', function ($message) {
+            $message->to('bmoran311@yahoo.com')
+                    ->subject('Mailtrap Test');
+        });
+
+        return 'Email sent!';
+    } catch (\Exception $e) {
+        Log::error('Mail send failed: ' . $e->getMessage());
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
 
 require __DIR__.'/auth.php';
