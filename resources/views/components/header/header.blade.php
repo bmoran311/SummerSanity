@@ -8,7 +8,7 @@
                 <li class="nav__link"><a href="#team">Team</a></li>
             </ul>
             <div class="logo">
-                <a href="/"><img src="assets/logo.svg" alt="Summer Sanity Logo" /></a>
+                <a href="/"><img src="/assets/logo.svg" alt="Summer Sanity Logo" /></a>
             </div>
             <div class="actions">
                 <button class="btn btn--tertiary btn--sm">Login</button>

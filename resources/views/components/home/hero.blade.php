@@ -1,5 +1,5 @@
 <section id="hero">
-    <img src="assets/masthead.png" alt="Children playing sport" class="hero__image" />
+    <img src="/assets/masthead.png" alt="Children playing sport" class="hero__image" />
     <div class="overlay"></div>
 
     <div class="container hero-container">

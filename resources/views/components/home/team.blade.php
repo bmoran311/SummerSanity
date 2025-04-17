@@ -11,16 +11,16 @@
         <div class="employees-container">
             <div class="person">
                 <div class="person__portrait">
-                    <img src="assets/megan-p-portrait.png" alt="Megan Petrik Portrait Image" />
+                    <img src="/assets/megan-p-portrait.png" alt="Megan Petrik Portrait Image" />
                     <div class="card social-links">
                         <a href="https://www.facebook.com" target="_blank">
-                            <img src="assets/icons/facebook-color.svg" alt="Facebook Icon and Link" />
+                            <img src="/assets/icons/facebook-color.svg" alt="Facebook Icon and Link" />
                         </a>
                         <a href="https://www.linkedin.com" target="_blank">
-                            <img src="assets/icons/linkedin-color.svg" alt="LinkedIn Icon and Link" />
+                            <img src="/assets/icons/linkedin-color.svg" alt="LinkedIn Icon and Link" />
                         </a>
                         <a href="https://www.instagram.com" target="_blank">
-                            <img src="assets/icons/instagram-color.svg" alt="Instagram Icon and Link" />
+                            <img src="/assets/icons/instagram-color.svg" alt="Instagram Icon and Link" />
                         </a>
                     </div>
                 </div>
@@ -45,16 +45,16 @@
 
             <div class="person person--opposite">
                 <div class="person__portrait">
-                    <img src="assets/megan-s-portrait.png" alt="Megan Petrik Portrait Image" />
+                    <img src="/assets/megan-s-portrait.png" alt="Megan Petrik Portrait Image" />
                     <div class="card social-links">
                         <a href="https://www.facebook.com" target="_blank">
-                            <img src="assets/icons/facebook-color.svg" alt="Facebook Icon and Link" />
+                            <img src="/assets/icons/facebook-color.svg" alt="Facebook Icon and Link" />
                         </a>
                         <a href="https://www.linkedin.com" target="_blank">
-                            <img src="assets/icons/linkedin-color.svg" alt="LinkedIn Icon and Link" />
+                            <img src="/assets/icons/linkedin-color.svg" alt="LinkedIn Icon and Link" />
                         </a>
                         <a href="https://www.instagram.com" target="_blank">
-                            <img src="assets/icons/instagram-color.svg" alt="Instagram Icon and Link" />
+                            <img src="/assets/icons/instagram-color.svg" alt="Instagram Icon and Link" />
                         </a>
                     </div>
                 </div>

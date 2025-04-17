@@ -35,6 +35,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/plan_calendar/{guardian_id}', 'App\Http\Controllers\CalendarController@index')->name('plan_calendar.index');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

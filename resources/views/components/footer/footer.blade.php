@@ -2,17 +2,17 @@
     <div class="gradient-bg"></div>
     <div class="container footer-container">
         <div class="footer__left">
-            <img class="logo" src="assets/logo.svg" alt="Summer Sanity Logo" />
+            <img class="logo" src="/assets/logo.svg" alt="Summer Sanity Logo" />
             <p>&copy; Copyright 2025 Summer Sanity. All rights reserved.</p>
             <div class="social-icons">
                 <a href="https://www.facebook.com" target="_blank">
-                    <img src="assets/icons/facebook-color.svg" alt="Facebook Icon and Link" />
+                    <img src="/assets/icons/facebook-color.svg" alt="Facebook Icon and Link" />
                 </a>
                 <a href="https://www.linkedin.com" target="_blank">
-                    <img src="assets/icons/linkedin-color.svg" alt="LinkedIn Icon and Link" />
+                    <img src="/assets/icons/linkedin-color.svg" alt="LinkedIn Icon and Link" />
                 </a>
                 <a href="https://www.instagram.com" target="_blank">
-                    <img src="assets/icons/instagram-color.svg" alt="Instagram Icon and Link" />
+                    <img src="/assets/icons/instagram-color.svg" alt="Instagram Icon and Link" />
                 </a>
             </div>
         </div>

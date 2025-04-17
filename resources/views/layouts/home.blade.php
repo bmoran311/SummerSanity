@@ -11,7 +11,7 @@
             <x-home.calendar />  
             <x-home.about />  
             <x-home.team />  
-            <img class="line-separator" src="assets/dotted-separator.svg" alt="Dotted line separator between sections" />   
+            <img class="line-separator" src="/assets/dotted-separator.svg" alt="Dotted line separator between sections" />   
             <x-home.cta />              
         </main>       
         <footer>      
