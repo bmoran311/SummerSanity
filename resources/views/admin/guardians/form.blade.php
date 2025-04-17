@@ -22,13 +22,13 @@
                 </h3>
             </div>
             <div class="p-7">
-                <form action="{{ isset($bio) ? route('guardian.update', $guardian->id) : route('guardian.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ isset($guardian) ? route('guardian.update', $guardian->id) : route('guardian.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @if(isset($guardian))
                         @method('PUT')
                     @else
                         @method('POST')
-                    @endif
+                    @endif                              
                     <div class="mb-5.5 grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
 							<x-label>First Name</x-label>
@@ -57,7 +57,7 @@
                                                     
                     <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                         <div class="flex justify-end gap-4.5">
-                            <a href="{{ route('bio.index') }}"
+                            <a href="{{ route('guardian.index') }}"
                                 class="btn-white"
                                 type="submit">
                                 Cancel

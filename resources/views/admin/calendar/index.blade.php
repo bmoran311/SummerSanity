@@ -10,7 +10,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
                     </svg>
                 </div>
-                <h3 class="text-lg font-semibold text-gray-900">Add Camp Enrollment</h3>
+                <h3 class="text-lg font-semibold text-gray-900">Add Plan</h3>
             </div>
             <div class="py-4">
                 @include('admin.camp_enrollment.modal-form')
@@ -20,7 +20,7 @@
                     Cancel
                 </button>
                 <button type="submit" class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
-                    Create Enrollment
+                    Create Plan
                 </button>
             </div>
         </form>
@@ -210,11 +210,6 @@
         ],
     });
 </script>
-
-week{{ $week->week_number }}: "{{ isset($camp_enrollment_array[$camper->id][$time_slot][$week->week_number]) ? $camp_enrollment_array[$camper->id][$time_slot][$week->week_number] : '' }}",
-week{{ $week->week_number }}_link: "{{ $camp_enrollment_id_array[$camper->id][$time_slot][$week->week_number] ? "/camp_enrollment/{$camp_enrollment_id_array[$camper->id][$time_slot][$week->week_number]}/edit" : "/camp_enrollment/create?week={$week->id}&time_slot=" . urlencode($time_slot) . "&guardian_id={$guardian->id}&camper_id={$camper->id}" }}",
-week{{ $week->week_number }}_color: "{{ $camp_enrollment_color_array[$camper->id][$time_slot][$week->week_number] ?? '' }}",
-
 
 @foreach($friends_campers as $friends_camper)
     <script>

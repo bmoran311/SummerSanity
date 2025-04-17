@@ -2,14 +2,14 @@
 
 <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
     <h2 class="text-title-md2 font-bold text-black dark:text-white">
-        {{ isset($camp_enrollment) ? 'Edit Camp Enrollment' : 'Add Camp Enrollment' }}
+        {{ isset($camp_enrollment) ? 'Edit Plan' : 'Add Plan' }}
     </h2>
     <nav>
         <ol class="flex items-center gap-2">
             <li>
                 <a class="font-medium" href="{{ route('dashboard') }}">Dashboard /</a>
             </li>            
-            <li class="font-medium text-primary"><a class="font-medium" href="{{ route('camp_enrollment.index') }}">Camp Enrollments</a></li>         
+            <li class="font-medium text-primary"><a class="font-medium" href="{{ route('camp_enrollment.index') }}">Plans</a></li>         
         </ol>
     </nav>
 </div>
@@ -19,7 +19,7 @@
         @csrf
         @method('DELETE')
         <button type="submit" class="px-4 py-2 text-white bg-red-600 rounded-md hover:bg-red-700">
-            Delete Enrollment Batch
+            Delete Plan Batch
         </button>
     </form>
     <br><br>
@@ -113,7 +113,7 @@
                 Cancel
             </a>
             <button type="submit" class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
-                {{ isset($camp_enrollment) ? 'Update' : 'Create' }} Enrollment
+                {{ isset($camp_enrollment) ? 'Update' : 'Create' }} Plan
             </button>
         </div>
     </form>

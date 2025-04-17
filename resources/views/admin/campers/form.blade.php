@@ -22,7 +22,7 @@
                 </h3>
             </div>
             <div class="p-7">
-                <form action="{{ isset($bio) ? route('camper.update', $camper->id) : route('camper.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ isset($camper) ? route('camper.update', $camper->id) : route('camper.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @if(isset($camper))
                         @method('PUT')
@@ -62,7 +62,7 @@
 							<x-label>Birth Date</x-label>
 							<input
                                 name="birth_date"
-                                value="{{ old('birth_date', $camp->birth_date ?? '') }}"
+                                value="{{ old('birth_date', $camper->birth_date ?? '') }}"
                                 class="form-datepicker w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                                 placeholder="mm/dd/yyyy"
                                 data-class="flatpickr-right"
