@@ -40,6 +40,11 @@
 							<x-text-input name="last_name" type="text" placeholder="Last Name..." class="text-input" value="{{ old('last_name', $guardian->last_name ?? '') }}"/>
 							<x-form-error key="last_name" />
                         </div>
+                        <div>
+							<x-label>Password</x-label>
+							<x-text-input name="password" type="password" placeholder="***********" class="text-input"/>
+							<x-form-error key="password" />
+                        </div>
                     </div>
 
 					<div class="mb-5.5 grid grid-cols-1 sm:grid-cols-2 gap-4">

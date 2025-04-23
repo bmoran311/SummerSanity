@@ -39,25 +39,36 @@
     </div>
     <br><br>
     <div class="container">
-        <h2>Please login and start planning</h2>
-        <div class="card register-card">
-            <div class="gradient"></div>
-            <div class="header">
-                <img src="/assets/icons/register.svg" alt="Register Icon" />
-                <h4>Login</h4>               
-            </div>
-            <form class="register__form">                
-                <div class="input__field">
-                    <img src="/assets/icons/email.svg" alt="Profile icon" />
-                    <input type="email" placeholder="Email" name="email" class="input__email" />
-                </div>
-                <div class="input__field">
-                    <img src="/assets/icons/password.svg" alt="Profile icon" />
-                    <input type="password" placeholder="Password" name="password" class="input__first" />
-                </div>                                
-            </form>
+        <section id="login">
+            <h2>Please login and start planning</h2>
+            <div class="card register-card">
+                <div class="gradient"></div>
+                <div class="header">
+                    <img src="/assets/icons/register.svg" alt="Register Icon" />
+                    <h4>Login</h4>               
+                </div>               
 
-            <button class="btn btn--sm">Get Started</button>
+                @if ($errors->any())
+                    <div class="alert">
+                        @foreach ($errors->all() as $error)
+                            <p>{{ $error }}</p>
+                        @endforeach
+                    </div>
+                @endif
+                <form id="loginForm" class="register__form" method="POST" action="/guardian/login">                
+                    @csrf
+                    <div class="input__field">
+                        <img src="/assets/icons/email.svg" alt="Profile icon" />
+                        <input type="email" placeholder="Email" name="email" class="input__email" />
+                    </div>
+                    <div class="input__field">
+                        <img src="/assets/icons/password.svg" alt="Profile icon" />
+                        <input type="password" placeholder="Password" name="password" class="input__first" />
+                    </div>                                                
+
+                    <button type="submit" class="btn btn--sm">Login</button>
+                </form>
+            </div>
         </div>
     </div>
 </section>    

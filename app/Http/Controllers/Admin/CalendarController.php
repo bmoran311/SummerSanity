@@ -75,7 +75,7 @@ class CalendarController extends Controller
                 }
             }
         }
-
+        
         foreach($friends_campers as $camper)
         {
             foreach($time_slots as $time_slot)

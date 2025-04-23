@@ -27,6 +27,10 @@ use App\Http\Controllers\Admin\GuardianController;
 use App\Http\Controllers\Admin\CamperController;
 use App\Http\Controllers\Admin\CampEnrollmentController;
 use App\Http\Controllers\Admin\CalendarController;
+use App\Http\Controllers\Guardian\AuthController;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -36,22 +40,20 @@ Route::get('/', function () {
 });
 
 Route::get('/plan_calendar/{guardian_id}', 'App\Http\Controllers\CalendarController@index')->name('plan_calendar.index');
+Route::get('/my-dashboard/', 'App\Http\Controllers\CalendarController@dashboard')->name('dashboard.index');
+
+Route::post('/guardian/login', [AuthController::class, 'loginWithEmail'])->name('guardian.login');
+
+Route::post('/guardian/logout', function (Request $request) {
+    Auth::guard('guardian')->logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect('/#login');
+})->name('guardian.logout');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::get('/dashboard/form-elements', function () {
-    return view('form-elements');
-})->middleware(['auth', 'verified'])->name('form-elements');
-
-Route::get('/dashboard/form-layout', function () {
-    return view('form-layout');
-})->middleware(['auth', 'verified'])->name('form-layout');
-
-Route::get('/dashboard/tables', function () {
-    return view('tables');
-})->middleware(['auth', 'verified'])->name('tables');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

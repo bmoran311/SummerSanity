@@ -26,7 +26,7 @@ class AdminUserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',           
             'email' => 'required|string|max:255',
-            'password' => 'required|string|max:255',           
+            'password' => 'required|string|max:50',           
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 

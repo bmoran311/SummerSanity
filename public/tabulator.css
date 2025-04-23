@@ -1,0 +1,223 @@
+/* Target the table container */
+#summer-calendar,
+.calendar {
+    grid-row: 2 / -1;
+    justify-self: stretch;
+    /* align-self: self-start; */
+    grid-column: 2 / -1;
+    display: inline-block;
+    border: 1px solid #d0d7de;
+    border-radius: 0.6rem;
+    background-color: var(--color-white);
+    font-family: "Overpass";
+    margin: 1.2rem;
+    box-shadow: 0 0.3rem 0.5rem rgba(33, 33, 38, 0.06), 0 1px 1px 1px rgba(33, 33, 38, 0.06), 0 0.6rem 1.6rem rgba(33, 33, 38, 0.06);
+}
+
+.tabulator .tabulator-tableholder {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+}
+
+.tabulator .tabulator-tableholder::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+/* Target the header */
+.tabulator .tabulator-header {
+    color: var(--color-black-70);
+    border-bottom: 1px solid #ebebeb;
+    background-color: #f9f9f9;
+}
+
+/* Target header cells */
+
+.tabulator .tabulator-header .tabulator-frozen.tabulator-frozen-left,
+.tabulator .tabulator-header .tabulator-col {
+    background-color: #f9f9f9;
+    border-right: 1px solid #ebebeb;
+    font-weight: bold;
+    text-align: center;
+}
+
+.tabulator .tabulator-header .tabulator-col {
+    min-width: 23.2rem !important;
+}
+
+/* .tabulator .tabulator-header .tabulator-frozen.tabulator-frozen-left,
+.tabulator-row .tabulator-cell.tabulator-frozen.tabulator-frozen-left {
+    min-width: 12rem !important;
+} */
+
+.tabulator .tabulator-header .tabulator-col .tabulator-col-content {
+    padding: 0.8rem;
+}
+
+.tabulator .tabulator-col-resize-handle:hover {
+    background-color: var(--color-blue);
+    opacity: 0.5;
+}
+
+.tabulator .tabulator-header .tabulator-col.tabulator-sortable.tabulator-col-sorter-element:hover {
+    background-color: #ebebeb;
+}
+
+.tabulator .tabulator-col:last-child {
+    border-right: none;
+}
+
+/* Target table rows */
+.tabulator .tabulator-row {
+    background-color: var(--color-white);
+    border-bottom: 1px solid #ebebeb;
+}
+
+/* Last row - remove bottom border (optional) */
+.tabulator .tabulator-row:last-child {
+    border-bottom: none;
+}
+
+.tabulator .tabulator-row:nth-child(even) {
+    background-color: var(--color-white);
+}
+
+/* Hover effect */
+.tabulator .tabulator-row:hover {
+    background-color: #f9f9f9;
+}
+
+/* Apply border-right to all tabulator cells */
+.tabulator-row .tabulator-cell.tabulator-frozen.tabulator-frozen-left,
+.tabulator .tabulator-cell {
+    border-right: 1px solid #ebebeb;
+    padding: 0.8rem;
+    text-align: center;
+    min-width: 10.4rem;
+    color: var(--color-black-50);
+    font-weight: 600;
+    min-height: 7.2rem;
+    min-width: 23.2rem;
+}
+
+.tabulator-row:hover .tabulator-cell.tabulator-frozen.tabulator-frozen-left {
+    background-color: #ebebeb;
+    color: var(--color-black);
+}
+
+.tabulator-row .tabulator-cell.tabulator-frozen.tabulator-frozen-left {
+    background-color: #f9f9f9;
+}
+
+.tabulator .tabulator-row .tabulator-cell:nth-last-child(1) {
+    border-right: none;
+}
+
+/* Hide sort icon by default */
+.tabulator .tabulator-col .tabulator-arrow {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Show on hover over column header */
+.tabulator .tabulator-col:hover .tabulator-arrow {
+    opacity: 1;
+}
+
+/* 
+    Event Cards
+*/
+
+.event-card {
+    background: var(--color-white);
+    border: 1px solid #ebebeb;
+    border-radius: 0.6rem;
+    padding: 0.8rem;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem 0.6rem;
+    box-shadow: 0 1px 1px rgba(33, 33, 38, 0.06);
+    font-family: "Overpass", sans-serif;
+    height: 100%;
+}
+
+.event-card:hover {
+    border-color: #d0d7de;
+}
+
+.event-card.user-child.confirmed {
+    background: var(--color-light-green-50);
+}
+
+.event-card.user-child.tentative {
+    background: var(--color-yellow-50);
+}
+
+.event-card .booking-type {
+    width: 0.4rem;
+    height: 100%;
+    border-radius: 9999px;
+}
+
+.event-card .booking-type.tentative {
+    background-color: var(--color-yellow);
+}
+
+.event-card .booking-type.confirmed {
+    background-color: var(--color-light-green);
+}
+
+.event-card .card__content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 0.2rem;
+    padding: 0.4rem;
+}
+
+.event-card .card__content .event-name {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--color-black);
+}
+
+.event-card .card__content .event-type {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--color-black-50);
+}
+
+/* 
+
+*/
+
+.tabulator-cell:has(> .event-card.start),
+.tabulator-cell:has(> .event-card.middle) {
+    padding: 0.8rem 0;
+    border: none;
+}
+
+.tabulator-cell:has(> .event-card.end) {
+    padding: 0.8rem 0;
+    border-right: 1px solid #ebebeb;
+}
+
+.event-card.start {
+    margin: 0 0 0 0.8rem;
+    border-radius: 0.6rem 0 0 0.6rem;
+    border-right: none;
+}
+
+.event-card.middle {
+    border-radius: 0;
+    margin: 0;
+    border-inline: none;
+}
+
+.event-card.end {
+    border-radius: 0 0.6rem 0.6rem 0;
+    margin: 0 0.8rem 0 0;
+    border-left: none;
+    border-right: 1px solid #ebebeb;
+}

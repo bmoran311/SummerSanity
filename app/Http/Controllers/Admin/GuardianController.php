@@ -6,9 +6,33 @@ use App\Http\Controllers\Controller;
 use App\Models\Guardian, App\Models\Friend;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 
 class GuardianController extends Controller
 {
+    public function loginWithEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
+
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::guard('guardian')->attempt($credentials)) {
+            $request->session()->regenerate();
+
+            return response()->json([
+                'message' => 'Login successful',
+                'user' => Auth::guard('guardian')->user(),
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Invalid credentials'
+        ], 401);
+    }
+
     public function index()
     {
         $guardians = Guardian::orderBy('last_name')->orderBy('first_name')->get();
@@ -56,7 +80,8 @@ class GuardianController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|max:255',
-            'phone_number' => 'required|string|max:255',                       
+            'phone_number' => 'required|string|max:255', 
+            'password' => 'required|string|max:50',                         
         ]);
 
         $guardian = new Guardian();
@@ -66,6 +91,7 @@ class GuardianController extends Controller
         $guardian->password = "password";
 		$guardian->email = $request->input('email');
 		$guardian->phone_number = $request->input('phone_number');
+        $guardian->password = Hash::make($request->password);
         $guardian->save();
 
         return back()->with('success', 'Guardian Created');
@@ -89,6 +115,10 @@ class GuardianController extends Controller
 		$guardian->last_name = $request->input('last_name');
 		$guardian->email = $request->input('email');
 		$guardian->phone_number = $request->input('phone_number');
+        if ($request->filled('password')) 
+        {
+		    $guardian->password = Hash::make($request->password);
+        }
         $guardian->save();
 
         return back()->with('success', 'Guardian Updated');

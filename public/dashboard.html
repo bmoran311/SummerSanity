@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <!-- "Overpass" Google Font -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
+        <!-- CSS Stylesheet -->
+        <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="style.css" />
+        <link rel="stylesheet" href="tabulator.css" />
+        <title>Dashboard - Summer Sanity</title>
+    </head>
+    <body>
+        <div class="dashboard">
+            <nav class="nav nav--dashboard">
+                <div class="logo">
+                    <a href="/"><img src="assets/logo.svg" alt="Summer Sanity Logo" /></a>
+                </div>
+                <div></div>
+            </nav>
+            <div class="filter__friends">
+                <label><input type="checkbox" class="friend-child-checkbox" id="sally" checked />Sally</label>
+                <label><input type="checkbox" class="friend-child-checkbox" id="campbell" checked />Campbell</label>
+                <label><input type="checkbox" class="friend-child-checkbox" id="lizzie" checked />Lizzie</label>
+                <label><input type="checkbox" class="friend-child-checkbox" id="vaughn" checked />Vaughn</label>
+            </div>
+            <div id="summer-calendar"></div>
+        </div>
+        <script src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
+        <script type="module" src="script.js"></script>
+    </body>
+</html>

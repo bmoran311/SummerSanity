@@ -104,8 +104,20 @@
                     <option value="1" {{ isset($camp_enrollment) && $camp_enrollment->booked == 1 ? 'selected' : '' }}>Yes</option>
                     <option value="0" {{ isset($camp_enrollment) && $camp_enrollment->booked == 0 ? 'selected' : '' }}>No</option>
                 </select>
+                <br><br>
+                <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
+                <select name="type" id="type" required class="w-full rounded-md border border-gray-300 p-2">
+                    <option value=""></option>
+                    <option value="Morning Camp" {{ isset($camp_enrollment) && $camp_enrollment->type == "Morning Camp" ? 'selected' : '' }}>Morning Camp</option>
+                    <option value="Afternoon Camp" {{ isset($camp_enrollment) && $camp_enrollment->type == "Afternoon Camp" ? 'selected' : '' }}>Afternoon Camp</option>
+                    <option value="All Day Camp" {{ isset($camp_enrollment) && $camp_enrollment->type == "All Day Camp" ? 'selected' : '' }}>All_Day Camp</option>
+                    <option value="Night Camp" {{ isset($camp_enrollment) && $camp_enrollment->type == "Night Camp" ? 'selected' : '' }}>Night Camp</option>
+                    <option value="Overnight Camp" {{ isset($camp_enrollment) && $camp_enrollment->type == "Overnight Camp" ? 'selected' : '' }}>Overnight Camp</option>
+                    <option value="Vacation" {{ isset($camp_enrollment) && $camp_enrollment->type == "Vacation" ? 'selected' : '' }}>Vacation</option>
+                    <option value="Babysitter Coverage" {{ isset($camp_enrollment) && $camp_enrollment->type == "Babysitter Coverage" ? 'selected' : '' }}>Babysitter Coverage</option>
+                </select>
             </div>
-        </div>
+        </div>       
 
         <!-- Submit Button -->
         <div class="mt-6 flex justify-end space-x-4">

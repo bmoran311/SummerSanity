@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('camp_name');
             $table->enum('time_slot', ['AM', 'PM', 'Night']);
             $table->boolean('booked')->default(false);
+            $table->string('type');
             $table->timestamps();
         });
     }
