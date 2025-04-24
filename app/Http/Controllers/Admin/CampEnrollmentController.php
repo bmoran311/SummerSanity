@@ -56,14 +56,7 @@ class CampEnrollmentController extends Controller
     }
 
     public function store(Request $request)
-    {
-        /*$request->validate([
-            'camper_id' => 'required|exists:camper,id',
-            'week_id' => 'required|exists:week,id',
-            'camp_name' => 'required|string|max:255',
-            'time_slot' => 'required|in:AM,PM,Night',
-        ]);   */
-
+    {        
         $enrollments = [];
         $group_id = Str::uuid();
 
@@ -86,7 +79,8 @@ class CampEnrollmentController extends Controller
         }
         CampEnrollment::insert($enrollments);
 
-        return redirect()->route('calendar.index', ['guardian_id' => $request->guardian_id])->with('success', 'Camp Enrollment successfully added!');
+        //return redirect()->route('calendar.index', ['guardian_id' => $request->guardian_id])->with('success', 'Camp Enrollment successfully added!');       
+		return redirect()->intended('/my-dashboard/')->with('success', 'Plan successfully added!');
     }
 
     public function edit(CampEnrollment $camp_enrollment)

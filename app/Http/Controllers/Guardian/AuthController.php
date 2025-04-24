@@ -31,13 +31,15 @@ class AuthController extends Controller
     }
 
     public function store(Request $request)
-    {
+    {       
         $request->validate([
-            'first_name'   => 'required|string|max:255',
-            'last_name'    => 'required|string|max:255',
-            'email'        => 'required|email|max:255|unique:guardians,email',
-            'phone_number' => 'required|string|max:255',
-            'password'     => 'required|string|min:8|max:50',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
+            'phone_number' => 'required|string|max:255', 
+            'zip_code' => 'required|string|max:50', 
+            'communication_preference' => 'required|string|max:50', 
+            'password' => 'required|string|max:50|confirm_password',                         
         ]);
 
         $guardian = new Guardian();
@@ -46,10 +48,12 @@ class AuthController extends Controller
         $guardian->email = $request->input('email');
         $guardian->phone_number = $request->input('phone_number');
         $guardian->password = Hash::make($request->input('password'));
-
+        $guardian->zip_code = $request->input('zip_code');
+        $guardian->communication_preference = $request->input('communication_preference');
+        $guardian->active = '0';
         $guardian->save();
 
-        return back()->with('success', 'Guardian Created');
+        return back()->with('success', "Registration Successful.  You'll receive an email to confirm your account. ");
     }
 
     public function logout(Request $request)

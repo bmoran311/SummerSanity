@@ -81,17 +81,21 @@ class GuardianController extends Controller
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|max:255',
             'phone_number' => 'required|string|max:255', 
+            'zip_code' => 'required|string|max:50', 
+            'communication_preference' => 'required|string|max:50', 
             'password' => 'required|string|max:50',                         
         ]);
 
         $guardian = new Guardian();
         
         $guardian->first_name = $request->input('first_name');		
-		$guardian->last_name = $request->input('last_name');
-        $guardian->password = "password";
+		$guardian->last_name = $request->input('last_name');        
 		$guardian->email = $request->input('email');
 		$guardian->phone_number = $request->input('phone_number');
         $guardian->password = Hash::make($request->password);
+        $guardian->zip_code = $request->input('zip_code');
+        $guardian->communication_preference = $request->input('communication_preference');
+        $guardian->active = $request->input('active');
         $guardian->save();
 
         return back()->with('success', 'Guardian Created');
@@ -108,6 +112,8 @@ class GuardianController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|max:255',
+            'zip_code' => 'required|string|max:50', 
+            'communication_preference' => 'required|string|max:50', 
             'phone_number' => 'required|string|max:255',                      
         ]);        
 
@@ -119,6 +125,9 @@ class GuardianController extends Controller
         {
 		    $guardian->password = Hash::make($request->password);
         }
+        $guardian->zip_code = $request->input('zip_code');
+        $guardian->communication_preference = $request->input('communication_preference');
+        $guardian->active = $request->input('active');
         $guardian->save();
 
         return back()->with('success', 'Guardian Updated');

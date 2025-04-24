@@ -82,5 +82,45 @@
                 <option value="Babysitter Coverage" {{ isset($camp_enrollment) && $camp_enrollment->type == "Babysitter Coverage" ? 'selected' : '' }}>Babysitter Coverage</option>
             </select>
         </div>
+        <div class="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <x-label for="start_day">Start Day</x-label>
+                <select name="start_day" class="w-full rounded-md border border-gray-300 p-2">
+                    <option value=""></option>
+                    <option value="Sunday">Sunday</option>
+                    <option value="Monday" selected>Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                    <option value="Saturday">Saturday</option>
+                </select>
+            </div>
+
+            <div>
+                <x-label for="end_day">End Day</x-label>
+                <select name="end_day" class="w-full rounded-md border border-gray-300 p-2">
+                    <option value=""></option>
+                    <option value="Sunday">Sunday</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday" selected>Thursday</option>
+                    <option value="Friday">Friday</option>
+                    <option value="Saturday">Saturday</option>
+                </select>
+            </div>
+        </div>
+        <div class="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <x-label for="start_time">Start Time</x-label>
+                <input type="time" name="start_time" class="w-full rounded-md border border-gray-300 p-2" value="{{ old('start_time', '09:00') }}" />
+            </div>
+
+            <div>
+                <x-label for="end_time">End Time</x-label>
+                <input type="time" name="end_time" class="w-full rounded-md border border-gray-300 p-2" value="{{ old('end_time', '15:00') }}" />
+            </div>
+        </div>
     </div>
 

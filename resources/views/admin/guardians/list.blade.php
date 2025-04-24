@@ -38,13 +38,16 @@
                     <tr class="bg-gray-2 text-left dark:bg-meta-4">                        
                         <th class="min-w-[180px]  xl:pl-11">
                             Name
-                        </th>
-						<th class="min-w-[180px]  xl:pl-11">
-                            Email
-                        </th>
+                        </th>						
 						<th class="min-w-[180px]  xl:pl-11">
                             Phone
-                        </th>                                            
+                        </th>  
+                        <th class="min-w-[180px]  xl:pl-11">
+                            Zip
+                        </th>  
+                        <th class="min-w-[180px]  xl:pl-11">
+                            Active?
+                        </th>                                               
                         <th class="no-sort">
                             Actions
                         </th>
@@ -54,14 +57,17 @@
                     @foreach($guardians as $guardian)
                         <tr class="hover:bg-blue-50 hover:cursor-pointer" data-url="{{ route('guardian.edit', ['guardian' => $guardian]) }}">                            
                             <td class="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
-                                <h5 class="font-medium text-black dark:text-white">{{ $guardian->last_name }}, {{ $guardian->first_name }}</h5>
-                            </td>
-							<td class="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
-                                <h5 class="font-medium text-black dark:text-white">{{ $guardian->email }}</h5>
-                            </td>
+                                <h5 class="font-medium text-black dark:text-white">{{ $guardian->last_name }}, {{ $guardian->first_name }}<br>{{ $guardian->email }}</h5>
+                            </td>							
 							<td class="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
                                 <h5 class="font-medium text-black dark:text-white">{{ $guardian->phone_number }}</h5>
-                            </td>                                                 
+                            </td>  
+                            <td class="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
+                                <h5 class="font-medium text-black dark:text-white">{{ $guardian->zip_code }}</h5>
+                            </td>  
+                            <td class="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
+                                <h5 class="font-medium text-black dark:text-white">{{ $guardian->active ? 'Yes' : 'No' }}</h5>
+                            </td>                                                   
                             <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                                 <div class="flex items-center space-x-3.5">
                                     <button class="hover:text-primary">

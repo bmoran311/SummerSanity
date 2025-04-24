@@ -43,6 +43,7 @@ Route::get('/plan_calendar/{guardian_id}', 'App\Http\Controllers\CalendarControl
 Route::get('/my-dashboard/', 'App\Http\Controllers\CalendarController@dashboard')->name('dashboard.index');
 
 Route::post('/guardian/login', [AuthController::class, 'loginWithEmail'])->name('guardian.login');
+Route::post('/guardian/register', [AuthController::class, 'loginWithEmail'])->name('guardian.register');
 
 Route::post('/guardian/logout', function (Request $request) {
     Auth::guard('guardian')->logout();
@@ -54,6 +55,18 @@ Route::post('/guardian/logout', function (Request $request) {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/dashboard/form-elements', function () {
+    return view('form-elements');
+})->middleware(['auth', 'verified'])->name('form-elements');
+
+Route::get('/dashboard/form-layout', function () {
+    return view('form-layout');
+})->middleware(['auth', 'verified'])->name('form-layout');
+
+Route::get('/dashboard/tables', function () {
+    return view('tables');
+})->middleware(['auth', 'verified'])->name('tables');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -47,7 +47,7 @@
                         </div>
                     </div>
 
-					<div class="mb-5.5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+					<div class="mb-5.5 grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
 							<x-label>Email</x-label>
 							<x-text-input name="email" type="text" placeholder="Email..." class="text-input" value="{{ old('email', $guardian->email ?? '') }}"/>
@@ -57,6 +57,50 @@
 							<x-label>Phone</x-label>
 							<x-text-input name="phone_number" type="text" placeholder="Phone Number..." class="text-input" value="{{ old('phone_number', $guardian->phone_number ?? '') }}"/>
 							<x-form-error key="phone_number" />
+                        </div>
+                        <div>
+							<x-label>Zip Code</x-label>
+							<x-text-input name="zip_code" type="text" placeholder="Zip Code..." class="text-input" value="{{ old('zip_code', $guardian->zip_code ?? '') }}"/>
+							<x-form-error key="zip_code" />
+                        </div>
+                    </div>
+
+                    <div class="mb-5.5 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <x-label>Preferred Communication Method</x-label>
+                            
+                            <div class="flex items-center gap-4 mt-2">
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="communication_preference" value="Email"
+                                        {{ old('communication_preference', $guardian->communication_preference ?? '') === 'Email' ? 'checked' : '' }}>
+                                    <span class="ml-2">Email</span>
+                                </label>
+
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="communication_preference" value="Text"
+                                        {{ old('communication_preference', $guardian->communication_preference ?? '') === 'Text' ? 'checked' : '' }}>
+                                    <span class="ml-2">Text</span>
+                                </label>
+                            </div>
+
+                            <x-form-error key="communication_preference" />
+                        </div>
+                        <div>
+                            <x-label>Active?</x-label>
+                            
+                            <div class="flex items-center gap-4 mt-2">
+                                <label class="inline-flex items-center">                               
+                                    <input type="radio" name="active" value="1" {{ (int) old('active', $guardian->active ?? 1) === 1 ? 'checked' : '' }}>
+                                    <span class="ml-2">Yes</span>
+                                </label>
+
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="active" value="0" {{ (int) old('active', $guardian->active ?? 1) === 0 ? 'checked' : '' }}>
+                                    <span class="ml-2">No</span>
+                                </label>
+                            </div>
+
+                            <x-form-error key="active" />
                         </div>
                     </div>
                                                     
