@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="/style.css" />
         <link rel="stylesheet" href="/tabulator.css" />
         <title>Dashboard - Summer Sanity</title>
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body>
         <div class="dashboard">
@@ -25,7 +26,7 @@
             <div class="filter__friends">
 				@foreach($friends_campers as $friends_camper)
 					<label><input type="checkbox" class="friend-child-checkbox" id="friend{{ $loop->iteration }}" checked />{{ $friends_camper->first_name }} {{ $friends_camper->last_name }}</label>
-				@endforeach		                
+				@endforeach
             </div>
             <div id="summer-calendar"></div>
         </div>
@@ -57,7 +58,7 @@
 			</div>
 		</x-modal>
 
-        <script src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>		
+        <script src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
 		<script>
 			const BookingType = {
 				TENTATIVE: "tentative",
@@ -79,31 +80,32 @@
 				NIGHT_CAMP: "Overnight",
 				FULL_DAY_CAMP: "Full Day",
 				BABYSITTER: "Babysitter",
-			};								
+			};
 
 			const tableData = [
 				@foreach($weeks as $week)
 					{
 						week: new Date("{{ \Carbon\Carbon::parse($week->start_date)->format('Y-m-d\TH:i:s') }}"),
+                        week_id: '{{ $week->id }}',
 						@foreach($campers as $camper)
-							myKid{{ $loop->iteration }}: 
+							myKid{{ $loop->iteration }}:
 							@if(empty($camp_enrollment_array[$camper->id]["AM"][$week->week_number]))
 								null,
 							@else
 								{
-									eventName: "{{ $camp_enrollment_array[$camper->id]["AM"][$week->week_number] }}",	
+									eventName: "{{ $camp_enrollment_array[$camper->id]["AM"][$week->week_number] }}",
 									@if($camp_enrollment_type_array[$camper->id]["AM"][$week->week_number] == "Morning Camp")
-										eventType: EventType.DAY_CAMP_AM,			
+										eventType: EventType.DAY_CAMP_AM,
 									@elseif($camp_enrollment_type_array[$camper->id]["AM"][$week->week_number] == "Afternoon Camp")
 										eventType: EventType.DAY_CAMP_PM,
 									@elseif($camp_enrollment_type_array[$camper->id]["AM"][$week->week_number] == "Day Camp")
 										eventType: EventType.DAY_CAMP_PM,
 									@elseif($camp_enrollment_type_array[$camper->id]["AM"][$week->week_number] == "Overnight Camp")
-										eventType: EventType.NIGHT_CAMP,							
+										eventType: EventType.NIGHT_CAMP,
 									@elseif($camp_enrollment_type_array[$camper->id]["AM"][$week->week_number] == "Vacation")
-										eventType: EventType.VACATION,										
+										eventType: EventType.VACATION,
 									@else
-										eventType: EventType.BABYSITTER,										
+										eventType: EventType.BABYSITTER,
 									@endif
 									eventTypeLabel: "{{ $camp_enrollment_type_array[$camper->id]["AM"][$week->week_number]}}",
 									bookingType: {{ ($camp_enrollment_color_array[$camper->id]["AM"][$week->week_number] ?? '') === 'yellow' ? 'BookingType.CONFIRMED' : 'BookingType.TENTATIVE' }},
@@ -112,35 +114,35 @@
 							@endif
 						@endforeach
 						@foreach($friends_campers as $friends_camper)
-							friend{{ $loop->iteration }}: 
+							friend{{ $loop->iteration }}:
 							@if(empty($camp_enrollment_array[$friends_camper->id]["AM"][$week->week_number]))
 								null,
 							@else
 								{
-									eventName: "{{ $camp_enrollment_array[$friends_camper->id]["AM"][$week->week_number] }}",									
+									eventName: "{{ $camp_enrollment_array[$friends_camper->id]["AM"][$week->week_number] }}",
 									@if($camp_enrollment_type_array[$camper->id]["AM"][$week->week_number] == "Morning Camp")
-										eventType: EventType.DAY_CAMP_AM,			
+										eventType: EventType.DAY_CAMP_AM,
 									@elseif($camp_enrollment_type_array[$camper->id]["AM"][$week->week_number] == "Afternoon Camp")
 										eventType: EventType.DAY_CAMP_PM,
 									@elseif($camp_enrollment_type_array[$camper->id]["AM"][$week->week_number] == "Day Camp")
 										eventType: EventType.DAY_CAMP_PM,
 									@elseif($camp_enrollment_type_array[$camper->id]["AM"][$week->week_number] == "Overnight Camp")
-										eventType: EventType.NIGHT_CAMP,							
+										eventType: EventType.NIGHT_CAMP,
 									@elseif($camp_enrollment_type_array[$camper->id]["AM"][$week->week_number] == "Vacation")
-										eventType: EventType.VACATION,										
+										eventType: EventType.VACATION,
 									@else
-										eventType: EventType.BABYSITTER,										
+										eventType: EventType.BABYSITTER,
 									@endif
 									eventTypeLabel: "{{ $camp_enrollment_type_array[$camper->id]["AM"][$week->week_number] }}",
-									bookingType: {{ ($camp_enrollment_color_array[$friends_camper->id]["AM"][$week->week_number] ?? '') === 'yellow' ? 'BookingType.CONFIRMED' : 'BookingType.TENTATIVE' }},									
+									bookingType: {{ ($camp_enrollment_color_array[$friends_camper->id]["AM"][$week->week_number] ?? '') === 'yellow' ? 'BookingType.CONFIRMED' : 'BookingType.TENTATIVE' }},
 								},
 							@endif
-						@endforeach															
+						@endforeach
 					},
-				@endforeach						
+				@endforeach
 			];
 
-		
+
 			const loginButton = document.getElementById("btn--login");
 
 			loginButton?.addEventListener("click", (e) => {
@@ -189,6 +191,7 @@
 						{
 							title: "{{ $camper->first_name }}",
 							field: "myKid{{ $loop->iteration }}",
+                            id: "{{ $camper->id }}",
 							sorter: "string",
 							cellClick: handleCellClick,
 							formatter: function (cell) {
@@ -196,13 +199,13 @@
 								return data ? generateEventCard(data) : "";
 							},
 						},
-					@endforeach					
+					@endforeach
 				];
 
 				const friendsChild = [
 					@foreach($friends_campers as $friends_camper)
 						{ name: "{{ $friends_camper->first_name }} {{ $friends_camper->last_name }}", elementId: "friend{{ $loop->iteration }}" },
-					@endforeach																	
+					@endforeach
 				];
 
 				friendsChild.forEach(({ name, elementId }) => {
@@ -221,32 +224,39 @@
 
 				return columns;
 			};
-		
+
 			function handleCellClick(e, cell) {
 
-				//alert("TEST TEST TEST ");
 
 				const id = cell.getRow().getData().id; // Get the ID from the row data
 				const cellValue = cell.getValue();
 
 				if(cellValue) {
-					const column = cell.getColumn()
-					let week_num = column.getField().replace('week', '');
-					let url = cell.getRow().getData()[`week${week_num}_link`];
+                    alert('clicked on an filled cell');
+					// const column = cell.getColumn()
+					// let week_num = column.getField().replace('week', '');
+					// let url = cell.getRow().getData()[`week${week_num}_link`];
 
-					return window.location.href = url;
+					// return window.location.href = url;
 				}else{
+                    // alert('clicked on an empty cell');
 					//create new enrollment
-					const column = cell.getColumn()
-					const time_slot = document.getElementById('modal_time_slot');
+					// const column = cell.getColumn()
+					// const time_slot = document.getElementById('modal_time_slot');
 					const camper_id = document.getElementById('modal_camper_id');
 					const week_id = document.getElementById('modal_week_id');
 
-					let week_num = column.getField().replace('week', '');
+					// let week_num = column.getField().replace('week', '');
 
-					time_slot.value = cell.getRow().getData().timeslot;
-					camper_id.value = cell.getRow().getData().id;
-					week_id.value = week_num;
+					// time_slot.value = cell.getRow().getData().timeslot;
+					// camper_id.value = cell.getRow().getData().id;
+					// week_id.value = week_num;
+
+                    var column = cell.getColumn();
+                    camper_id.value = column.getDefinition().id;
+                    week_id.value = cell.getRow().getData().week_id;
+
+                    // console.log(cell.getRow().getData().week_id)
 
 
 					window.dispatchEvent(new CustomEvent('open-modal', {detail: 'enrollment_create'}));
@@ -254,7 +264,7 @@
 					return;
 				}
 
-			}        
+			}
 
 
 			// Create Tabulator instance
@@ -269,6 +279,6 @@
 					table.setColumns(getColumns());
 				});
 			});
-		</script>	
+		</script>
     </body>
 </html>
