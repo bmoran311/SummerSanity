@@ -58,6 +58,7 @@
 			</div>
 		</x-modal>
 
+
         <script src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
 		<script>
 			const BookingType = {
@@ -227,37 +228,21 @@
 
 			function handleCellClick(e, cell) {
 
-
-				const id = cell.getRow().getData().id; // Get the ID from the row data
-				const cellValue = cell.getValue();
+                const cellValue = cell.getValue();
 
 				if(cellValue) {
-                    alert('clicked on an filled cell');
-					// const column = cell.getColumn()
-					// let week_num = column.getField().replace('week', '');
-					// let url = cell.getRow().getData()[`week${week_num}_link`];
+                    alert('need to get enrollment id');
+                    const data = cell.getRow().getData(); // Get the ID from the row data
 
-					// return window.location.href = url;
+                    console.log(data, cellValue)
 				}else{
-                    // alert('clicked on an empty cell');
-					//create new enrollment
-					// const column = cell.getColumn()
-					// const time_slot = document.getElementById('modal_time_slot');
+
 					const camper_id = document.getElementById('modal_camper_id');
 					const week_id = document.getElementById('modal_week_id');
-
-					// let week_num = column.getField().replace('week', '');
-
-					// time_slot.value = cell.getRow().getData().timeslot;
-					// camper_id.value = cell.getRow().getData().id;
-					// week_id.value = week_num;
 
                     var column = cell.getColumn();
                     camper_id.value = column.getDefinition().id;
                     week_id.value = cell.getRow().getData().week_id;
-
-                    // console.log(cell.getRow().getData().week_id)
-
 
 					window.dispatchEvent(new CustomEvent('open-modal', {detail: 'enrollment_create'}));
 
