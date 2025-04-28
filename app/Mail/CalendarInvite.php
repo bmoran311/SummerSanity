@@ -19,13 +19,20 @@ class CalendarInvite extends Mailable
         $this->screenshotPath = $screenshotPath;
     }
 
-    public function build()
+    public function build_old()
     {
         return $this->subject("Let’s Coordinate Summer Plans – Join Me on Summer Sanity!")
-                    ->view('emails.calendar_invite')
+                    ->view('emails.calendar_invite_screenshot')
                     ->attach(storage_path("app/public/" . $this->screenshotPath), [
                         'as' => 'camp_calendar.png',
                         'mime' => 'image/png',
                     ]);
+    }
+
+    public function build()
+    {
+        return $this->subject("Let’s Coordinate Summer Plans – Join Me on Summer Sanity!")
+                    ->view('emails.calendar_invite')
+                    ->attach();
     }
 }

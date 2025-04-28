@@ -8,7 +8,7 @@
                 <h4>Create an Account</h4>
                 <p>Send an invite to friends and family to share schedules and plan activities.</p>
             </div>
-            <form id="loginForm" class="register__form" method="POST" action="/guardian/register">                
+            <form id="registerForm" class="register__form" method="POST" action="/guardian/register">                
                 @csrf
                 <div class="name">
                     <div class="input__field">
@@ -46,45 +46,39 @@
                     &nbsp;&nbsp;
                     <label><input type="radio" name="communication_preference" value="text" /> Text</label>
                 </div>
-                <p class="submission-text">By Submitting, you are agreeing to the terms of services and privacy policy.</p>
+                <p class="submission-text">By Submitting, you are agreeing to the terms of services and privacy policy.</p>            
+                <button class="btn btn--sm">Get Started</button>
             </form>
-
-            <button class="btn btn--sm">Get Started</button>
         </div>
+    </div>    
+</section> 
+
+<section id="cta">
+    <div id="login" class="container">         
+        <h2>Please login and start planning</h2>
+        <div class="card register-card">
+            <div class="gradient"></div>
+            <div class="header">
+                <img src="/assets/icons/register.svg" alt="Register Icon" />
+                <h4>Login</h4>  
+                <p>Please enter your Email and Password to login</p>             
+            </div>               
+           
+            <form id="loginForm" class="login__form" method="POST" action="/guardian/login">                
+                @csrf
+                <div class="input__field" style="display: flex; align-items: center;">
+                    <img src="/assets/icons/email.svg" alt="Profile icon" style="width: 20px; height: 20px; margin-right: 8px; pointer-events: none;">
+                    <input type="email" placeholder="Email" name="email" class="input__email" style="flex: 1;">
+                </div>
+                <br>                  
+                <div class="input__field" style="display: flex; align-items: center;">
+                    <img src="/assets/icons/password.svg" alt="Profile icon" style="width: 20px; height: 20px; margin-right: 8px; pointer-events: none;">
+                    <input type="password" placeholder="Password" name="password" class="input__first" style="flex: 1;">
+                </div>
+                                               
+                <br>
+                <button type="submit" class="btn btn--sm">Login</button>
+            </form>
+        </div>     
     </div>
-
-    <br><br>
-    <div class="container">
-        <section id="login">
-            <h2>Please login and start planning</h2>
-            <div class="card register-card">
-                <div class="gradient"></div>
-                <div class="header">
-                    <img src="/assets/icons/register.svg" alt="Register Icon" />
-                    <h4>Login</h4>               
-                </div>               
-
-                @if ($errors->any())
-                    <div class="alert">
-                        @foreach ($errors->all() as $error)
-                            <p>{{ $error }}</p>
-                        @endforeach
-                    </div>
-                @endif
-                <form id="loginForm" class="login__form" method="POST" action="/guardian/login">                
-                    @csrf
-                    <div class="input__field">
-                        <img src="/assets/icons/email.svg" alt="Profile icon" />
-                        <input type="email" placeholder="Email" name="email" class="input__email" />
-                    </div>
-                    <div class="input__field">
-                        <img src="/assets/icons/password.svg" alt="Profile icon" />
-                        <input type="password" placeholder="Password" name="password" class="input__first" />
-                    </div>                                                
-
-                    <button type="submit" class="btn btn--sm">Login</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</section>    
+</section> 

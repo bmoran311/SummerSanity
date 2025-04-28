@@ -41,6 +41,7 @@ Route::get('/', function () {
 
 Route::get('/plan_calendar/{guardian_id}', 'App\Http\Controllers\CalendarController@index')->name('plan_calendar.index');
 Route::get('/my-dashboard/', 'App\Http\Controllers\CalendarController@dashboard')->name('dashboard.index');
+Route::post('/invite/friends', 'App\Http\Controllers\CalendarController@sendInvites')->name('invite.friends');
 
 Route::post('/guardian/login', [AuthController::class, 'loginWithEmail'])->name('guardian.login');
 Route::post('/guardian/register', [AuthController::class, 'loginWithEmail'])->name('guardian.register');

@@ -38,6 +38,7 @@ class CalendarController extends Controller
         $friends_campers = Camper::whereIn('guardian_id', $friend_guardian_ids)->orderBy('last_name')->get();
 
         $camp_enrollment_array = [];
+        $camp_enrollment_group_id_array = [];
         $camp_enrollment_type_array = [];
         $camp_enrollment_id_array = [];
         $camp_enrollment_color_array = [];        
@@ -72,6 +73,7 @@ class CalendarController extends Controller
                         ->first();
 
                     $camp_enrollment_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->camp_name : "";
+                    $camp_enrollment_group_id_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->group_id : "";
                     $camp_enrollment_id_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->id : "";   
                     $camp_enrollment_type_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->type : "";                 
                     $camp_enrollment_color_array[$camper->id][$time_slot][$week->week_number] = 
@@ -93,6 +95,7 @@ class CalendarController extends Controller
                         ->first();
 
                     $camp_enrollment_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->camp_name : "";
+                    $camp_enrollment_group_id_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->group_id : "";
                     $camp_enrollment_id_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->id : "";  
                     $camp_enrollment_type_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->type : "";                      
                     $camp_enrollment_color_array[$camper->id][$time_slot][$week->week_number] = 
@@ -101,18 +104,37 @@ class CalendarController extends Controller
                 }
             }
         }
+
+        $guardianId = Auth::guard('guardian')->id();
+
+        $friends = Guardian::whereIn('id', function($query) use ($guardianId) {
+            $query->select(DB::raw('CASE 
+                WHEN guardian_id1 = '.$guardianId.' THEN guardian_id2
+                WHEN guardian_id2 = '.$guardianId.' THEN guardian_id1
+            END'))
+            ->from('friends')
+            ->whereRaw('guardian_id1 = '.$guardianId.' OR guardian_id2 = '.$guardianId);
+        })->select('first_name', 'last_name', 'email')->get();        
         
-        return view('dashboard.index', compact('campers', 'camp_names', 'time_slots', 'guardian', 'friends_campers', 'weeks', 'camp_enrollment_id_array', 'camp_enrollment_type_array', 'camp_enrollment_array', 'camp_enrollment_color_array'));
+        return view('dashboard.index', compact( 'campers', 
+                                                'camp_names', 
+                                                'time_slots', 
+                                                'guardian', 
+                                                'friends', 
+                                                'friends_campers', 
+                                                'weeks', 
+                                                'camp_enrollment_id_array', 
+                                                'camp_enrollment_type_array', 
+                                                'camp_enrollment_array', 
+                                                'camp_enrollment_group_id_array', 
+                                                'camp_enrollment_color_array')
+                                            );
     }
     
-    public function showInvitePage(Request $request)
-    {
-        $screenshotPath = $request->query('screenshot');
-        return view('admin.calendar.invite_friends', compact('screenshotPath'));
-    }
-
     public function sendInvites(Request $request)
     {       
+        dd($request->all());
+
         $request->validate([
             'emails' => 'required|string',
             'screenshot' => 'required|string'

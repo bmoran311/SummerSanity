@@ -32,29 +32,27 @@
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h2>Let’s Coordinate Summer Plans – Join Me on Summer Sanity!</h2>
-        
-        <p>Hey (Friend),</p>
-        
-        <p>I just set up my summer schedule on <strong>Summer Sanity</strong>, and I’d love for you to join me! This app makes it super easy to organize and share summer camp schedules with friends, so we can coordinate plans and make sure our kids get to spend time together.</p>
-        
-        <p><strong>Here’s a snapshot of our tentative summer schedule:</strong></p>
-        <img src="{{ $message->embed(storage_path('app/public/' . $screenshotPath)) }}" class="screenshot" alt="Camp Calendar">
-        
-        <p>With <strong>Summer Sanity</strong>, you can:</p>
-        <ul style="text-align: left; display: inline-block;">
-            <li>Plan and manage summer camps and activities in one place</li>
-            <li>See which friends are attending the same camps</li>
-            <li>Share and compare schedules with ease</li>
-        </ul>
-        
-        <p>Click below to sign up and start planning your summer with me!</p>
-        <a href="http://www.summersanity.com/register" class="btn">Join Summer Sanity</a>
-        
-        <p>Let’s make this summer stress-free and fun for the kids!</p>
-        <p><strong>See you in the app,<br>Brian Moran</strong></p>
+<body>  
+    <h3 class="subject">Let’s Coordinate Summer Plans - Join Me on Summer Sanity!</h3>
+    <div class="description">
+        <p>Hello <span class="bold">[friend-name]</span>,</p>
+        <p>
+            I just joined this awesome parenting site called <span class="bold">Summer Sanity</span> to help plan my kid's summer schedule, and I think
+            you'll love it too!
+        </p>
+        <p>It's completely free and makes it easy for parents like us to organize summer schedules and share plans with friends.</p>
+        <p>
+            Here’s the best part: if we connect our calendars, we can swap ideas for camps and activities and make sure the kids get plenty of time together
+            this summer—it’s a win-win!
+        </p>
+        <p class="bold">Take a look at how easy it is to use:</p>
+        <img src="http://darling-aqua-orchid.viviotech.us/assets/calendar.png" alt="Summer Calendar" />
+        <p class="bold">Click below to join me and start planning:</p>
+        <button class="btn btn--sm">Join Summer Sanity!</button>
+        <div class="email-footer">
+            <p>Can't wait to see what we come up with!</p>
+            <p class="bold">Megan Petrik</p>
+        </div>
     </div>
 </body>
 </html>

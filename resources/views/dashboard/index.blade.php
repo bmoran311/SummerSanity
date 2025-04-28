@@ -21,7 +21,14 @@
                 <div class="logo">
                     <a href="/"><img src="/assets/logo.svg" alt="Summer Sanity Logo" /></a>
                 </div>
-                <div></div>
+				<ul class="nav__links">
+					<li class="nav__link"><a href="/dashboard.html">Dashboard</a></li>
+					<li id="invitation-link" class="nav__link"><a href="#">Invitation</a></li>
+				</ul>
+				<div class="profile">
+					<img src="assets/megan-p-profile-pic.jpg" alt="User Profile Picture" />
+					<span>Megan Petrik</span>
+				</div>                 
             </nav>
             <div class="filter__friends">
 				@foreach($friends_campers as $friends_camper)
@@ -29,6 +36,86 @@
 				@endforeach
             </div>
             <div id="summer-calendar"></div>
+        </div>
+
+		<div id="invitation-modal-overlay" class="modal-overlay hide">
+            <div class="card modal invitation-modal">
+                <div class="gradient"></div>
+                <div class="close-btn"><img src="assets/icons/close.svg" /></div>
+                <div class="header">
+                    <img src="assets/icons/register.svg" alt="Register Icon" />
+                    <h4>Invite & Simplify Summer Together!</h4>
+                    <p>Send an invite to friends and family to share schedules and plan activities.</p>
+                </div>
+                <div class="modal__main">                    
+                    <div class="left">						
+						<form id="invite-email-form" method="POST" action="{{ route('invite.friends') }}">
+							@csrf
+                            <label class="field__label" for="emails">Enter friends’ emails (comma-separated)</label>
+                            <div class="input__field">
+                                <img src="assets/icons/email.svg" alt="Profile icon" />
+                                <input type="text" placeholder="friend1@example.com, friend2@example.com" name="emails" id="emails" class="input__email" />
+                                <button type="submit" class="btn btn--sm">Send</button>
+                            </div>
+                        </form>
+                        <div class="line-separator"></div>
+                        <!-- Invite History -->
+                        <div class="invite-history-container">
+                            <div class="field__label">Invite History</div>
+                            <div class="invites-list">                                
+                                @foreach($friends as $friend)
+									<div class="invite-item">
+										<div class="invite-item__main">
+											<span class="name">{{ $friend->first_name }} {{ $friend->last_name }} </span>
+											<span class="email">{{ $friend->email }}</span>
+										</div>
+										<div class="state">Accepted</div>
+									</div>
+                                @endforeach                                
+                                <div class="invite-item">
+                                    <div class="invite-item__main">
+                                        <span class="name">Tyler Murphy</span>
+                                        <span class="email">typermurphy@gmail.com</span>
+                                    </div>
+                                    <div class="resend-btn">
+                                        <img src="assets/icons/resend.svg" alt="Resent Invite Icon" />
+                                    </div>
+                                    <div class="state state--pending">Pending</div>
+                                </div>                                
+                            </div>
+                        </div>                        
+                    </div>                    
+                    <!-- Modal Right Content -->
+                    <div class="right">
+                        <div>
+                            <div class="field__label">Email Preview</div>
+                        </div>
+                        <div class="email-preview">
+                            <h3 class="subject">Let’s Coordinate Summer Plans - Join Me on Summer Sanity!</h3>
+                            <div class="description">
+                                <p>Hello <span class="bold">[friend-name]</span>,</p>
+                                <p>
+                                    I just joined this awesome parenting site called <span class="bold">Summer Sanity</span> to help plan my kid's summer schedule, and I think
+                                    you'll love it too!
+                                </p>
+                                <p>It's completely free and makes it easy for parents like us to organize summer schedules and share plans with friends.</p>
+                                <p>
+                                    Here’s the best part: if we connect our calendars, we can swap ideas for camps and activities and make sure the kids get plenty of time together
+                                    this summer—it’s a win-win!
+                                </p>
+                                <p class="bold">Take a look at how easy it is to use:</p>
+                                <img src="assets/calendar.png" alt="Summer Calendar" />
+                                <p class="bold">Click below to join me and start planning:</p>
+                                <button class="btn btn--sm">Join Summer Sanity!</button>
+                                <div class="email-footer">
+                                    <p>Can't wait to see what we come up with!</p>
+                                    <p class="bold">Megan Petrik</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>                
+            </div>
         </div>
 
 		<x-modal name="enrollment_create" maxWidth="4xl">
@@ -89,54 +176,106 @@
 						week: new Date("{{ \Carbon\Carbon::parse($week->start_date)->format('Y-m-d\TH:i:s') }}"),
                         week_id: '{{ $week->id }}',
 						@foreach($campers as $camper)
-							myKid{{ $loop->iteration }}:
-							@if(empty($camp_enrollment_array[$camper->id]["AM"][$week->week_number]))
+							myKid{{ $loop->iteration }}: 
+							@php
+								$enrollments = [];
+							@endphp
+
+							@foreach($time_slots as $time_slot)
+								@php
+									$eventName = $camp_enrollment_array[$camper->id][$time_slot][$week->week_number] ?? null;
+									$eventType = $camp_enrollment_type_array[$camper->id][$time_slot][$week->week_number] ?? null;
+									$bookingColor = $camp_enrollment_color_array[$camper->id][$time_slot][$week->week_number] ?? null;
+								@endphp
+
+								@if($eventName)
+									@php
+										// Only add if this eventName hasn't been added yet
+										if (!isset($enrollments[$eventName])) {
+											$enrollments[$eventName] = [
+												'eventType' => $eventType,
+												'bookingColor' => $bookingColor,
+											];
+										}
+									@endphp
+								@endif
+							@endforeach
+
+							@if(empty($enrollments))
 								null,
 							@else
-								{
-									eventName: "{{ $camp_enrollment_array[$camper->id]["AM"][$week->week_number] }}",
-									@if($camp_enrollment_type_array[$camper->id]["AM"][$week->week_number] == "Morning Camp")
-										eventType: EventType.DAY_CAMP_AM,
-									@elseif($camp_enrollment_type_array[$camper->id]["AM"][$week->week_number] == "Afternoon Camp")
-										eventType: EventType.DAY_CAMP_PM,
-									@elseif($camp_enrollment_type_array[$camper->id]["AM"][$week->week_number] == "Day Camp")
-										eventType: EventType.DAY_CAMP_PM,
-									@elseif($camp_enrollment_type_array[$camper->id]["AM"][$week->week_number] == "Overnight Camp")
-										eventType: EventType.NIGHT_CAMP,
-									@elseif($camp_enrollment_type_array[$camper->id]["AM"][$week->week_number] == "Vacation")
-										eventType: EventType.VACATION,
-									@else
-										eventType: EventType.BABYSITTER,
-									@endif
-									eventTypeLabel: "{{ $camp_enrollment_type_array[$camper->id]["AM"][$week->week_number]}}",
-									bookingType: {{ ($camp_enrollment_color_array[$camper->id]["AM"][$week->week_number] ?? '') === 'yellow' ? 'BookingType.CONFIRMED' : 'BookingType.TENTATIVE' }},
-									userChild: true,
-								},
+								[
+									@foreach($enrollments as $name => $details)
+										{
+											eventName: "{{ $name }}",
+											@if($details['eventType'] == "Morning Camp")
+												eventType: EventType.DAY_CAMP_AM,
+											@elseif($details['eventType'] == "Afternoon Camp" || $details['eventType'] == "Day Camp")
+												eventType: EventType.DAY_CAMP_PM,
+											@elseif($details['eventType'] == "Overnight Camp")
+												eventType: EventType.NIGHT_CAMP,
+											@elseif($details['eventType'] == "Vacation")
+												eventType: EventType.VACATION,
+											@else
+												eventType: EventType.BABYSITTER,
+											@endif
+											eventTypeLabel: "{{ $details['eventType'] }}",
+											bookingType: {{ ($details['bookingColor'] ?? '') === 'yellow' ? 'BookingType.CONFIRMED' : 'BookingType.TENTATIVE' }},
+											userChild: true,
+										},
+									@endforeach
+								],
 							@endif
 						@endforeach
+
 						@foreach($friends_campers as $friends_camper)
-							friend{{ $loop->iteration }}:
-							@if(empty($camp_enrollment_array[$friends_camper->id]["AM"][$week->week_number]))
+							friend{{ $loop->iteration }}: 
+							@php
+								$enrollments = [];
+							@endphp
+
+							@foreach($time_slots as $time_slot)
+								@php
+									$eventName = $camp_enrollment_array[$friends_camper->id][$time_slot][$week->week_number] ?? null;
+									$eventType = $camp_enrollment_type_array[$friends_camper->id][$time_slot][$week->week_number] ?? null;
+									$bookingColor = $camp_enrollment_color_array[$friends_camper->id][$time_slot][$week->week_number] ?? null;
+								@endphp
+
+								@if($eventName)
+									@php
+										if (!isset($enrollments[$eventName])) {
+											$enrollments[$eventName] = [
+												'eventType' => $eventType,
+												'bookingColor' => $bookingColor,
+											];
+										}
+									@endphp
+								@endif
+							@endforeach
+
+							@if(empty($enrollments))
 								null,
 							@else
-								{
-									eventName: "{{ $camp_enrollment_array[$friends_camper->id]["AM"][$week->week_number] }}",
-									@if($camp_enrollment_type_array[$camper->id]["AM"][$week->week_number] == "Morning Camp")
-										eventType: EventType.DAY_CAMP_AM,
-									@elseif($camp_enrollment_type_array[$camper->id]["AM"][$week->week_number] == "Afternoon Camp")
-										eventType: EventType.DAY_CAMP_PM,
-									@elseif($camp_enrollment_type_array[$camper->id]["AM"][$week->week_number] == "Day Camp")
-										eventType: EventType.DAY_CAMP_PM,
-									@elseif($camp_enrollment_type_array[$camper->id]["AM"][$week->week_number] == "Overnight Camp")
-										eventType: EventType.NIGHT_CAMP,
-									@elseif($camp_enrollment_type_array[$camper->id]["AM"][$week->week_number] == "Vacation")
-										eventType: EventType.VACATION,
-									@else
-										eventType: EventType.BABYSITTER,
-									@endif
-									eventTypeLabel: "{{ $camp_enrollment_type_array[$camper->id]["AM"][$week->week_number] }}",
-									bookingType: {{ ($camp_enrollment_color_array[$friends_camper->id]["AM"][$week->week_number] ?? '') === 'yellow' ? 'BookingType.CONFIRMED' : 'BookingType.TENTATIVE' }},
-								},
+								[
+									@foreach($enrollments as $name => $details)
+										{
+											eventName: "{{ $name }}",
+											@if($details['eventType'] == "Morning Camp")
+												eventType: EventType.DAY_CAMP_AM,
+											@elseif($details['eventType'] == "Afternoon Camp" || $details['eventType'] == "Day Camp")
+												eventType: EventType.DAY_CAMP_PM,
+											@elseif($details['eventType'] == "Overnight Camp")
+												eventType: EventType.NIGHT_CAMP,
+											@elseif($details['eventType'] == "Vacation")
+												eventType: EventType.VACATION,
+											@else
+												eventType: EventType.BABYSITTER,
+											@endif
+											eventTypeLabel: "{{ $details['eventType'] }}",
+											bookingType: {{ ($details['bookingColor'] ?? '') === 'yellow' ? 'BookingType.CONFIRMED' : 'BookingType.TENTATIVE' }},
+										},
+									@endforeach
+								],
 							@endif
 						@endforeach
 					},
@@ -152,12 +291,21 @@
 			});
 
 			const generateEventCard = (data) => {
+				if (Array.isArray(data)) {
+					// Multiple plans in the same cell
+					return data.map(generateEventCard).join("");
+				}
+
 				const isUserChild = data.userChild;
 				const bookingClass = isUserChild ? "user-child " + data.bookingType : "";
 				const bookingTypeDiv = !isUserChild ? '<div class="booking-type ' + data.bookingType + '"></div>' : "";
-				const iconName = !isUserChild && data.eventType === EventType.DAY_CAMP_AM
-					? data.eventType + "-yellow"
-					: data.eventType;
+
+				let iconName = data.eventType || "default";
+
+				if (!isUserChild && iconName === "daycamp" && data.eventTypeLabel === "Morning Camp") {
+					iconName = "daycamp-yellow";
+				}
+
 				const eventTypeLabel = data.eventTypeLabel
 					? '<span class="event-type">' + data.eventTypeLabel + '</span>'
 					: "";
@@ -173,6 +321,7 @@
 					'</div>'
 				);
 			};
+
 
 			const getColumns = () => {
 				const columns = [
@@ -192,7 +341,7 @@
 						{
 							title: "{{ $camper->first_name }}",
 							field: "myKid{{ $loop->iteration }}",
-                            id: "{{ $camper->id }}",
+                            //id: "{{ $camper->id }}",
 							sorter: "string",
 							cellClick: handleCellClick,
 							formatter: function (cell) {
@@ -263,6 +412,42 @@
 				checkbox.addEventListener("change", () => {
 					table.setColumns(getColumns());
 				});
+			});
+			
+			// Invitation Modal
+			const invitaitonLink = document.getElementById("invitation-link");
+			const invitationModalOverlay = document.getElementById("invitation-modal-overlay");
+			const modalCloseBtn = document.querySelector(".close-btn");
+			const inviteEmailForm = document.getElementById("invite-email-form");
+
+			const hideModal = () => {
+				invitationModalOverlay.classList.add("hide");
+			};
+
+			const showModal = () => {
+				invitationModalOverlay.classList.remove("hide");
+			};
+
+			invitaitonLink.addEventListener("click", showModal);
+
+			modalCloseBtn.addEventListener("click", hideModal);
+
+			invitationModalOverlay.addEventListener("click", (e) => {
+				const targetEl = e.target;
+
+				if (!targetEl.classList.contains("modal-overlay")) return;
+
+				hideModal();
+			});
+
+			document.onkeyup = (e) => {
+				if (e.key !== "Escape" && !invitationModalOverlay.classList.contains("hide")) return;
+
+				hideModal();
+			};
+
+			inviteEmailForm.addEventListener("submit", (e) => {
+				e.preventDefault();
 			});
 		</script>
     </body>

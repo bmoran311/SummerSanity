@@ -23,7 +23,7 @@
             </select>
         </div>
         <div class="col-span-2">
-            <label for="camp_name" class="block text-sm font-medium text-gray-700">Camp Name</label>
+            <label for="camp_name" class="block text-sm font-medium text-gray-700">Plan</label>
             <input type="text" name="camp_name" required id="camp_input"
                 class="w-full rounded-md border border-gray-300 p-2"
                 list="camp_name_list"

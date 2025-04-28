@@ -42,7 +42,12 @@ const getColumns = () => {
             sorter: "string",
             formatter: function (cell, formatterParams) {
                 const data = cell.getValue(); // assuming it's an object
-                return data ? generateEventCard(data) : "";
+                return `
+                    <div class="event-card-wrapper">
+                        ${data ? data.map((child) => generateEventCard(child)).join("") : ""}
+                    </div>
+                `;
+                // return data ? generateEventCard(data) : "";
             },
         },
         {
@@ -51,7 +56,12 @@ const getColumns = () => {
             sorter: "string",
             formatter: function (cell, formatterParams) {
                 const data = cell.getValue(); // assuming it's an object
-                return data ? generateEventCard(data) : "";
+                return `
+                    <div class="event-card-wrapper">
+                        ${data ? data.map((child) => generateEventCard(child)).join("") : ""}
+                    </div>
+                `;
+                // return data ? generateEventCard(data) : "";
             },
         },
     ];
@@ -71,12 +81,16 @@ const getColumns = () => {
                 sorter: "string",
                 formatter: function (cell, formatterParams) {
                     const data = cell.getValue(); // assuming it's an object
-                    return data ? generateEventCard(data) : "";
+                    return `
+                    <div class="event-card-wrapper">
+                        ${data ? data.map((child) => generateEventCard(child)).join("") : ""}
+                    </div>
+                `;
+                    // return data ? generateEventCard(data) : "";
                 },
             });
         }
     });
-
     return columns;
 };
 
@@ -91,4 +105,41 @@ document.querySelectorAll(".friend-child-checkbox").forEach((checkbox) => {
     checkbox.addEventListener("change", () => {
         table.setColumns(getColumns());
     });
+});
+
+// Invitation Modal
+
+const invitaitonLink = document.getElementById("invitation-link");
+const invitationModalOverlay = document.getElementById("invitation-modal-overlay");
+const modalCloseBtn = document.querySelector(".close-btn");
+const inviteEmailForm = document.getElementById("invite-email-form");
+
+const hideModal = () => {
+    invitationModalOverlay.classList.add("hide");
+};
+
+const showModal = () => {
+    invitationModalOverlay.classList.remove("hide");
+};
+
+invitaitonLink.addEventListener("click", showModal);
+
+modalCloseBtn.addEventListener("click", hideModal);
+
+invitationModalOverlay.addEventListener("click", (e) => {
+    const targetEl = e.target;
+
+    if (!targetEl.classList.contains("modal-overlay")) return;
+
+    hideModal();
+});
+
+document.onkeyup = (e) => {
+    if (e.key !== "Escape" && !invitationModalOverlay.classList.contains("hide")) return;
+
+    hideModal();
+};
+
+inviteEmailForm.addEventListener("submit", (e) => {
+    e.preventDefault();
 });
