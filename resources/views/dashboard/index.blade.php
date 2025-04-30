@@ -446,9 +446,9 @@
 				hideModal();
 			};
 
-			inviteEmailForm.addEventListener("submit", (e) => {
-				e.preventDefault();
-			});
+			//inviteEmailForm.addEventListener("submit", (e) => {
+			//	e.preventDefault();
+			//});
 		</script>
     </body>
 </html>

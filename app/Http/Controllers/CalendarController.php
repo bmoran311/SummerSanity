@@ -132,19 +132,16 @@ class CalendarController extends Controller
     }
     
     public function sendInvites(Request $request)
-    {       
-        dd($request->all());
-
+    {               
         $request->validate([
-            'emails' => 'required|string',
-            'screenshot' => 'required|string'
+            'emails' => 'required|string'
         ]);
 
-        $emails = explode(',', $request->emails);
+        $emails = explode(',', $request->emails);        
 
         foreach ($emails as $email) {
             Mail::to(trim($email))->send(new CalendarInvite($request->screenshot));
-        }
+        }       
 
         return back()->with('success', 'Invitations sent successfully!');
     }

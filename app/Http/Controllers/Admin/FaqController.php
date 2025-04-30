@@ -12,7 +12,7 @@ class FaqController extends Controller
 {
     public function index()
     {
-        $faqs = Faq::where('firm_id', session('firm_id'))->orderBy('faq_category_id')->orderBy('created_at')->get();
+        $faqs = Faq::where('firm_id', 1)->orderBy('faq_category_id')->orderBy('created_at')->get();
         return view('admin.faq.list', compact('faqs'));
     }
 
@@ -32,7 +32,7 @@ class FaqController extends Controller
         ]);
 
         $faq = new Faq();
-        $faq->firm_id = session('firm_id');
+        $faq->firm_id = 1;
         $faq->question = $request->input('question');
         $faq->answer = $request->input('answer');
         $faq->faq_category_id = $request->input('faq_category_id');        

@@ -71,6 +71,10 @@ class CampEnrollmentController extends Controller
                         'time_slot' => $timeSlot,
                         'booked' => $request->input('booked'),
                         'type' => $request->input('type'),
+                        'start_day' => $request->input('start_day'),
+                        'end_day' => $request->input('end_day'),
+                        'start_time' => $request->input('start_time'),
+                        'end_time' => $request->input('end_time'),
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
@@ -135,6 +139,10 @@ class CampEnrollmentController extends Controller
                             'time_slot' => $timeSlot,
                             'booked' => $request->input('booked'),
                             'type' => $request->input('type'),
+                            'start_day' => $request->input('start_day'),
+                            'end_day' => $request->input('end_day'),
+                            'start_time' => $request->input('start_time'),
+                            'end_time' => $request->input('end_time'),
                             'created_at' => now(),
                             'updated_at' => now(),
                         ];

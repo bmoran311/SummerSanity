@@ -32,7 +32,6 @@ class CalendarInvite extends Mailable
     public function build()
     {
         return $this->subject("Let’s Coordinate Summer Plans – Join Me on Summer Sanity!")
-                    ->view('emails.calendar_invite')
-                    ->attach();
+                    ->view('emails.calendar_invite');
     }
 }

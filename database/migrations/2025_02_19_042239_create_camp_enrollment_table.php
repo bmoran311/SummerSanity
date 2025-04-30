@@ -17,6 +17,10 @@ return new class extends Migration {
             $table->enum('time_slot', ['AM', 'PM', 'Night']);
             $table->boolean('booked')->default(false);
             $table->string('type');
+            $table->string('start_day')->nullable();
+            $table->string('end_day')->nullable();  
+            $table->time('start_time')->nullable(); 
+            $table->time('end_time')->nullable();   
             $table->timestamps();
         });
     }

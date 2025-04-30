@@ -111,15 +111,7 @@
                     href="{{ route('dashboard') }}"
                     >Dashboard
                   </a>
-                </li>
-                <!---<li>
-                  <a
-                    class="@if(request()->routeIs('camp*') && !request()->routeIs('camper*') && !request()->routeIs('camp_enrollment*') ) !text-white @endif group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white"
-                    href="{{ route('camp.index') }}"
-                    >Camps
-                  </a>
-                </li>
-				--->  
+                </li>                
                 <li>
                   <a
                     class="@if(request()->routeIs('admin_user*')) !text-white @endif group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white"
@@ -141,15 +133,13 @@
                     >Camper
                   </a>
                 </li>
-				<!---
-                <li>
+				<li>
                   <a
-                    class="@if(request()->routeIs('camp_enrollment*')) !text-white @endif group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white"
-                    href="{{ route('camp_enrollment.index') }}"
-                    >Camp Enrollment
+                    class="@if(request()->routeIs('faq*')) !text-white @endif group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white"
+                    href="{{ route('faq.index') }}"
+                    >FAQ
                   </a>
-                </li>
-				--->
+                </li>				
               </ul>
             </div>
             <!-- Dropdown Menu End -->

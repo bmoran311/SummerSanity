@@ -28,6 +28,7 @@ use App\Http\Controllers\Admin\CamperController;
 use App\Http\Controllers\Admin\CampEnrollmentController;
 use App\Http\Controllers\Admin\CalendarController;
 use App\Http\Controllers\Guardian\AuthController;
+use App\Http\Controllers\Site\PageController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -115,6 +116,8 @@ Route::post('/guardian/friends/{guardian_id}', 'App\Http\Controllers\Admin\Guard
 Route::get('/blog_category/order/{direction}/{id}/{currPos}', 'App\Http\Controllers\Admin\BlogCategoryController@sort')->name('orderBlogCategory');
 Route::get('/faq_category/order/{direction}/{id}/{currPos}', 'App\Http\Controllers\Admin\FaqCategoryController@sort')->name('orderFaqCategory');
 Route::get('/resource_category/order/{direction}/{id}/{currPos}', 'App\Http\Controllers\Admin\ResourceCategoryController@sort')->name('orderResourceCategory');
+
+Route::get('/faqs', [PageController::class, 'faqs'])->name('site.faqs');
 
 Route::get('/test-email', function () {
     try {
