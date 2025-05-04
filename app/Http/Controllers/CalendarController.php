@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Guardian, App\Models\Camper, App\Models\Friend, App\Models\Week, App\Models\CampEnrollment;
+use App\Models\Guardian, App\Models\Camper, App\Models\Friend, App\Models\Week, App\Models\CampEnrollment, App\Models\Invitation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use DB;
@@ -114,7 +114,9 @@ class CalendarController extends Controller
             END'))
             ->from('friends')
             ->whereRaw('guardian_id1 = '.$guardianId.' OR guardian_id2 = '.$guardianId);
-        })->select('first_name', 'last_name', 'email')->get();        
+        })->select('first_name', 'last_name', 'email')->get();  
+        
+        $pending_invitations = Invitation::where('guardian_id', Auth::guard('guardian')->id())->where('status', 'pending')->get();
         
         return view('dashboard.index', compact( 'campers', 
                                                 'camp_names', 
@@ -123,6 +125,7 @@ class CalendarController extends Controller
                                                 'friends', 
                                                 'friends_campers', 
                                                 'weeks', 
+                                                'pending_invitations',                                                 
                                                 'camp_enrollment_id_array', 
                                                 'camp_enrollment_type_array', 
                                                 'camp_enrollment_array', 
@@ -137,10 +140,26 @@ class CalendarController extends Controller
             'emails' => 'required|string'
         ]);
 
-        $emails = explode(',', $request->emails);        
+        $emails = explode(',', $request->emails);                
 
-        foreach ($emails as $email) {
-            Mail::to(trim($email))->send(new CalendarInvite($request->screenshot));
+        foreach ($emails as $email) 
+        {
+            $cleanEmail = trim($email);                                   
+            $alreadyInvited = Invitation::where('guardian_id', Auth::guard('guardian')->id())
+                                    ->where('email', $cleanEmail)
+                                    ->exists();
+
+            if (!$alreadyInvited) 
+            {               
+
+                Mail::to($cleanEmail)->send(new CalendarInvite(Auth::guard('guardian')->id(), $cleanEmail));                               
+
+                Invitation::create([
+                    'guardian_id' => Auth::guard('guardian')->id(),
+                    'email' => $cleanEmail,
+                    'status' => 'pending',
+                ]);
+            }
         }       
 
         return back()->with('success', 'Invitations sent successfully!');

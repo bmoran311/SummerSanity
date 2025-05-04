@@ -46,9 +46,9 @@
             this summer—it’s a win-win!
         </p>
         <p class="bold">Take a look at how easy it is to use:</p>
-        <img src="http://darling-aqua-orchid.viviotech.us/assets/calendar.png" alt="Summer Calendar" />
+        <img src="https://staging.summersanity.com/assets/calendar.png" alt="Summer Calendar" />
         <p class="bold">Click below to join me and start planning:</p>
-        <button class="btn btn--sm">Join Summer Sanity!</button>
+        <a href="{{ url('/') }}?inviter_id={{ Auth::guard('guardian')->id() }}&email={{ urlencode($email) }}#cta"><button class="btn btn--sm">Join Summer Sanity!</button></a>
         <div class="email-footer">
             <p>Can't wait to see what we come up with!</p>
             <p class="bold">Megan Petrik</p>

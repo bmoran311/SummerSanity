@@ -1432,11 +1432,11 @@ p {
     overflow: hidden;
     transition: max-height 0.3s ease, padding 0.3s ease;
     padding: 0 15px;
-    color: #000 !important;
+    color: black !important;
   }
   
   .faq-answer.open {
     padding: 15px;
-    max-height: 300px; /* Adjust if needed */
-    color: #000 !important;
+    max-height: 300px; /* Adjust if needed */   
+    color: black !important; 
   }

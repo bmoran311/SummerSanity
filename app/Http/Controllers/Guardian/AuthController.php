@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Guardian;
+use App\Models\Friend;
+use App\Models\Invitation;
 
 class AuthController extends Controller
 {
@@ -30,18 +32,18 @@ class AuthController extends Controller
         ]);
     }
 
-    public function store(Request $request)
-    {       
+    public function registerWithEmail(Request $request)
+    {                              
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|string|max:255',
-            'phone_number' => 'required|string|max:255', 
-            'zip_code' => 'required|string|max:50', 
-            'communication_preference' => 'required|string|max:50', 
-            'password' => 'required|string|max:50|confirm_password',                         
+            'email' => 'required|string|email|max:255|unique:guardian,email',
+            'phone_number' => 'required|string|max:255',
+            'zip_code' => 'required|string|max:50',
+            'communication_preference' => 'required|string|max:50',
+            'password' => 'required|string|confirmed|max:50',
         ]);
-
+        
         $guardian = new Guardian();
         $guardian->first_name = $request->input('first_name');
         $guardian->last_name = $request->input('last_name');
@@ -50,10 +52,27 @@ class AuthController extends Controller
         $guardian->password = Hash::make($request->input('password'));
         $guardian->zip_code = $request->input('zip_code');
         $guardian->communication_preference = $request->input('communication_preference');
-        $guardian->active = '0';
-        $guardian->save();
+        $guardian->active = '1';
+        $guardian->save();      
 
-        return back()->with('success', "Registration Successful.  You'll receive an email to confirm your account. ");
+        if ($request->filled('inviter_id')) 
+        {         
+            Friend::create([
+                'guardian_id1' => $request->input('inviter_id'),
+                'guardian_id2' => $guardian->id,
+            ]);
+        }
+        
+        $invitation = Invitation::where('email', $guardian->email)->first();
+        if ($invitation) 
+        {
+            $invitation->status = 'accepted';
+            $invitation->save();
+        }
+
+        Auth::guard('guardian')->login($guardian);
+
+        return redirect('/my-dashboard/');     
     }
 
     public function logout(Request $request)

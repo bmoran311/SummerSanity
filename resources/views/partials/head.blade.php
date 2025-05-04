@@ -16,4 +16,5 @@
 
 	<link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator.min.css" rel="stylesheet">
 	<script src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
 </head>

@@ -12,16 +12,18 @@
             <div class="person">
                 <div class="person__portrait">
                     <img src="/assets/megan-p-portrait.png" alt="Megan Petrik Portrait Image" />
-                    <div class="card social-links">
-                        <a href="https://www.facebook.com" target="_blank">
-                            <img src="/assets/icons/facebook-color.svg" alt="Facebook Icon and Link" />
-                        </a>
-                        <a href="https://www.linkedin.com" target="_blank">
+                    <div class="card social-links">                                           
+                        <a href="https://www.linkedin.com/in/megan-petrik-8a387613/" target="_blank">
                             <img src="/assets/icons/linkedin-color.svg" alt="LinkedIn Icon and Link" />
                         </a>
-                        <a href="https://www.instagram.com" target="_blank">
+                        <!---    
+                        <a href="https://www.facebook.com/profile.php?id=61574991233005" target="_blank">
+                            <img src="/assets/icons/facebook-color.svg" alt="Facebook Icon and Link" />
+                        </a>
+                        <a href="https://www.instagram.com/summer_sanity/" target="_blank">
                             <img src="/assets/icons/instagram-color.svg" alt="Instagram Icon and Link" />
                         </a>
+                        --->
                     </div>
                 </div>
                 <div class="person__content">
@@ -45,17 +47,19 @@
 
             <div class="person person--opposite">
                 <div class="person__portrait">
-                    <img src="/assets/megan-s-portrait.png" alt="Megan Petrik Portrait Image" />
+                    <img src="/assets/megan-s-portrait.png" alt="Megan Spivey Portrait Image" />
                     <div class="card social-links">
-                        <a href="https://www.facebook.com" target="_blank">
-                            <img src="/assets/icons/facebook-color.svg" alt="Facebook Icon and Link" />
-                        </a>
-                        <a href="https://www.linkedin.com" target="_blank">
+                        <a href="https://www.linkedin.com/in/meganspivey/" target="_blank">
                             <img src="/assets/icons/linkedin-color.svg" alt="LinkedIn Icon and Link" />
-                        </a>
-                        <a href="https://www.instagram.com" target="_blank">
+                        </a>                        
+                        <!---
+                        <a href="https://www.facebook.com/profile.php?id=61574991233005" target="_blank">
+                            <img src="/assets/icons/facebook-color.svg" alt="Facebook Icon and Link" />
+                        </a>                        
+                        <a href="https://www.instagram.com/summer_sanity/" target="_blank">
                             <img src="/assets/icons/instagram-color.svg" alt="Instagram Icon and Link" />
                         </a>
+                        --->
                     </div>
                 </div>
                 <div class="person__content">

@@ -12,11 +12,13 @@ class CalendarInvite extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $screenshotPath;
+    public $guardian_id;
+    public $email;
 
-    public function __construct($screenshotPath)
+    public function __construct($guardian_id, $email)
     {
-        $this->screenshotPath = $screenshotPath;
+        $this->guardian_id = $guardian_id;
+        $this->email = $email;
     }
 
     public function build_old()
@@ -32,6 +34,10 @@ class CalendarInvite extends Mailable
     public function build()
     {
         return $this->subject("Let’s Coordinate Summer Plans – Join Me on Summer Sanity!")
-                    ->view('emails.calendar_invite');
+                    ->view('emails.calendar_invite')
+                    ->with([
+                        'guardian_id' => $this->guardian_id,
+                        'email' => $this->email,
+                    ]);
     }
 }

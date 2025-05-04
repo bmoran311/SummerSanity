@@ -133,13 +133,20 @@
                     >Camper
                   </a>
                 </li>
-				<li>
+				        <li>
                   <a
                     class="@if(request()->routeIs('faq*')) !text-white @endif group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white"
                     href="{{ route('faq.index') }}"
                     >FAQ
                   </a>
-                </li>				
+                </li>		
+                <li>
+                  <a
+                    class="@if(request()->routeIs('invitation*')) !text-white @endif group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white"
+                    href="{{ route('invitation.index') }}"
+                    >Invitations
+                  </a>
+                </li>			
               </ul>
             </div>
             <!-- Dropdown Menu End -->

@@ -7,7 +7,7 @@
             <h1>Simplify Summer Planning</h1>
             <p>Easily organize camps, sitters, and plans with our user-friendly calendar - AND stay in sync with your trusted circle.</p>
 
-            <button class="btn">Join Now - It’s Free !</button>
+            <a href="#cta"><button class="btn">Join Now - It’s Free !</button></a>
         </div>
 
         <div class="usp">

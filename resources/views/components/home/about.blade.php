@@ -18,7 +18,7 @@
                         </p>
                     </div>
                 </div>
-                <button class="btn btn--sm">Get Started</button>
+                <a href="#cta"><button class="btn btn--sm">Get Started</button></a>
             </div>
         </div>
     </div>

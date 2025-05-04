@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\GuardianController;
 use App\Http\Controllers\Admin\CamperController;
 use App\Http\Controllers\Admin\CampEnrollmentController;
 use App\Http\Controllers\Admin\CalendarController;
+use App\Http\Controllers\Admin\InvitationController;
 use App\Http\Controllers\Guardian\AuthController;
 use App\Http\Controllers\Site\PageController;
 
@@ -45,7 +46,7 @@ Route::get('/my-dashboard/', 'App\Http\Controllers\CalendarController@dashboard'
 Route::post('/invite/friends', 'App\Http\Controllers\CalendarController@sendInvites')->name('invite.friends');
 
 Route::post('/guardian/login', [AuthController::class, 'loginWithEmail'])->name('guardian.login');
-Route::post('/guardian/register', [AuthController::class, 'loginWithEmail'])->name('guardian.register');
+Route::post('/guardian/register', [AuthController::class, 'registerWithEmail'])->name('guardian.register');
 
 Route::post('/guardian/logout', function (Request $request) {
     Auth::guard('guardian')->logout();
@@ -102,6 +103,7 @@ Route::resource('camp', CampController::class);
 Route::resource('guardian', GuardianController::class);
 Route::resource('camper', CamperController::class);
 Route::resource('camp_enrollment', CampEnrollmentController::class);
+Route::resource('invitation', InvitationController::class);
 
 Route::get('/calendar/index/{guardian_id}', 'App\Http\Controllers\Admin\CalendarController@index')->name('calendar.index');
 Route::get('/calendar_only/index/{guardian_id}', 'App\Http\Controllers\Admin\CalendarController@index_only')->name('calendar.index_only');

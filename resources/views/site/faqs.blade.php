@@ -4,17 +4,18 @@
 <section id="about">
     <div class="container">
         <div class="about__image">
+            <br>
             <div class="section-header">
                 <h1>FAQs</h1>
                 <h2>Frequently Asked Questions</h2>
             </div>
-
+            <br>
             <div class="faq-list">
                 @foreach($faqs as $faq) 
                     <div class="faq-item">
                         <button class="faq-question">{{ $faq->question }}</button>
-                        <div class="faq-answer">
-                            <p>{{ $faq->answer }}.</p>
+                        <div class="faq-answer" style="color: black;">
+                            <p style="color: black;">{{ $faq->answer }}.</p>
                         </div>
                     </div>                                                                                                 
                 @endforeach                       

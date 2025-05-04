@@ -27,15 +27,21 @@
 				</ul>
 				<div class="profile">
 					<img src="assets/megan-p-profile-pic.jpg" alt="User Profile Picture" />
-					<span>Megan Petrik</span>
+					<span>{{ Auth::guard('guardian')->user()->first_name }} {{ Auth::guard('guardian')->user()->last_name }}</span>
 				</div>                 
             </nav>
+			@if(session('success'))
+				<div class="alert alert-success" style="margin-bottom: 15px; background-color: #e6ffed; color: #05603a; padding: 12px 16px; border-radius: 6px;">
+					{{ session('success') }}
+				</div>
+			@endif
             <div class="filter__friends">
 				@foreach($friends_campers as $friends_camper)
 					<label><input type="checkbox" class="friend-child-checkbox" id="friend{{ $loop->iteration }}" checked />{{ $friends_camper->first_name }} {{ $friends_camper->last_name }}</label>
 				@endforeach
-            </div>
-            <div id="summer-calendar"></div>
+            </div>			
+            <div id="summer-calendar">
+			</div>
         </div>
 
 		<div id="invitation-modal-overlay" class="modal-overlay hide">
@@ -71,17 +77,20 @@
 										</div>
 										<div class="state">Accepted</div>
 									</div>
-                                @endforeach                                
-                                <div class="invite-item">
-                                    <div class="invite-item__main">
-                                        <span class="name">Tyler Murphy</span>
-                                        <span class="email">typermurphy@gmail.com</span>
-                                    </div>
-                                    <div class="resend-btn">
-                                        <img src="assets/icons/resend.svg" alt="Resent Invite Icon" />
-                                    </div>
-                                    <div class="state state--pending">Pending</div>
-                                </div>                                
+                                @endforeach     
+								@if($pending_invitations->isNotEmpty())
+									@foreach($pending_invitations as $invite)
+										<div class="invite-item">
+											<div class="invite-item__main">
+												<span class="email">{{ $invite->email }}</span>
+											</div>
+											<div class="resend-btn">
+												<img src="assets/icons/resend.svg" alt="Resend Invite Icon" />
+											</div>
+											<div class="state state--pending">Pending</div>
+										</div>
+									@endforeach
+								@endif                                                                                        
                             </div>
                         </div>                        
                     </div>                    
