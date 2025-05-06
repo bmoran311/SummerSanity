@@ -31,7 +31,7 @@
                 <ul class="links">
                     <li><a class="disabled" href="#">Privacy Policy</a></li>
                     <li><a class="disabled" href="#">Terms of Services</a></li>
-                    <li><a class="disabled" href="/faqs">FAQS</a></li>
+                    <li><a class="disabled" href="/faqs">FAQ</a></li>
                 </ul>
             </div>
             <div class="links__wrapper">

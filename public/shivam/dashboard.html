@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <!-- "Overpass" Google Font -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
+        <!-- CSS Stylesheet -->
+        <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator.min.css" rel="stylesheet" />
+
+        <!-- Calendar UI External Library "Flatpickr" -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/airbnb.css" />
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/weekSelect/weekSelect.js"></script>
+
+        <link rel="stylesheet" href="tabulator.css" />
+        <link rel="stylesheet" href="style.css" />
+        <link rel="stylesheet" href="calendar.css" />
+        <title>Dashboard - Summer Sanity</title>
+    </head>
+    <body>
+        <div class="dashboard">
+            <nav class="nav nav--dashboard">
+                <div class="logo">
+                    <a href="/"><img src="assets/logo.svg" alt="Summer Sanity Logo" /></a>
+                </div>
+                <ul class="nav__links">
+                    <li class="nav__link"><a href="/dashboard.html">Dashboard</a></li>
+                    <li id="campers-link" class="nav__link"><a href="/campers.html">Campers</a></li>
+                    <li id="invitation-link" class="nav__link"><a href="#">Invitation</a></li>
+                </ul>
+                <div class="profile">
+                    <img src="assets/megan-p-profile-pic.jpg" alt="User Profile Picture" />
+                    <span>Megan Petrik</span>
+                </div>
+            </nav>
+            <div class="filter__friends">
+                <label><input type="checkbox" class="friend-child-checkbox" id="sally" checked />Sally</label>
+                <label><input type="checkbox" class="friend-child-checkbox" id="campbell" checked />Campbell</label>
+                <label><input type="checkbox" class="friend-child-checkbox" id="lizzie" checked />Lizzie</label>
+                <label><input type="checkbox" class="friend-child-checkbox" id="vaughn" checked />Vaughn</label>
+            </div>
+            <div id="summer-calendar"></div>
+        </div>
+        <!-- Edit Plan Modal -->
+        <div id="edit-plan-modal-overlay" class="modal-overlay hide">
+            <div class="card modal modal--md plan-modal">
+                <div class="gradient blue"></div>
+                <div class="close-btn"><img src="assets/icons/close.svg" /></div>
+                <div class="header">
+                    <img src="/assets/icons/event.svg" alt="Plan Icon" />
+                    <h4>Edit A Plan</h4>
+                    <!-- <p>Send an invite to friends and family to share schedules and plan activities.</p> -->
+                </div>
+                <div class="modal__main">
+                    <form class="plan-form">
+                        <div class="plan-form__main">
+                            <div class="calendar-ui">
+                                <label class="field__label" for="weekPicker">Select a week</label>
+                                <div id="myCalendar"></div>
+                            </div>
+                            <!-- <div>
+                                <label class="field__label" for="weekPicker">Select a week</label>
+                                <div class="input__field">
+                                    <img src="assets/icons/email.svg" alt="Profile icon" />
+                                    <input id="weekPicker" placeholder="Select a week" />
+                                </div>
+                            </div> -->
+                            <div class="flex">
+                                <div>
+                                    <label class="field__label" for="eventType">Event Type</label>
+                                    <div class="input__field">
+                                        <!-- <img src="assets/icons/email.svg" alt="Profile icon" /> -->
+                                        <select id="eventType">
+                                            <option value="camp">Camp</option>
+                                            <option value="babysitter">Babysitter</option>
+                                            <option value="vacation">Vacation</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="field__label" for="campName">Event Name</label>
+                                    <div class="input__field">
+                                        <!-- <img src="assets/icons/email.svg" alt="Profile icon" /> -->
+                                        <input type="text" placeholder="Camp name" name="campName" id="campName" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex">
+                                <div>
+                                    <label class="field__label" for="kids">Select Children</label>
+                                    <div class="input__field">
+                                        <select class="multi-select" id="kids" multiple size="4">
+                                            <option value="myKid1">My Kid 1</option>
+                                            <option value="myKid2">My Kid 2</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="field__label" for="timeSlot">Time Slot</label>
+                                    <div class="input__field">
+                                        <select class="multi-select" id="timeSlot" multiple size="4">
+                                            <option value="am">AM</option>
+                                            <option value="pm">PM</option>
+                                            <option value="night">Night</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="field__label" for="booking">Booked</label>
+                                <div class="input__field">
+                                    <select id="booking">
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex">
+                            <button class="btn btn--secondary btn--sm">Cancel</button>
+                            <button type="submit" class="btn btn--sm">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Invitation Modal -->
+        <div id="invitation-modal-overlay" class="modal-overlay hide">
+            <div class="card modal invitation-modal">
+                <div class="gradient"></div>
+                <div class="close-btn"><img src="assets/icons/close.svg" /></div>
+                <div class="header">
+                    <img src="assets/icons/register.svg" alt="Register Icon" />
+                    <h4>Invite & Simplify Summer Together!</h4>
+                    <p>Send an invite to friends and family to share schedules and plan activities.</p>
+                </div>
+                <div class="modal__main">
+                    <!-- Modal Left Content -->
+                    <div class="left">
+                        <form id="invite-email-form">
+                            <label class="field__label" for="emails">Enter friends’ emails (comma-separated)</label>
+                            <div class="input__field">
+                                <img src="assets/icons/email.svg" alt="Profile icon" />
+                                <input type="text" placeholder="friend1@example.com, friend2@example.com" name="emails" id="emails" class="input__email" />
+                                <button type="submit" class="btn btn--sm">Send</button>
+                            </div>
+                        </form>
+                        <div class="line-separator"></div>
+                        <!-- Invite History -->
+                        <div class="invite-history-container">
+                            <div class="field__label">Invite History</div>
+                            <div class="invites-list">
+                                <!-- Invite Item -->
+                                <div class="invite-item">
+                                    <div class="invite-item__main">
+                                        <span class="name">Tyler Murphy</span>
+                                        <span class="email">typermurphy@gmail.com</span>
+                                    </div>
+                                    <div class="resend-btn">
+                                        <img src="assets/icons/resend.svg" alt="Resent Invite Icon" />
+                                    </div>
+                                    <div class="state state--pending">Pending</div>
+                                </div>
+                                <!--  -->
+                                <!-- Invite Item -->
+                                <div class="invite-item">
+                                    <div class="invite-item__main">
+                                        <span class="name">Tyler Murphy</span>
+                                        <span class="email">typermurphy@gmail.com</span>
+                                    </div>
+                                    <div class="state">Accepted</div>
+                                </div>
+                                <!--  -->
+                                <!-- Invite Item -->
+                                <div class="invite-item">
+                                    <div class="invite-item__main">
+                                        <span class="name">Tyler Murphy</span>
+                                        <span class="email">typermurphy@gmail.com</span>
+                                    </div>
+                                    <div class="state">Accepted</div>
+                                </div>
+                                <!--  -->
+                                <!-- Invite Item -->
+                                <div class="invite-item">
+                                    <div class="invite-item__main">
+                                        <span class="name">Tyler Murphy</span>
+                                        <span class="email">typermurphy@gmail.com</span>
+                                    </div>
+                                    <div class="state">Accepted</div>
+                                </div>
+                                <!--  -->
+                                <!-- Invite Item -->
+                                <div class="invite-item">
+                                    <div class="invite-item__main">
+                                        <span class="name">Tyler Murphy</span>
+                                        <span class="email">typermurphy@gmail.com</span>
+                                    </div>
+                                    <div class="resend-btn">
+                                        <img src="assets/icons/resend.svg" alt="Resent Invite Icon" />
+                                    </div>
+                                    <div class="state state--pending">Pending</div>
+                                </div>
+                                <!--  -->
+                            </div>
+                        </div>
+                        <!--  -->
+                    </div>
+                    <!--  -->
+                    <!-- Modal Right Content -->
+                    <div class="right">
+                        <div>
+                            <div class="field__label">Email Preview</div>
+                        </div>
+                        <div class="email-preview">
+                            <h3 class="subject">Let’s Coordinate Summer Plans - Join Me on Summer Sanity!</h3>
+                            <div class="description">
+                                <p>Hello <span class="bold">[friend-name]</span>,</p>
+                                <p>
+                                    I just joined this awesome parenting site called <span class="bold">Summer Sanity</span> to help plan my kid's summer schedule, and I think
+                                    you'll love it too!
+                                </p>
+                                <p>It's completely free and makes it easy for parents like us to organize summer schedules and share plans with friends.</p>
+                                <p>
+                                    Here’s the best part: if we connect our calendars, we can swap ideas for camps and activities and make sure the kids get plenty of time together
+                                    this summer—it’s a win-win!
+                                </p>
+                                <p class="bold">Take a look at how easy it is to use:</p>
+                                <img src="assets/calendar.png" alt="Summer Calendar" />
+                                <p class="bold">Click below to join me and start planning:</p>
+                                <button class="btn btn--sm">Join Summer Sanity!</button>
+                                <div class="email-footer">
+                                    <p>Can't wait to see what we come up with!</p>
+                                    <p class="bold">Megan Petrik</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--  -->
+                </div>
+
+                <!-- <button class="btn btn--sm">Get Started</button> -->
+            </div>
+        </div>
+        <script src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
+        <script type="module" src="script.js"></script>
+    </body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <!-- "Overpass" Google Font -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
+        <!-- CSS Stylesheet -->
+        <link rel="stylesheet" href="style.css" />
+        <title>My Web App</title>
+    </head>
+    <body>
+        <header>
+            <nav class="nav">
+                <div class="container">
+                    <ul class="nav__links">
+                        <li class="nav__link"><a href="#hero">Home</a></li>
+                        <li class="nav__link"><a href="#calendar">Features</a></li>
+                        <li class="nav__link"><a href="#about">About Us</a></li>
+                        <li class="nav__link"><a href="#team">Team</a></li>
+                    </ul>
+                    <div class="logo">
+                        <a href="/"><img src="assets/logo.svg" alt="Summer Sanity Logo" /></a>
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn--tertiary btn--sm" id="btn--login">Login</button>
+                        <button class="btn btn--secondary btn--sm">Register</button>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <section id="about">
+                <div class="container">
+                    <div class="about__image">
+                        <div class="section-header">
+                            <span class="gradient-text">FAQ</span>
+                            <h2>Frequently Asked Questions</h2>
+                        </div>
+                        <div class="faq-list">
+                            <div class="faq-item">
+                                <button class="faq-question">Will I be able to have a shared family account with each caretaker having their own credentials?</button>
+                                <div class="faq-answer" style="color: black">
+                                    <p style="color: black">Eventually, yes! For now, go ahead and create one family login for all caretakers to use while planning.</p>
+                                </div>
+                            </div>
+
+                            <div class="faq-item">
+                                <button class="faq-question">Is there a mobile app I can download?</button>
+                                <div class="faq-answer" style="color: black">
+                                    <p style="color: black">We are thrilled to announce that our mobile app is coming fall 2025!</p>
+                                </div>
+                            </div>
+
+                            <div class="faq-item">
+                                <button class="faq-question">Is there a limit to the number of people I can connect with?</button>
+                                <div class="faq-answer" style="color: black">
+                                    <p style="color: black">
+                                        No limit! In fact, we encourage you to connect with your entire trusted circle, so you can see the true value that Summer Sanity provides.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="faq-item">
+                                <button class="faq-question">Is there a way to communicate with other parents inside Summer Sanity?</button>
+                                <div class="faq-answer" style="color: black">
+                                    <p style="color: black">Not yet, but it’s in the works!</p>
+                                </div>
+                            </div>
+
+                            <div class="faq-item">
+                                <button class="faq-question">What do I do if I need help?</button>
+                                <div class="faq-answer" style="color: black">
+                                    <p style="color: black">Please email us at hello@summersanity.com and we will respond within 24 hours.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer>
+            <footer class="footer">
+                <div class="gradient-bg"></div>
+                <div class="container footer-container">
+                    <div class="footer__left">
+                        <img class="logo" src="/assets/logo.svg" alt="Summer Sanity Logo" />
+                        <p>© Copyright 2025 Summer Sanity. All rights reserved.</p>
+                        <div class="social-icons">
+                            <a href="https://www.facebook.com" target="_blank">
+                                <img src="/assets/icons/facebook-color.svg" alt="Facebook Icon and Link" />
+                            </a>
+                            <a href="https://www.linkedin.com" target="_blank">
+                                <img src="/assets/icons/linkedin-color.svg" alt="LinkedIn Icon and Link" />
+                            </a>
+                            <a href="https://www.instagram.com" target="_blank">
+                                <img src="/assets/icons/instagram-color.svg" alt="Instagram Icon and Link" />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="footer__right">
+                        <div class="links__wrapper">
+                            <span class="label">Explore</span>
+                            <ul class="links">
+                                <li><a href="#hero">Home</a></li>
+                                <li><a href="#calendar">Features</a></li>
+                                <li><a href="#about">About Us</a></li>
+                                <li><a href="#team">Team</a></li>
+                            </ul>
+                        </div>
+                        <div class="links__wrapper">
+                            <span class="label">Links</span>
+                            <ul class="links">
+                                <li><a class="disabled" href="#">Privacy Policy</a></li>
+                                <li><a class="disabled" href="#">Terms of Services</a></li>
+                                <li><a class="disabled" href="/faqs">FAQS</a></li>
+                            </ul>
+                        </div>
+                        <div class="links__wrapper">
+                            <span class="label">Contact</span>
+                            <ul class="links">
+                                <li><a href="mailto:hello@summersanity.com">hello@summersanity.com</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </footer>
+
+        <script>
+            document.querySelectorAll(".faq-question").forEach((button) => {
+                button.addEventListener("click", () => {
+                    const answer = button.nextElementSibling;
+                    const isOpen = answer.classList.contains("open");
+                    const parentItem = button.closest(".faq-item");
+
+                    document.querySelectorAll(".faq-answer").forEach((a) => {
+                        a.classList.remove("open");
+                        a.previousElementSibling.classList.remove("active");
+                        a.closest(".faq-item").classList.remove("card");
+                    });
+
+                    if (!isOpen) {
+                        answer.classList.add("open");
+                        button.classList.add("active");
+                        parentItem?.classList.add("card");
+                    }
+                });
+            });
+        </script>
+
+        <script type="module" src="script.js"></script>
+    </body>
+</html>

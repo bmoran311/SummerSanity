@@ -9,7 +9,7 @@
                     <a class="font-medium" href="{{ route('dashboard') }}">Dashboard /</a>
                 </li>
                 <li class="font-medium text-primary"><a class="font-medium"
-                                                        href="{{ route('faq.index') }}">FAQs</a></li>
+                                                        href="{{ route('faq.index') }}">FAQ</a></li>
             </ol>
         </nav>
     </div>

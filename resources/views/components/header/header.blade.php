@@ -6,7 +6,7 @@
                 <li class="nav__link"><a href="#calendar">Features</a></li>
                 <li class="nav__link"><a href="#about">About Us</a></li>
                 <li class="nav__link"><a href="#team">Team</a></li>
-                <li class="nav__link"><a href="/faqs">FAQs</a></li>
+                <li class="nav__link"><a href="/faqs">FAQ</a></li>
             </ul>
             <div class="logo">
                 <a href="/"><img src="/assets/logo.svg" alt="Summer Sanity Logo" /></a>

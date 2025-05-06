@@ -12,6 +12,13 @@
         <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator.min.css" rel="stylesheet" />
         <link rel="stylesheet" href="/style.css" />
         <link rel="stylesheet" href="/tabulator.css" />
+		<link rel="stylesheet" href="/calendar.css" />
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/airbnb.css" />
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/weekSelect/weekSelect.js"></script>
+
         <title>Dashboard - Summer Sanity</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
@@ -22,7 +29,8 @@
                     <a href="/"><img src="/assets/logo.svg" alt="Summer Sanity Logo" /></a>
                 </div>
 				<ul class="nav__links">
-					<li class="nav__link"><a href="/dashboard.html">Dashboard</a></li>
+					<li class="nav__link"><a href="/my-dashboard">Dashboard</a></li>
+					<li class="nav__link"><a href="/campers">Campers</a></li>
 					<li id="invitation-link" class="nav__link"><a href="#">Invitation</a></li>
 				</ul>
 				<div class="profile">
@@ -38,10 +46,94 @@
             <div class="filter__friends">
 				@foreach($friends_campers as $friends_camper)
 					<label><input type="checkbox" class="friend-child-checkbox" id="friend{{ $loop->iteration }}" checked />{{ $friends_camper->first_name }} {{ $friends_camper->last_name }}</label>
-				@endforeach
-            </div>			
+				@endforeach               
+            </div>		
             <div id="summer-calendar">
 			</div>
+        </div>
+
+		<!-- Edit Plan Modal -->
+        <div id="edit-plan-modal-overlay" class="modal-overlay hide">
+            <div class="card modal modal--md plan-modal">
+                <div class="gradient blue"></div>
+                <div class="close-btn"><img src="assets/icons/close.svg" /></div>
+                <div class="header">
+                    <img src="assets/icons/event.svg" alt="Plan Icon" />
+                    <h4>Edit A Plan</h4>
+                    <!-- <p>Send an invite to friends and family to share schedules and plan activities.</p> -->
+                </div>
+                <div class="modal__main">
+                    <form class="plan-form">
+                        <div class="plan-form__main">
+                            <div class="calendar-ui">
+                                <label class="field__label" for="weekPicker">Select a week</label>
+                                <div id="myCalendar"></div>
+                            </div>
+                            <!-- <div>
+                                <label class="field__label" for="weekPicker">Select a week</label>
+                                <div class="input__field">
+                                    <img src="assets/icons/email.svg" alt="Profile icon" />
+                                    <input id="weekPicker" placeholder="Select a week" />
+                                </div>
+                            </div> -->
+                            <div class="flex">
+                                <div>
+                                    <label class="field__label" for="eventType">Event Type</label>
+                                    <div class="input__field">
+                                        <!-- <img src="assets/icons/email.svg" alt="Profile icon" /> -->
+                                        <select id="eventType">
+                                            <option value="camp">Camp</option>
+                                            <option value="babysitter">Babysitter</option>
+                                            <option value="vacation">Vacation</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="field__label" for="campName">Event Name</label>
+                                    <div class="input__field">
+                                        <!-- <img src="assets/icons/email.svg" alt="Profile icon" /> -->
+                                        <input type="text" placeholder="Camp name" name="campName" id="campName" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex">
+                                <div>
+                                    <label class="field__label" for="kids">Select Children</label>
+                                    <div class="input__field">
+                                        <select class="multi-select" id="kids" multiple size="4">
+                                            <option value="myKid1">My Kid 1</option>
+                                            <option value="myKid2">My Kid 2</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="field__label" for="timeSlot">Time Slot</label>
+                                    <div class="input__field">
+                                        <select class="multi-select" id="timeSlot" multiple size="4">
+                                            <option value="am">AM</option>
+                                            <option value="pm">PM</option>
+                                            <option value="night">Night</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="field__label" for="booking">Booked</label>
+                                <div class="input__field">
+                                    <select id="booking">
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex">
+                            <button class="btn btn--secondary btn--sm">Cancel</button>
+                            <button type="submit" class="btn btn--sm">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
 
 		<div id="invitation-modal-overlay" class="modal-overlay hide">
@@ -296,7 +388,7 @@
 
 			loginButton?.addEventListener("click", (e) => {
 				console.log("clicked");
-				window.location.href = "dashboard.html";
+				window.location.href = "/my-dashboard";
 			});
 
 			const generateEventCard = (data) => {

@@ -37,16 +37,25 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+use Spatie\Honeypot\ProtectAgainstSpam;
+
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::get('/plan_calendar/{guardian_id}', 'App\Http\Controllers\CalendarController@index')->name('plan_calendar.index');
 Route::get('/my-dashboard/', 'App\Http\Controllers\CalendarController@dashboard')->name('dashboard.index');
+Route::get('/my-dashboard-shivam/', 'App\Http\Controllers\CalendarController@dashboardshivam')->name('dashboard.shivam');
+Route::get('/campers/', 'App\Http\Controllers\CalendarController@campers')->name('dashboard.campers');
+Route::post('/create_camper/', 'App\Http\Controllers\CalendarController@create_camper')->name('camper_front_end.create');
+Route::delete('/delete_camper/{camper}', [App\Http\Controllers\CalendarController::class, 'destroy'])->name('camper_front_end.destroy');
+Route::patch('/update_camper/{camper}', [CalendarController::class, 'update'])->name('camper_front_end.update');
 Route::post('/invite/friends', 'App\Http\Controllers\CalendarController@sendInvites')->name('invite.friends');
 
 Route::post('/guardian/login', [AuthController::class, 'loginWithEmail'])->name('guardian.login');
-Route::post('/guardian/register', [AuthController::class, 'registerWithEmail'])->name('guardian.register');
+Route::post('/guardian/register', [AuthController::class, 'registerWithEmail'])
+     ->middleware(ProtectAgainstSpam::class)
+     ->name('guardian.register');
 
 Route::post('/guardian/logout', function (Request $request) {
     Auth::guard('guardian')->logout();

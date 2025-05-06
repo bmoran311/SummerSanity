@@ -20,6 +20,7 @@
             </div>
             <form id="registerForm" class="register__form" method="POST" action="/guardian/register#cta">                
                 @csrf
+                @honeypot
                 <div class="name">
                     <div class="input__field">
                         <img src="/assets/icons/profile.svg" alt="Profile icon" />

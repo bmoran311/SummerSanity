@@ -4,12 +4,10 @@
 <section id="about">
     <div class="container">
         <div class="about__image">
-            <br>
             <div class="section-header">
-                <h1>FAQs</h1>
+                <span class="gradient-text">FAQ</span>
                 <h2>Frequently Asked Questions</h2>
             </div>
-            <br>
             <div class="faq-list">
                 @foreach($faqs as $faq) 
                     <div class="faq-item">

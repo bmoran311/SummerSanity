@@ -133,6 +133,66 @@ class CalendarController extends Controller
                                                 'camp_enrollment_color_array')
                                             );
     }
+
+    public function dashboardshivam(Request $request)
+    {
+        return view('dashboard.shivam') ;
+    }
+
+    public function campers(Request $request)
+    {
+        $guardian_id = Auth::guard('guardian')->user()->id;
+
+        $campers = Camper::where('guardian_id', $guardian_id )->orderBy('last_name')->orderBy('first_name')->get();
+        $guardian = Guardian::find( $guardian_id );
+                       
+        return view('dashboard.campers', compact( 'campers') );
+    }
+
+    public function create_camper(Request $request)
+    {
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'birth_date' => 'required|string|max:255',            
+        ]);
+
+        $camper = new Camper();
+
+        $birth_date = \Carbon\Carbon::createFromFormat('M d, Y', $request->birth_date)->format('Y-m-d');
+        
+        $camper->first_name = $request->input('first_name');	
+        $camper->guardian_id = Auth::guard('guardian')->user()->id;
+        $camper->last_name = $request->input('last_name');       
+        $camper->birth_date = $birth_date;		
+        $camper->save();
+
+        return back()->with('success', 'Camper Created');
+    }
+
+    public function update(Request $request, Camper $camper)
+    {
+        if ($camper->guardian_id !== Auth::guard('guardian')->id()) {
+            abort(403);
+        }
+
+        $camper->first_name = $request->input('first_name');
+        $camper->birth_date = $request->input('birth_date');
+        $camper->save();
+
+        return back()->with('success', 'Camper updated!');
+    }
+
+    public function destroy(camper $camper)
+    {
+        if ($camper->guardian_id !== Auth::guard('guardian')->id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $camper->delete();
+
+        return back()->with('danger', 'Camper Deleted');
+    }
     
     public function sendInvites(Request $request)
     {               

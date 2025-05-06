@@ -35,7 +35,7 @@
 <body>  
     <h3 class="subject">Let’s Coordinate Summer Plans - Join Me on Summer Sanity!</h3>
     <div class="description">
-        <p>Hello <span class="bold">[friend-name]</span>,</p>
+        <p>Hello,</p>
         <p>
             I just joined this awesome parenting site called <span class="bold">Summer Sanity</span> to help plan my kid's summer schedule, and I think
             you'll love it too!
