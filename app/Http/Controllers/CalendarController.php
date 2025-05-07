@@ -139,6 +139,45 @@ class CalendarController extends Controller
         return view('dashboard.shivam') ;
     }
 
+    public function edit_enrollment(CampEnrollment $enrollment)
+    {
+        $camp_enrollment = $enrollment;
+        if ($camp_enrollment->camper->guardian_id !== Auth::guard('guardian')->id()) {
+            abort(403);
+        }
+
+        $camper = Camper::find($camp_enrollment->camper_id);
+        $selected_guardian_id = $camper->guardian_id;
+
+        $camp_enrollments = CampEnrollment::where('group_id', $camp_enrollment->group_id)->get();
+
+        $selected_camper_ids = $camp_enrollments->pluck('camper_id')->toArray();
+        $selected_week_ids = $camp_enrollments->pluck('week_id')->toArray();
+        $selected_time_slots = $camp_enrollments->pluck('time_slot')->toArray();
+
+        $campers = Camper::where('guardian_id', $selected_guardian_id )->orderBy('last_name')->orderBy('first_name')->get();
+        $weeks = Week::orderBy('week_number')->get();
+
+        $camp_names = DB::select("
+            SELECT
+                CONCAT(camper.first_name, ' ', camper.last_name, ' ', camp_name, ' ', time_slot) AS camp_fill,
+                camp_name
+            FROM camp_enrollment
+            INNER JOIN camper ON camp_enrollment.camper_id = camper.id
+            WHERE camper.guardian_id IN (
+                SELECT
+                    CASE
+                        WHEN guardian_id1 = ? THEN guardian_id2
+                        ELSE guardian_id1
+                    END
+                FROM friends
+                WHERE guardian_id1 = ? OR guardian_id2 = ?
+            )
+        ", [$selected_guardian_id, $selected_guardian_id, $selected_guardian_id]);
+
+        return view('dashboard.enrollment.edit', compact('camp_enrollment', 'campers', 'weeks', 'camp_names', 'selected_guardian_id', 'selected_camper_ids', 'selected_week_ids', 'selected_time_slots'));
+    }
+
     public function campers(Request $request)
     {
         $guardian_id = Auth::guard('guardian')->user()->id;

@@ -52,6 +52,7 @@ Route::delete('/delete_camper/{camper}', [App\Http\Controllers\CalendarControlle
 Route::get('/edit_camper/{camper}', 'App\Http\Controllers\CalendarController@edit_camper')->name('camper_front_end.edit');
 Route::patch('/update_camper/{camper}', [CalendarController::class, 'update'])->name('camper_front_end.update');
 Route::post('/invite/friends', 'App\Http\Controllers\CalendarController@sendInvites')->name('invite.friends');
+Route::get('/enrollment/{enrollment}/edit', 'App\Http\Controllers\CalendarController@edit_enrollment')->name('enrollment_front_end.edit');
 
 Route::post('/guardian/login', [AuthController::class, 'loginWithEmail'])->name('guardian.login');
 Route::post('/guardian/register', [AuthController::class, 'registerWithEmail'])

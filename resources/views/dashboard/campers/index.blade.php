@@ -22,7 +22,7 @@
     </head>
     <body>
         <div class="dashboard">
-        <nav class="nav nav--dashboard">
+            <nav class="nav nav--dashboard">
                 <div class="logo">
                     <a href="/"><img src="/assets/logo.svg" alt="Summer Sanity Logo" /></a>
                 </div>

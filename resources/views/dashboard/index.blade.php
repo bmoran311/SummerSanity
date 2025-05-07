@@ -80,18 +80,20 @@
                                 <div>
                                     <label class="field__label" for="eventType">Event Type</label>
                                     <div class="input__field">
-                                        <!-- <img src="assets/icons/email.svg" alt="Profile icon" /> -->
                                         <select id="eventType">
-                                            <option value="camp">Camp</option>
-                                            <option value="babysitter">Babysitter</option>
-                                            <option value="vacation">Vacation</option>
+											<option value="Morning Camp">Morning Camp</option>
+											<option value="Afternoon Camp">Afternoon Camp</option>
+											<option value="All Day Camp">All_Day Camp</option>
+											<option value="Night Camp">Night Camp</option>
+											<option value="Overnight Camp">Overnight Camp</option>
+											<option value="Vacation">Vacation</option>
+											<option value="Babysitter Coverage">Babysitter Coverage</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div>
                                     <label class="field__label" for="campName">Event Name</label>
                                     <div class="input__field">
-                                        <!-- <img src="assets/icons/email.svg" alt="Profile icon" /> -->
                                         <input type="text" placeholder="Camp name" name="campName" id="campName" />
                                     </div>
                                 </div>
@@ -101,8 +103,9 @@
                                     <label class="field__label" for="kids">Select Children</label>
                                     <div class="input__field">
                                         <select class="multi-select" id="kids" multiple size="4">
-                                            <option value="myKid1">My Kid 1</option>
-                                            <option value="myKid2">My Kid 2</option>
+											@foreach($campers as $camper)
+                                            	<option value="myKid{{ $loop->iteration }}"> {{ $camper->first_name }} {{ $camper->last_name }}</option>
+											@endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -287,6 +290,8 @@
 									$eventName = $camp_enrollment_array[$camper->id][$time_slot][$week->week_number] ?? null;
 									$eventType = $camp_enrollment_type_array[$camper->id][$time_slot][$week->week_number] ?? null;
 									$bookingColor = $camp_enrollment_color_array[$camper->id][$time_slot][$week->week_number] ?? null;
+									$groupId = $camp_enrollment_group_id_array[$camper->id][$time_slot][$week->week_number] ?? null;
+									$enrollmentId = $camp_enrollment_id_array[$camper->id][$time_slot][$week->week_number] ?? null;
 								@endphp
 
 								@if($eventName)
@@ -296,6 +301,8 @@
 											$enrollments[$eventName] = [
 												'eventType' => $eventType,
 												'bookingColor' => $bookingColor,
+												'groupId' => $groupId,
+												'enrollmentId' => $enrollmentId,
 											];
 										}
 									@endphp
@@ -308,6 +315,7 @@
 								[
 									@foreach($enrollments as $name => $details)
 										{
+                                            enrollment_id: '{{ $details['enrollmentId'] }}',
 											eventName: "{{ $name }}",
 											@if($details['eventType'] == "Morning Camp")
 												eventType: EventType.DAY_CAMP_AM,
@@ -339,7 +347,7 @@
 								@php
 									$eventName = $camp_enrollment_array[$friends_camper->id][$time_slot][$week->week_number] ?? null;
 									$eventType = $camp_enrollment_type_array[$friends_camper->id][$time_slot][$week->week_number] ?? null;
-									$bookingColor = $camp_enrollment_color_array[$friends_camper->id][$time_slot][$week->week_number] ?? null;
+									$bookingColor = $camp_enrollment_color_array[$friends_camper->id][$time_slot][$week->week_number] ?? null;									
 								@endphp
 
 								@if($eventName)
@@ -347,7 +355,7 @@
 										if (!isset($enrollments[$eventName])) {
 											$enrollments[$eventName] = [
 												'eventType' => $eventType,
-												'bookingColor' => $bookingColor,
+												'bookingColor' => $bookingColor,												
 											];
 										}
 									@endphp
@@ -398,9 +406,8 @@
 				}
 
 				const isUserChild = data.userChild;
-				const bookingClass = isUserChild ? "user-child " + data.bookingType : "";
-                const editIcon = isUserChild ? '<div class="edit-btn" data-id="' + data.eventName + '-' + data.eventType +'"><img src="/assets/icons/edit.svg" alt="Edit Icon" /></div>' : "";
-				const bookingTypeDiv = !isUserChild ? '<div class="booking-type ' + data.bookingType + '"></div>' : "";
+				const bookingClass = isUserChild ? `user-child ${data.bookingType}` : "";
+				const bookingTypeDiv = !isUserChild ? `<div class="booking-type ${data.bookingType}"></div>` : "";
 
 				let iconName = data.eventType || "default";
 
@@ -409,21 +416,39 @@
 				}
 
 				const eventTypeLabel = data.eventTypeLabel
-					? '<span class="event-type">' + data.eventTypeLabel + '</span>'
+					? `<span class="event-type">${data.eventTypeLabel}</span>`
 					: "";
 
-				return (
-					'<div class="event-card ' + bookingClass + '">' +
-						bookingTypeDiv +
-						'<img src="/assets/icons/' + iconName + '.svg" alt="' + data.eventType + ' icon" />' +
-						'<div class="card__content">' +
-							'<span class="event-name">' + data.eventName + '</span>' +
-							eventTypeLabel +
-						'</div>' +
-					'</div>'
-				);
+				const editButton = data.userChild
+					? `<div class="edit-btn" data-id="${data.enrollment_id}"><img src="assets/icons/edit.svg" alt="Edit Icon" /></div>`
+					: "";
+
+				return `
+					<div class="event-card ${bookingClass}">
+						${bookingTypeDiv}
+						<img src="/assets/icons/${iconName}.svg" alt="${data.eventType} icon" />
+						<div class="card__content">
+							<span class="event-name">${data.eventName}</span>
+							<div class="event-second-line">
+								${eventTypeLabel}
+								${editButton}
+							</div>
+						</div>
+					</div>
+				`;
 			};
 
+			const showEditModal = (cell, event, id = null) => {
+				openEditModal(
+					{
+						week: cell.getRow().getData()?.week,
+						kid: cell.getColumn().getField(),
+						events: cell.getValue(),
+						id,
+					},
+					event.target
+				);
+			};
 
 			const getColumns = () => {
 				const columns = [
@@ -443,12 +468,34 @@
 						{
 							title: "{{ $camper->first_name }}",
 							field: "myKid{{ $loop->iteration }}",
-                            //id: "{{ $camper->id }}",
 							sorter: "string",
-							cellClick: handleCellClick,
 							formatter: function (cell) {
 								const data = cell.getValue();
 								return data ? generateEventCard(data) : "";
+							},
+							cellClick: (e, cell) => {
+								const isMobileOrTablet = window.matchMedia("(max-width: 1024px)").matches;
+								let targetElement = null;
+
+								if (isMobileOrTablet) {
+									const eventBlock = e.target.closest(".event-card");
+									if (eventBlock) {
+										targetElement = eventBlock;
+									}
+								} else {
+									if (e.target.classList.contains("edit-btn")) {
+										targetElement = e.target;
+									}
+								}
+
+								if (targetElement) {
+									const dataId = targetElement.getAttribute("data-id");
+									if (dataId) {
+                                        // alert(dataId);
+										//showEditModal(cell, e, dataId);
+                                        window.location.href = '/enrollment/' + dataId + '/edit';
+									}
+								}
 							},
 						},
 					@endforeach
@@ -461,7 +508,7 @@
 				];
 
 				friendsChild.forEach(({ name, elementId }) => {
-					if (document.getElementById(elementId).checked) {
+					if (document.getElementById(elementId)?.checked) {
 						columns.push({
 							title: name,
 							field: elementId,
@@ -470,12 +517,36 @@
 								const data = cell.getValue();
 								return data ? generateEventCard(data) : "";
 							},
+							cellClick: (e, cell) => {
+								const isMobileOrTablet = window.matchMedia("(max-width: 1024px)").matches;
+								let targetElement = null;
+
+								if (isMobileOrTablet) {
+									const eventBlock = e.target.closest(".event-card");
+									if (eventBlock) {
+										targetElement = eventBlock;
+									}
+								} else {
+									if (e.target.classList.contains("edit-btn")) {
+										targetElement = e.target;
+									}
+								}
+
+								if (targetElement) {
+									const dataId = targetElement.getAttribute("data-id");
+									if (dataId) {
+										showEditModal(cell, e, dataId);
+									}
+								}
+							},
 						});
 					}
 				});
 
 				return columns;
 			};
+
+
 
 			function handleCellClick(e, cell) {
 
@@ -505,8 +576,8 @@
 
 			// Create Tabulator instance
 			var table = new Tabulator("#summer-calendar", {
-				data: tableData,
-				layout: "fitDataTable",
+				data: tableData, // Assign data
+				layout: "fitDataTable", // Auto-fit columns to container width
 				columns: getColumns(),
 			});
 
@@ -517,40 +588,202 @@
 			});
 
 			// Invitation Modal
+
 			const invitaitonLink = document.getElementById("invitation-link");
 			const invitationModalOverlay = document.getElementById("invitation-modal-overlay");
 			const modalCloseBtn = document.querySelector(".close-btn");
 			const inviteEmailForm = document.getElementById("invite-email-form");
 
-			const hideModal = () => {
-				invitationModalOverlay.classList.add("hide");
+			const hideModal = (overlayEl) => {
+				overlayEl.classList.add("hide");
 			};
 
-			const showModal = () => {
-				invitationModalOverlay.classList.remove("hide");
+			const showModal = (overlayEl) => {
+				overlayEl.classList.remove("hide");
 			};
 
-			invitaitonLink.addEventListener("click", showModal);
+			invitaitonLink.addEventListener("click", () => {
+				showModal(invitationModalOverlay);
+			});
 
-			modalCloseBtn.addEventListener("click", hideModal);
+			modalCloseBtn?.addEventListener("click", () => {
+				hideModal(invitationModalOverlay);
+			});
 
-			invitationModalOverlay.addEventListener("click", (e) => {
+			invitationModalOverlay?.addEventListener("click", (e) => {
 				const targetEl = e.target;
 
 				if (!targetEl.classList.contains("modal-overlay")) return;
 
-				hideModal();
+				hideModal(invitationModalOverlay);
 			});
 
 			document.onkeyup = (e) => {
-				if (e.key !== "Escape" && !invitationModalOverlay.classList.contains("hide")) return;
+				if (e.key !== "Escape" && !invitationModalOverlay?.classList.contains("hide")) return;
 
-				hideModal();
+				hideModal(invitationModalOverlay);
 			};
 
-			//inviteEmailForm.addEventListener("submit", (e) => {
-			//	e.preventDefault();
-			//});
+			inviteEmailForm?.addEventListener("submit", (e) => {
+				e.preventDefault();
+			});
+
+			/*
+				Edit Plan Modal
+			*/
+
+			const weekDisplayFormat = (selectedDates, instance) => {
+				if (!selectedDates.length) return;
+
+				const selectedDate = selectedDates[0];
+
+				const start = new Date(selectedDate);
+				start.setDate(start.getDate() - start.getDay());
+
+				const end = new Date(start);
+				end.setDate(start.getDate() + 6);
+
+				const formatOptions = { month: "short", day: "numeric", year: "numeric" };
+				const formatted = `${start.toLocaleDateString("en-US", formatOptions)} to ${end.toLocaleDateString("en-US", formatOptions)}`;
+
+				instance.input.value = formatted;
+			};
+
+			flatpickr("#date-picker", {
+				// defaultDate: new Date("2025-04-15"),
+				dateFormat: "F j, Y",
+			});
+
+			const weeklyCalendar = flatpickr("#myCalendar", {
+				inline: true, // this shows the calendar directly
+				plugins: [new weekSelect()],
+				defaultDate: "2025-04-15",
+				onChange: function (selectedDates, _, instance) {
+					weekDisplayFormat(selectedDates, instance);
+				},
+				onReady: function (selectedDates, _, instance) {
+					weekDisplayFormat(selectedDates, instance);
+				},
+			});
+
+			// Edit Plan Overlay
+			const editPlanOverlay = document.getElementById("edit-plan-modal-overlay");
+			const editPlayCloseBtn = document.querySelector("#edit-plan-modal-overlay .close-btn");
+
+			function fillEditForm(data) {
+				// Update Event Name
+				document.getElementById("campName").value = data?.eventName || "";
+
+				// Update Week
+				weeklyCalendar.setDate(data?.week || "", true);
+
+				// Update Event Type
+				const eventTypeSelect = document.getElementById("eventType");
+				if (eventTypeSelect) {
+					let type = data?.eventType || "";
+					const campTypes = [EventType.DAY_CAMP_AM, EventType.DAY_CAMP_PM, EventType.FULL_DAY_CAMP, EventType.NIGHT_CAMP];
+					if (campTypes.includes(type)) {
+						type = "camp";
+					}
+					console.log(type);
+					eventTypeSelect.value = type;
+				}
+
+				// Update Booking Type
+				const bookingTypeSelect = document.getElementById("booking");
+				let booking = data?.bookingType === BookingType.CONFIRMED ? "yes" : "no";
+				if (bookingTypeSelect) bookingTypeSelect.value = booking;
+
+				// Update Time Slot
+				const eventTypeToTimeSlots = {
+					[EventType.DAY_CAMP_AM]: ["am"],
+					[EventType.DAY_CAMP_PM]: ["pm"],
+					[EventType.NIGHT_CAMP]: ["night"],
+					[EventType.FULL_DAY_CAMP]: ["am", "pm"],
+				};
+				const timeSlotSelect = document.getElementById("timeSlot");
+				if (!timeSlotSelect) return;
+				const slots = eventTypeToTimeSlots[data?.eventType] || [];
+				// Clear previous selection
+				[...timeSlotSelect.options].forEach((option) => {
+					option.selected = slots.includes(option.value);
+				});
+
+				// Update Kid
+				const kidsSelect = document.getElementById("kids");
+				[...kidsSelect.options].forEach((option) => {
+					option.selected = option.value === data?.kid;
+				});
+			}
+
+			const openEditModal = (data, el) => {
+				showModal(editPlanOverlay);
+				console.log(data);
+				const dataId = data.id || el.dataset?.id;
+				const [eventName, eventType] = dataId.split("-");
+				const clickedEvent = data?.events?.find((event) => event.eventName === eventName && event.eventType === eventType);
+				console.log(clickedEvent);
+				fillEditForm({ ...clickedEvent, kid: data?.kid, week: data?.week });
+			};
+
+			editPlayCloseBtn?.addEventListener("click", () => {
+				hideModal(editPlanOverlay);
+			});
+
+			document.onkeyup = (e) => {
+				if (e.key !== "Escape" && !editPlanOverlay?.classList.contains("hide")) return;
+
+				hideModal(editPlanOverlay);
+			};
+
+			editPlanOverlay?.addEventListener("click", (e) => {
+				const targetEl = e.target;
+
+				if (!targetEl.classList.contains("modal-overlay")) return;
+
+				hideModal(editPlanOverlay);
+			});
+
+			/*
+			Campers Page
+			*/
+
+			document.querySelectorAll(".camper-item .input__field input").forEach((input) => {
+				input.dataset.originalValue = input.value;
+
+				input.addEventListener("blur", () => {
+					const trimmed = input.value.trim();
+
+					if (input.value.trim() === "") {
+						input.value = input.dataset.originalValue;
+					} else {
+						// Update the stored original value if changed and not empty
+						input.dataset.originalValue = trimmed;
+					}
+				});
+			});
+
+			// Add Kid Modal
+			const addKidModalOverlay = document.getElementById("add-kid-modal-overlay");
+			const addKidButton = document.getElementById("add-kid-btn");
+			const addKidCloseButton = document.querySelector("#add-kid-modal-overlay .close-btn");
+
+			addKidButton?.addEventListener("click", () => {
+				showModal(addKidModalOverlay);
+			});
+
+			addKidModalOverlay?.addEventListener("click", (e) => {
+				const targetEl = e.target;
+
+				if (!targetEl.classList.contains("modal-overlay")) return;
+
+				hideModal(addKidModalOverlay);
+			});
+
+			addKidCloseButton?.addEventListener("click", () => {
+				hideModal(addKidModalOverlay);
+			});
+
 		</script>
     </body>
 </html>
