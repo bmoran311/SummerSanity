@@ -36,7 +36,7 @@
 				<div class="profile">
 					<img src="assets/megan-p-profile-pic.jpg" alt="User Profile Picture" />
 					<span>{{ Auth::guard('guardian')->user()->first_name }} {{ Auth::guard('guardian')->user()->last_name }}</span>
-				</div>                 
+				</div>
             </nav>
 			@if(session('success'))
 				<div class="alert alert-success" style="margin-bottom: 15px; background-color: #e6ffed; color: #05603a; padding: 12px 16px; border-radius: 6px;">
@@ -46,8 +46,8 @@
             <div class="filter__friends">
 				@foreach($friends_campers as $friends_camper)
 					<label><input type="checkbox" class="friend-child-checkbox" id="friend{{ $loop->iteration }}" checked />{{ $friends_camper->first_name }} {{ $friends_camper->last_name }}</label>
-				@endforeach               
-            </div>		
+				@endforeach
+            </div>
             <div id="summer-calendar">
 			</div>
         </div>
@@ -145,8 +145,8 @@
                     <h4>Invite & Simplify Summer Together!</h4>
                     <p>Send an invite to friends and family to share schedules and plan activities.</p>
                 </div>
-                <div class="modal__main">                    
-                    <div class="left">						
+                <div class="modal__main">
+                    <div class="left">
 						<form id="invite-email-form" method="POST" action="{{ route('invite.friends') }}">
 							@csrf
                             <label class="field__label" for="emails">Enter friends’ emails (comma-separated)</label>
@@ -160,7 +160,7 @@
                         <!-- Invite History -->
                         <div class="invite-history-container">
                             <div class="field__label">Invite History</div>
-                            <div class="invites-list">                                
+                            <div class="invites-list">
                                 @foreach($friends as $friend)
 									<div class="invite-item">
 										<div class="invite-item__main">
@@ -169,7 +169,7 @@
 										</div>
 										<div class="state">Accepted</div>
 									</div>
-                                @endforeach     
+                                @endforeach
 								@if($pending_invitations->isNotEmpty())
 									@foreach($pending_invitations as $invite)
 										<div class="invite-item">
@@ -182,10 +182,10 @@
 											<div class="state state--pending">Pending</div>
 										</div>
 									@endforeach
-								@endif                                                                                        
+								@endif
                             </div>
-                        </div>                        
-                    </div>                    
+                        </div>
+                    </div>
                     <!-- Modal Right Content -->
                     <div class="right">
                         <div>
@@ -214,8 +214,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>                    
-                </div>                
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -277,7 +277,7 @@
 						week: new Date("{{ \Carbon\Carbon::parse($week->start_date)->format('Y-m-d\TH:i:s') }}"),
                         week_id: '{{ $week->id }}',
 						@foreach($campers as $camper)
-							myKid{{ $loop->iteration }}: 
+							myKid{{ $loop->iteration }}:
 							@php
 								$enrollments = [];
 							@endphp
@@ -330,7 +330,7 @@
 						@endforeach
 
 						@foreach($friends_campers as $friends_camper)
-							friend{{ $loop->iteration }}: 
+							friend{{ $loop->iteration }}:
 							@php
 								$enrollments = [];
 							@endphp
@@ -399,6 +399,7 @@
 
 				const isUserChild = data.userChild;
 				const bookingClass = isUserChild ? "user-child " + data.bookingType : "";
+                const editIcon = isUserChild ? '<div class="edit-btn" data-id="' + data.eventName + '-' + data.eventType +'"><img src="/assets/icons/edit.svg" alt="Edit Icon" /></div>' : "";
 				const bookingTypeDiv = !isUserChild ? '<div class="booking-type ' + data.bookingType + '"></div>' : "";
 
 				let iconName = data.eventType || "default";
@@ -514,7 +515,7 @@
 					table.setColumns(getColumns());
 				});
 			});
-			
+
 			// Invitation Modal
 			const invitaitonLink = document.getElementById("invitation-link");
 			const invitationModalOverlay = document.getElementById("invitation-modal-overlay");

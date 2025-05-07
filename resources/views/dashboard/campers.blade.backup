@@ -7,15 +7,14 @@
         <!-- "Overpass" Google Font -->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />        
-        <link rel="stylesheet" href="/style.css" />        
+        <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="/style.css" />
         <link rel="stylesheet" href="/calendar.css" />
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/airbnb.css" />
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/weekSelect/weekSelect.js"></script>
-
+        {{-- <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/weekSelect/weekSelect.js"></script> --}}
 
         <title>Dashboard - Summer Sanity</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -34,7 +33,7 @@
 				<div class="profile">
 					<img src="assets/megan-p-profile-pic.jpg" alt="User Profile Picture" />
 					<span>{{ Auth::guard('guardian')->user()->first_name }} {{ Auth::guard('guardian')->user()->last_name }}</span>
-				</div>                 
+				</div>
             </nav>
             <div class="container campers-page-container">
                 @if(session('success'))
@@ -48,23 +47,30 @@
                         {{ session('danger') }}
                     </div>
                 @endif
-               
+
                 <div class="camper-header">
                     <h4>Your Kids</h4>
                     <button id="add-kid-btn" class="btn btn--sm">Add New Kid</button>
                 </div>
-                <div class="camper-items">                    
+                <div class="camper-items">
                     <div class="camper-item table-header">
-                        <span class="column-title">Camper Name</span>                        
+                        <span class="column-title">Camper Name</span>
                         <span class="column-title">Birth Date</span>
-                    </div>                                       
+                    </div>
                     @foreach($campers as $camper)
                         <div class="camper-item card">
                             <div class="input__field">
                                 <input type="text" placeholder="{{ $camper->first_name }}" value="{{ $camper->first_name }}" name="camper_first_name" data-original="{{ $camper->first_name }}" />
-                            </div>                            
+                            </div>
                             <div class="input__field">
-                                <input id="date-picker" placeholder="Camper Birthdate" value="{{ \Carbon\Carbon::parse($camper->birth_date)->format('M d, Y') }}" data-original="{{ \Carbon\Carbon::parse($camper->birth_date)->format('M d, Y') }}">
+                                <input
+                                type="text"
+                                class="datepicker"
+                                id="date-picker"
+                                placeholder="Camper Birthdate"
+                                value="{{ \Carbon\Carbon::parse($camper->birth_date)->format('Y-m-d') }}"
+                                autocomplete="off"
+                                >
                             </div>
                             <form method="POST" action="{{route('camper_front_end.destroy', ['camper' => $camper])}}" onsubmit="return confirm('Are you sure you want to delete this camper?')">
                                 @csrf
@@ -72,10 +78,10 @@
                                 <button type="submit" class="delete-btn" style="background: none; border: none; padding: 0;">
                                     <img src="assets/icons/delete.svg" alt="Delete Icon" />
                                 </button>
-                            </form>                           
-                        </div>   
-                    @endforeach  
-                    <button type="submit" class="btn btn--sm save-btn" style="display: none;">Save Changes</button>                                                   
+                            </form>
+                        </div>
+                    @endforeach
+                    <button type="submit" class="btn btn--sm save-btn" style="display: none;">Save Changes</button>
                 </div>
             </div>
         </div>
@@ -83,27 +89,107 @@
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 // Init Flatpickr correctly
-                flatpickr(".datepicker", {
-                    dateFormat: "M d, Y",
-                    allowInput: true
-                });
+            //    flatpickr(".datepicker", {
+            //        dateFormat: "M d, Y",
+            //        allowInput: true
+            //    });
 
-                const inputs = document.querySelectorAll('.camper-edit-input');
-                const saveBtn = document.querySelector('.save-btn');
+            document.querySelectorAll('.datepicker').forEach(function(el) {
+    // Reset any residual value to clean ISO
+    const isoDate = el.getAttribute('value');  // Ensure value is ISO format (Y-m-d)
 
-                inputs.forEach(input => {
-                    input.addEventListener('input', () => {
-                        let hasChanged = false;
+    if (el._flatpickr) {
+        el._flatpickr.destroy();
+    }
 
-                        inputs.forEach(inp => {
-                            if (inp.value !== inp.dataset.original) {
-                                hasChanged = true;
-                            }
-                        });
+    // Strip any leftover Flatpickr data
+    el.classList.remove('flatpickr-input', 'active');
+    el.removeAttribute('readonly');
+    el.removeAttribute('data-original-value');
+    el.removeAttribute('aria-label');
 
-                        saveBtn.style.display = hasChanged ? 'inline-block' : 'none';
+    // Initialize Flatpickr
+    const picker = flatpickr(el, {
+        dateFormat: 'M d, Y',  // Format the displayed date as "May 8, 2025"
+        defaultDate: isoDate,  // Use the ISO format for the default date
+    });
+
+    // Now ensure the value is displayed in the correct format ("May 8, 2025")
+    el.value = picker.formatDate(new Date(isoDate), "M d, Y");  // Re-format the date display
+});
+
+                // const inputs = document.querySelectorAll('.camper-edit-input');
+                // const saveBtn = document.querySelector('.save-btn');
+
+                // inputs.forEach(input => {
+                //     input.addEventListener('input', () => {
+                //         console.log('Input changed');
+                //         con
+                //         let hasChanged = false;
+
+                //         inputs.forEach(inp => {
+                //             if (inp.value !== inp.dataset.original) {
+                //                 hasChanged = true;
+                //             }
+                //         });
+
+                //         saveBtn.style.display = hasChanged ? 'inline-block' : 'none';
+                //     });
+                // });
+
+
+                    /*
+                    Campers Page
+                    */
+                    const saveBtn = document.querySelector('.save-btn');
+                    saveBtn.style.display = 'inline-block';
+
+                    // document.querySelectorAll(".camper-item .input__field input").forEach((input) => {
+                    //     console.log(input);
+                    //     input.dataset.originalValue = input.value;
+
+                    //     input.addEventListener("blur", () => {
+                    //         const trimmed = input.value.trim();
+                    //         if (input.value.trim() === "") {
+                    //             input.value = input.dataset.originalValue;
+                    //             saveBtn.style.display = 'none';
+                    //         } else {
+                    //             // Update the stored original value if changed and not empty
+                    //             input.dataset.originalValue = trimmed;
+                    //             saveBtn.style.display = 'inline-block';
+                    //         }
+                    //     });
+                    // });
+
+                    // Add Kid Modal
+                    const addKidModalOverlay = document.getElementById("add-kid-modal-overlay");
+                    const addKidButton = document.getElementById("add-kid-btn");
+                    const addKidCloseButton = document.querySelector("#add-kid-modal-overlay .close-btn");
+
+                    addKidButton?.addEventListener("click", () => {
+                        showModal(addKidModalOverlay);
                     });
-                });
+
+                    addKidModalOverlay?.addEventListener("click", (e) => {
+                        const targetEl = e.target;
+
+                        if (!targetEl.classList.contains("modal-overlay")) return;
+
+                        hideModal(addKidModalOverlay);
+                    });
+
+                    addKidCloseButton?.addEventListener("click", () => {
+                        hideModal(addKidModalOverlay);
+                    });
+
+                    const hideModal = (overlayEl) => {
+                        overlayEl.classList.add("hide");
+                    };
+
+                    const showModal = (overlayEl) => {
+                        overlayEl.classList.remove("hide");
+                    };
+
             });
         </script>
 
@@ -115,7 +201,7 @@
                 <div class="header">
                     <img src="assets/icons/register.svg" alt="Register Icon" />
                     <h4>Add New Kid</h4>
-                </div>                
+                </div>
                 <div class="modal__main">
                     <form class="add-kid__form" method="POST" action="{{ route('camper_front_end.create') }}">
                         @csrf
@@ -146,6 +232,6 @@
                     </form>
                 </div>
             </div>
-        </div>                
+        </div>
     </body>
 </html>

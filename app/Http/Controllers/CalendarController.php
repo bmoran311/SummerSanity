@@ -12,7 +12,7 @@ use App\Mail\CalendarInvite;
 use Illuminate\Support\Facades\Auth;
 
 class CalendarController extends Controller
-{   
+{
     public function dashboard(Request $request)
     {
         $guardian_id = Auth::guard('guardian')->user()->id;
@@ -32,8 +32,8 @@ class CalendarController extends Controller
                   ->from('friends')
                   ->where('guardian_id2', $guardian_id);
         })->get();
-        
-        $friend_guardian_ids = $friends->pluck('id');        
+
+        $friend_guardian_ids = $friends->pluck('id');
 
         $friends_campers = Camper::whereIn('guardian_id', $friend_guardian_ids)->orderBy('last_name')->get();
 
@@ -41,7 +41,7 @@ class CalendarController extends Controller
         $camp_enrollment_group_id_array = [];
         $camp_enrollment_type_array = [];
         $camp_enrollment_id_array = [];
-        $camp_enrollment_color_array = [];        
+        $camp_enrollment_color_array = [];
 
         $camp_names = DB::select("
             SELECT
@@ -74,10 +74,10 @@ class CalendarController extends Controller
 
                     $camp_enrollment_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->camp_name : "";
                     $camp_enrollment_group_id_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->group_id : "";
-                    $camp_enrollment_id_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->id : "";   
-                    $camp_enrollment_type_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->type : "";                 
-                    $camp_enrollment_color_array[$camper->id][$time_slot][$week->week_number] = 
-                        ($enrollment && $enrollment->booked) ? "yellow" : 
+                    $camp_enrollment_id_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->id : "";
+                    $camp_enrollment_type_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->type : "";
+                    $camp_enrollment_color_array[$camper->id][$time_slot][$week->week_number] =
+                        ($enrollment && $enrollment->booked) ? "yellow" :
                         (($enrollment && $enrollment->camp_name) ? "#F8E5A6" : "");
                 }
             }
@@ -96,10 +96,10 @@ class CalendarController extends Controller
 
                     $camp_enrollment_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->camp_name : "";
                     $camp_enrollment_group_id_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->group_id : "";
-                    $camp_enrollment_id_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->id : "";  
-                    $camp_enrollment_type_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->type : "";                      
-                    $camp_enrollment_color_array[$camper->id][$time_slot][$week->week_number] = 
-                        ($enrollment && $enrollment->booked) ? "yellow" : 
+                    $camp_enrollment_id_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->id : "";
+                    $camp_enrollment_type_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->type : "";
+                    $camp_enrollment_color_array[$camper->id][$time_slot][$week->week_number] =
+                        ($enrollment && $enrollment->booked) ? "yellow" :
                         (($enrollment && $enrollment->camp_name) ? "#F8E5A6" : "");
                 }
             }
@@ -108,28 +108,28 @@ class CalendarController extends Controller
         $guardianId = Auth::guard('guardian')->id();
 
         $friends = Guardian::whereIn('id', function($query) use ($guardianId) {
-            $query->select(DB::raw('CASE 
+            $query->select(DB::raw('CASE
                 WHEN guardian_id1 = '.$guardianId.' THEN guardian_id2
                 WHEN guardian_id2 = '.$guardianId.' THEN guardian_id1
             END'))
             ->from('friends')
             ->whereRaw('guardian_id1 = '.$guardianId.' OR guardian_id2 = '.$guardianId);
-        })->select('first_name', 'last_name', 'email')->get();  
-        
+        })->select('first_name', 'last_name', 'email')->get();
+
         $pending_invitations = Invitation::where('guardian_id', Auth::guard('guardian')->id())->where('status', 'pending')->get();
-        
-        return view('dashboard.index', compact( 'campers', 
-                                                'camp_names', 
-                                                'time_slots', 
-                                                'guardian', 
-                                                'friends', 
-                                                'friends_campers', 
-                                                'weeks', 
-                                                'pending_invitations',                                                 
-                                                'camp_enrollment_id_array', 
-                                                'camp_enrollment_type_array', 
-                                                'camp_enrollment_array', 
-                                                'camp_enrollment_group_id_array', 
+
+        return view('dashboard.index', compact( 'campers',
+                                                'camp_names',
+                                                'time_slots',
+                                                'guardian',
+                                                'friends',
+                                                'friends_campers',
+                                                'weeks',
+                                                'pending_invitations',
+                                                'camp_enrollment_id_array',
+                                                'camp_enrollment_type_array',
+                                                'camp_enrollment_array',
+                                                'camp_enrollment_group_id_array',
                                                 'camp_enrollment_color_array')
                                             );
     }
@@ -145,8 +145,24 @@ class CalendarController extends Controller
 
         $campers = Camper::where('guardian_id', $guardian_id )->orderBy('last_name')->orderBy('first_name')->get();
         $guardian = Guardian::find( $guardian_id );
-                       
-        return view('dashboard.campers', compact( 'campers') );
+
+        return view('dashboard.campers.index', compact( 'campers', 'guardian_id') );
+    }
+
+    public function edit_camper(Request $request, Camper $camper)
+    {
+        $guardian_id = Auth::guard('guardian')->user()->id;
+        if ($camper->guardian_id !== Auth::guard('guardian')->id()) {
+            abort(403);
+        }
+
+        $c = $camper;
+
+        $campers = Camper::where('guardian_id', $guardian_id )->orderBy('last_name')->orderBy('first_name')->get();
+        $guardian = Guardian::find( $guardian_id );
+
+
+        return view('dashboard.campers.index', compact('c', 'guardian_id', 'campers'));
     }
 
     public function create_camper(Request $request)
@@ -154,17 +170,17 @@ class CalendarController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'birth_date' => 'required|string|max:255',            
+            'birth_date' => 'required|string|max:255',
         ]);
 
         $camper = new Camper();
 
         $birth_date = \Carbon\Carbon::createFromFormat('M d, Y', $request->birth_date)->format('Y-m-d');
-        
-        $camper->first_name = $request->input('first_name');	
+
+        $camper->first_name = $request->input('first_name');
         $camper->guardian_id = Auth::guard('guardian')->user()->id;
-        $camper->last_name = $request->input('last_name');       
-        $camper->birth_date = $birth_date;		
+        $camper->last_name = $request->input('last_name');
+        $camper->birth_date = $birth_date;
         $camper->save();
 
         return back()->with('success', 'Camper Created');
@@ -193,26 +209,26 @@ class CalendarController extends Controller
 
         return back()->with('danger', 'Camper Deleted');
     }
-    
+
     public function sendInvites(Request $request)
-    {               
+    {
         $request->validate([
             'emails' => 'required|string'
         ]);
 
-        $emails = explode(',', $request->emails);                
+        $emails = explode(',', $request->emails);
 
-        foreach ($emails as $email) 
+        foreach ($emails as $email)
         {
-            $cleanEmail = trim($email);                                   
+            $cleanEmail = trim($email);
             $alreadyInvited = Invitation::where('guardian_id', Auth::guard('guardian')->id())
                                     ->where('email', $cleanEmail)
                                     ->exists();
 
-            if (!$alreadyInvited) 
-            {               
+            if (!$alreadyInvited)
+            {
 
-                Mail::to($cleanEmail)->send(new CalendarInvite(Auth::guard('guardian')->id(), $cleanEmail));                               
+                Mail::to($cleanEmail)->send(new CalendarInvite(Auth::guard('guardian')->id(), $cleanEmail));
 
                 Invitation::create([
                     'guardian_id' => Auth::guard('guardian')->id(),
@@ -220,7 +236,7 @@ class CalendarController extends Controller
                     'status' => 'pending',
                 ]);
             }
-        }       
+        }
 
         return back()->with('success', 'Invitations sent successfully!');
     }

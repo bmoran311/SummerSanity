@@ -49,6 +49,7 @@ Route::get('/my-dashboard-shivam/', 'App\Http\Controllers\CalendarController@das
 Route::get('/campers/', 'App\Http\Controllers\CalendarController@campers')->name('dashboard.campers');
 Route::post('/create_camper/', 'App\Http\Controllers\CalendarController@create_camper')->name('camper_front_end.create');
 Route::delete('/delete_camper/{camper}', [App\Http\Controllers\CalendarController::class, 'destroy'])->name('camper_front_end.destroy');
+Route::get('/edit_camper/{camper}', 'App\Http\Controllers\CalendarController@edit_camper')->name('camper_front_end.edit');
 Route::patch('/update_camper/{camper}', [CalendarController::class, 'update'])->name('camper_front_end.update');
 Route::post('/invite/friends', 'App\Http\Controllers\CalendarController@sendInvites')->name('invite.friends');
 
