@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Guardian;
 use App\Models\Friend;
 use App\Models\Invitation;
+use App\Mail\RegistrationConfirmation;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 
 class AuthController extends Controller
 {
@@ -42,7 +45,7 @@ class AuthController extends Controller
             'zip_code' => 'required|string|max:50',
             'communication_preference' => 'required|string|max:50',
             'password' => 'required|string|confirmed|max:50',
-        ]);
+        ]);        
         
         $guardian = new Guardian();
         $guardian->first_name = $request->input('first_name');
@@ -50,9 +53,13 @@ class AuthController extends Controller
         $guardian->email = $request->input('email');
         $guardian->phone_number = $request->input('phone_number');
         $guardian->password = Hash::make($request->input('password'));
-        $guardian->zip_code = $request->input('zip_code');
-        $guardian->communication_preference = $request->input('communication_preference');
-        $guardian->active = '1';
+        $guardian->zip_code = $request->input('zip_code');        $guardian->communication_preference = $request->input('communication_preference');
+		if ($request->filled('inviter_id')): 		
+			$guardian->active = '1';
+        else:
+			$guardian->active = '0';
+		endif;
+		
         $guardian->save();      
 
         if ($request->filled('inviter_id')) 
@@ -61,18 +68,47 @@ class AuthController extends Controller
                 'guardian_id1' => $request->input('inviter_id'),
                 'guardian_id2' => $guardian->id,
             ]);
+			
+			$invitation = Invitation::where('email', $guardian->email)->first();
+			if ($invitation) 
+			{
+				$invitation->status = 'accepted';
+				$invitation->save();
+			}
+			
+			Auth::guard('guardian')->login($guardian);
+			
+			return redirect('/my-dashboard/')->with('success', 'Thanks for signing up! Please add your Campers to get started.');  
+        }                              
+		else
+		{		
+            $signedUrl = URL::temporarySignedRoute(
+                'guardian.confirm',
+                now()->addMinutes(60),
+                ['guardian' => $guardian->id, 'email' => $request->input('email')]
+            );
+            
+            Mail::to($request->input('email'))->send(new RegistrationConfirmation($request->input('email'), $signedUrl));
+
+            return redirect()->route('home')->with('success', 'Thanks for signing up! Please check your email to confirm your account and get started.');
+		}
+    }
+
+    public function confirmEmail(Request $request, $id)
+    {
+        $guardian = Guardian::findOrFail($id);
+       
+        if (! $request->hasValidSignature()) {
+            abort(401, 'Invalid or expired confirmation link.');
         }
+
         
-        $invitation = Invitation::where('email', $guardian->email)->first();
-        if ($invitation) 
-        {
-            $invitation->status = 'accepted';
-            $invitation->save();
-        }
+        $guardian->active = 1;
+        $guardian->save();
+       
+        Auth::guard('guardian')->login($guardian);       
 
-        Auth::guard('guardian')->login($guardian);
-
-        return redirect('/my-dashboard/');     
+        return redirect('/my-dashboard/')->with('success', 'Account confirmed and you are now logged in! Please add your campers to get started.');
     }
 
     public function logout(Request $request)

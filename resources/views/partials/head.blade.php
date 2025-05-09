@@ -16,5 +16,27 @@
 
 	<link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator.min.css" rel="stylesheet">
 	<script src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
+
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+	<script>
+		function showLoginModal() {			
+			document.getElementById("login-modal-overlay").classList.remove("hide");
+		}
+
+		function hideLoginModal() {
+			document.getElementById("login-modal-overlay").classList.add("hide");
+		}
+
+		// Optional: close modal on escape
+		document.addEventListener("keyup", function (e) {
+			if (e.key === "Escape") hideLoginModal();
+		});
+	</script>
 </head>

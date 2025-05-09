@@ -29,10 +29,11 @@
 				<ul class="nav__links">
 					<li class="nav__link"><a href="/my-dashboard">Dashboard</a></li>
 					<li class="nav__link"><a href="/campers">Campers</a></li>
-					<li id="invitation-link" class="nav__link"><a href="#">Invitation</a></li>
+                    <li class="nav__link"><a href="/friends">Friends</a></li>
+					<!---<li id="invitation-link" class="nav__link"><a href="#">Invitation</a></li>--->
 				</ul>
 				<div class="profile">
-					<img src="assets/megan-p-profile-pic.jpg" alt="User Profile Picture" />
+					<!---<img src="assets/megan-p-profile-pic.jpg" alt="User Profile Picture" />--->
 					<span>{{ Auth::guard('guardian')->user()->first_name }} {{ Auth::guard('guardian')->user()->last_name }}</span>
 				</div>
             </nav>

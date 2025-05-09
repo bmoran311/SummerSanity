@@ -51,7 +51,7 @@
         <a href="{{ url('/') }}?inviter_id={{ Auth::guard('guardian')->id() }}&email={{ urlencode($email) }}#cta"><button class="btn btn--sm">Join Summer Sanity!</button></a>
         <div class="email-footer">
             <p>Can't wait to see what we come up with!</p>
-            <p class="bold">Megan Petrik</p>
+            <p class="bold">{{ Auth::guard('guardian')->user()->first_name }} {{ Auth::guard('guardian')->user()->last_name }}</p>
         </div>
     </div>
 </body>
