@@ -11,7 +11,7 @@ const generateEventCard = (data) => {
     return `
         <div class="event-card ${data.userChild ? `user-child ${data.bookingType}` : ""}" data-id="${data.eventName}-${data.eventType}">
             ${!data.userChild ? `<div class="booking-type ${data.bookingType}"></div>` : ""}
-            <img src="assets/icons/${!data?.userChild && data.eventType === EventType.DAY_CAMP_AM ? `${data.eventType}-yellow` : data.eventType}.svg" alt="${
+            <img src="/assets/icons/${!data?.userChild && data.eventType === EventType.DAY_CAMP_AM ? `${data.eventType}-yellow` : data.eventType}.svg" alt="${
         data.eventType
     } icon" />
             <div class="card__content">

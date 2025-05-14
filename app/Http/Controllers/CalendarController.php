@@ -227,10 +227,22 @@ class CalendarController extends Controller
     {
         $guardian_id = Auth::guard('guardian')->user()->id;
 
+        $friends = Guardian::whereIn('id', function ($query) use ($guardian_id) {
+            $query->select('guardian_id2')
+                  ->from('friends')
+                  ->where('guardian_id1', $guardian_id);
+        })->orWhereIn('id', function ($query) use ($guardian_id) {
+            $query->select('guardian_id1')
+                  ->from('friends')
+                  ->where('guardian_id2', $guardian_id);
+        })->get();
+
+        $pending_invitations = Invitation::where('guardian_id', Auth::guard('guardian')->id())->where('status', 'pending')->get();
+
         $campers = Camper::where('guardian_id', $guardian_id )->orderBy('last_name')->orderBy('first_name')->get();
         $guardian = Guardian::find( $guardian_id );
 
-        return view('dashboard.campers.index', compact( 'campers', 'guardian_id') );
+        return view('dashboard.campers.index', compact( 'campers', 'friends', 'pending_invitations', 'guardian_id') );
     }
 
     public function friends(Request $request)
@@ -246,7 +258,9 @@ class CalendarController extends Controller
         $friends = Guardian::whereIn('id', $friendIds)
             ->orderBy('last_name')
             ->orderBy('first_name')
-            ->get();    
+            ->get();
+            
+        $pending_invitations = Invitation::where('guardian_id', Auth::guard('guardian')->id())->where('status', 'pending')->get();
             
         $searchResults = collect();
         if ($request->filled('first_name') || $request->filled('last_name')) {
@@ -259,7 +273,7 @@ class CalendarController extends Controller
                 ->get();            
         }
 
-        return view('dashboard.friends.index', compact( 'friends', 'guardian_id', 'searchResults') );
+        return view('dashboard.friends.index', compact( 'friends', 'pending_invitations', 'guardian_id', 'searchResults') );
     }
 
     public function edit_camper(Request $request, Camper $camper)
@@ -274,8 +288,20 @@ class CalendarController extends Controller
         $campers = Camper::where('guardian_id', $guardian_id )->orderBy('last_name')->orderBy('first_name')->get();
         $guardian = Guardian::find( $guardian_id );
 
+        $friendIds = Friend::where('guardian_id1', $guardian_id)
+            ->pluck('guardian_id2')
+            ->merge(Friend::where('guardian_id2', $guardian_id)->pluck('guardian_id1'))
+            ->unique();
 
-        return view('dashboard.campers.index', compact('c', 'guardian_id', 'campers'));
+       
+        $friends = Guardian::whereIn('id', $friendIds)
+            ->orderBy('last_name')
+            ->orderBy('first_name')
+            ->get();
+
+        $pending_invitations = Invitation::where('guardian_id', Auth::guard('guardian')->id())->where('status', 'pending')->get();
+
+        return view('dashboard.campers.index', compact('c', 'guardian_id', 'friends', 'campers', 'pending_invitations'));
     }
 
     public function create_camper(Request $request)
@@ -426,6 +452,6 @@ class CalendarController extends Controller
             Auth::guard('guardian')->loginUsingId($toId);
         }
 
-        return redirect()->route('my-dashboard')->with('success', 'Friend request accepted! You’re now connected.');
+        return redirect()->route('dashboard.index')->with('success', 'Friend request accepted! You’re now connected.');
     }
 }

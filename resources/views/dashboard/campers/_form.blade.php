@@ -39,7 +39,7 @@
                 @isset($c)
                     Save Changes
                 @else
-                    Add Camper
+                    Add My Kid
                 @endisset
             </button>
         </div>

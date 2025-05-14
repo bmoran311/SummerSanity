@@ -183,6 +183,15 @@
     background-color: var(--color-light-green);
 }
 
+.event-card.confirmed {
+    background: var(--color-light-green-25); /* lighter or same as user if you want */
+}
+
+.event-card.tentative {
+    background: var(--color-yellow-25); /* same here */
+}
+
+
 .event-card .card__content {
     display: flex;
     flex-direction: column;

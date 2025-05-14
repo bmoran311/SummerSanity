@@ -200,10 +200,9 @@
                         </div>                                          
                     </div>
 
-
                     <!-- Submit Button -->
                     <div class="mt-6 flex justify-end space-x-4">
-                        <a href="{{ route('camp_enrollment.index') }}" class="px-4 py-2 text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300 text-2xl">
+                        <a href="{{ route('dashboard.index') }}" class="px-4 py-2 text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300 text-2xl">
                             Cancel
                         </a>
                         <button type="submit" class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 text-2xl">

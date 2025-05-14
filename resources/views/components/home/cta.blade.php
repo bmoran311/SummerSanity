@@ -54,12 +54,7 @@
                     <img src="/assets/icons/profile.svg" alt="Phone" />                                                          
                     <input type="text" placeholder="Phone" name="phone_number" maxlength="50" class="input__phone" value="{{ old('phone_number') }}">
                 </div>
-                <div class="input__field">
-                    <p class="submission-text">Preferred Communication Method:</p><br />
-                    <label><input type="radio" name="communication_preference" value="email" {{ old('communication_preference') === 'email' ? 'checked' : '' }} /> Email</label>
-                    &nbsp;&nbsp;
-                    <label><input type="radio" name="communication_preference" value="text" {{ old('communication_preference') === 'text' ? 'checked' : '' }} /> Text</label>
-                </div>
+				<input type="hidden" name="communication_preference" value="email">                
                 <p class="submission-text">By Submitting, you are agreeing to the terms of services and privacy policy.</p>            
                 <button class="btn btn--sm">Get Started</button>
             </form>

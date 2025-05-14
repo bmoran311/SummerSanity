@@ -44,26 +44,28 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::get('/plan_calendar/{guardian_id}', 'App\Http\Controllers\CalendarController@index')->name('plan_calendar.index');
-Route::get('/my-dashboard/', 'App\Http\Controllers\CalendarController@dashboard')->name('dashboard.index');
-Route::get('/campers/', 'App\Http\Controllers\CalendarController@campers')->name('dashboard.campers');
-Route::match(['get', 'post'], '/friends', [FrontEndCalendarController::class, 'friends'])->name('dashboard.friends');
-Route::post('/create_camper/', 'App\Http\Controllers\CalendarController@create_camper')->name('camper_front_end.create');
-Route::delete('/delete_camper/{camper}', [App\Http\Controllers\CalendarController::class, 'destroy'])->name('camper_front_end.destroy');
-Route::delete('/delete_friend/{friend}', [App\Http\Controllers\CalendarController::class, 'destroy_friendship'])->name('friend_front_end.destroy');
-Route::get('/edit_camper/{camper}', 'App\Http\Controllers\CalendarController@edit_camper')->name('camper_front_end.edit');
-Route::patch('/update_camper/{camper}', [CalendarController::class, 'update'])->name('camper_front_end.update');
-Route::post('/invite/friends', 'App\Http\Controllers\CalendarController@sendInvites')->name('invite.friends');
-Route::post('/friendship/request', 'App\Http\Controllers\CalendarController@requestFriendship')->name('friendship.request');
 
-Route::get('/friends/accept', [CalendarController::class, 'accept'])
+Route::middleware('auth:guardian')->group(function () 
+{
+	Route::get('/my-dashboard/', 'App\Http\Controllers\CalendarController@dashboard')->name('dashboard.index');
+	Route::get('/campers/', 'App\Http\Controllers\CalendarController@campers')->name('dashboard.campers');
+	Route::match(['get', 'post'], '/friends', [FrontEndCalendarController::class, 'friends'])->name('dashboard.friends');
+	Route::post('/create_camper/', 'App\Http\Controllers\CalendarController@create_camper')->name('camper_front_end.create');
+	Route::delete('/delete_camper/{camper}', [App\Http\Controllers\CalendarController::class, 'destroy'])->name('camper_front_end.destroy');
+	Route::delete('/delete_friend/{friend}', [App\Http\Controllers\CalendarController::class, 'destroy_friendship'])->name('friend_front_end.destroy');
+	Route::get('/edit_camper/{camper}', 'App\Http\Controllers\CalendarController@edit_camper')->name('camper_front_end.edit');
+	Route::patch('/update_camper/{camper}', [CalendarController::class, 'update'])->name('camper_front_end.update');
+	Route::post('/invite/friends', 'App\Http\Controllers\CalendarController@sendInvites')->name('invite.friends');
+	Route::post('/friendship/request', 'App\Http\Controllers\CalendarController@requestFriendship')->name('friendship.request');
+	Route::get('/enrollment/{id}/edit', 'App\Http\Controllers\CalendarController@edit_enrollment')->name('enrollment_front_end.edit');
+	Route::put('/calendar/enrollment/{id}', [FrontEndCalendarController::class, 'update_enrollment'])->name('calendar.update_enrollment');
+	Route::delete('/camp_enrollment/{group_id}', [FrontEndCalendarController::class, 'delete_enrollment'])->name('camp_enrollment_fe.destroy');
+});
+
+
+Route::get('/friends/accept', [FrontEndCalendarController::class, 'accept'])
     ->name('friends.accept')
     ->middleware('signed');
-
-Route::get('/enrollment/{id}/edit', 'App\Http\Controllers\CalendarController@edit_enrollment')->name('enrollment_front_end.edit');
-Route::put('/calendar/enrollment/{id}', [FrontEndCalendarController::class, 'update_enrollment'])->name('calendar.update_enrollment');
-Route::delete('/camp_enrollment/{group_id}', [FrontEndCalendarController::class, 'delete_enrollment'])->name('camp_enrollment_fe.destroy');
-
 Route::get('/confirm/{guardian}', [AuthController::class, 'confirmEmail'])->name('guardian.confirm')->middleware('signed');
 
 Route::post('/guardian/login', [AuthController::class, 'loginWithEmail'])->name('guardian.login');
@@ -77,6 +79,11 @@ Route::post('/guardian/logout', function (Request $request) {
     $request->session()->regenerateToken();
     return redirect('/#login');
 })->name('guardian.logout');
+
+
+
+
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -143,19 +150,5 @@ Route::get('/faq_category/order/{direction}/{id}/{currPos}', 'App\Http\Controlle
 Route::get('/resource_category/order/{direction}/{id}/{currPos}', 'App\Http\Controllers\Admin\ResourceCategoryController@sort')->name('orderResourceCategory');
 
 Route::get('/faqs', [PageController::class, 'faqs'])->name('site.faqs');
-
-Route::get('/test-email', function () {
-    try {
-        Mail::raw('Test email from Summer Sanity using Mailtrap.', function ($message) {
-            $message->to('bmoran311@yahoo.com')
-                    ->subject('Mailtrap Test');
-        });
-
-        return 'Email sent!';
-    } catch (\Exception $e) {
-        Log::error('Mail send failed: ' . $e->getMessage());
-        return response()->json(['error' => $e->getMessage()], 500);
-    }
-});
 
 require __DIR__.'/auth.php';

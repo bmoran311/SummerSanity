@@ -5,13 +5,13 @@
             <img class="logo" src="/assets/logo.svg" alt="Summer Sanity Logo" />
             <p>&copy; Copyright 2025 Summer Sanity. All rights reserved.</p>
             <div class="social-icons">
-                <a href="https://www.facebook.com" target="_blank">
+                <a href="https://www.facebook.com/profile.php?id=61574991233005" target="_blank">
                     <img src="/assets/icons/facebook-color.svg" alt="Facebook Icon and Link" />
                 </a>
-                <a href="https://www.linkedin.com" target="_blank">
+                <a href="https://www.linkedin.com/company/summer-sanity-llc" target="_blank">
                     <img src="/assets/icons/linkedin-color.svg" alt="LinkedIn Icon and Link" />
                 </a>
-                <a href="https://www.instagram.com" target="_blank">
+                <a href="https://www.instagram.com/summer_sanity/" target="_blank">
                     <img src="/assets/icons/instagram-color.svg" alt="Instagram Icon and Link" />
                 </a>
             </div>
@@ -31,7 +31,7 @@
                 <ul class="links">
                     <li><a class="disabled" href="#">Privacy Policy</a></li>
                     <li><a class="disabled" href="#">Terms of Services</a></li>
-                    <li><a class="disabled" href="/faqs">FAQ</a></li>
+                    <li><a href="/faqs">FAQ</a></li>
                 </ul>
             </div>
             <div class="links__wrapper">

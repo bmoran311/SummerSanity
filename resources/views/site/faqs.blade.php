@@ -13,7 +13,7 @@
                     <div class="faq-item">
                         <button class="faq-question">{{ $faq->question }}</button>
                         <div class="faq-answer" style="color: black;">
-                            <p style="color: black;">{{ $faq->answer }}.</p>
+                            <p style="color: black;">{{ $faq->answer }}</p>
                         </div>
                     </div>                                                                                                 
                 @endforeach                       

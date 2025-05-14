@@ -15,15 +15,7 @@
                     <div class="card social-links">                                           
                         <a href="https://www.linkedin.com/in/megan-petrik-8a387613/" target="_blank">
                             <img src="/assets/icons/linkedin-color.svg" alt="LinkedIn Icon and Link" />
-                        </a>
-                        <!---    
-                        <a href="https://www.facebook.com/profile.php?id=61574991233005" target="_blank">
-                            <img src="/assets/icons/facebook-color.svg" alt="Facebook Icon and Link" />
-                        </a>
-                        <a href="https://www.instagram.com/summer_sanity/" target="_blank">
-                            <img src="/assets/icons/instagram-color.svg" alt="Instagram Icon and Link" />
-                        </a>
-                        --->
+                        </a>                        
                     </div>
                 </div>
                 <div class="person__content">
@@ -51,15 +43,7 @@
                     <div class="card social-links">
                         <a href="https://www.linkedin.com/in/meganspivey/" target="_blank">
                             <img src="/assets/icons/linkedin-color.svg" alt="LinkedIn Icon and Link" />
-                        </a>                        
-                        <!---
-                        <a href="https://www.facebook.com/profile.php?id=61574991233005" target="_blank">
-                            <img src="/assets/icons/facebook-color.svg" alt="Facebook Icon and Link" />
-                        </a>                        
-                        <a href="https://www.instagram.com/summer_sanity/" target="_blank">
-                            <img src="/assets/icons/instagram-color.svg" alt="Instagram Icon and Link" />
-                        </a>
-                        --->
+                        </a>                                                
                     </div>
                 </div>
                 <div class="person__content">

@@ -71,14 +71,14 @@
                             
                             <div class="flex items-center gap-4 mt-2">
                                 <label class="inline-flex items-center">
-                                    <input type="radio" name="communication_preference" value="Email"
-                                        {{ old('communication_preference', $guardian->communication_preference ?? '') === 'Email' ? 'checked' : '' }}>
+                                    <input type="radio" name="communication_preference" value="email"
+                                        {{ old('communication_preference', $guardian->communication_preference ?? '') === 'email' ? 'checked' : '' }}>
                                     <span class="ml-2">Email</span>
                                 </label>
 
                                 <label class="inline-flex items-center">
-                                    <input type="radio" name="communication_preference" value="Text"
-                                        {{ old('communication_preference', $guardian->communication_preference ?? '') === 'Text' ? 'checked' : '' }}>
+                                    <input type="radio" name="communication_preference" value="text"
+                                        {{ old('communication_preference', $guardian->communication_preference ?? '') === 'text' ? 'checked' : '' }}>
                                     <span class="ml-2">Text</span>
                                 </label>
                             </div>

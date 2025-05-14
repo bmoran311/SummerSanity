@@ -81,6 +81,23 @@ h4 {
     font-size: 1.8rem;
 }
 
+.section-header h2 {
+  margin: 0;
+}
+
+.employees-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.person {
+  margin: 0 10px 20px 0;
+}
+
+.section-header {
+  padding-bottom: 1px;
+}
+
+
 p {
     font-family: "Overpass", sans-serif;
     font-size: 1.6rem;
@@ -554,6 +571,26 @@ p {
     right: 0;
 }
 
+.social-links a img {
+  width: 24px;
+  height: 24px;
+}
+
+.social-links a {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #ffffff; 
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+
 #team .person .person__content {
     width: 70%;
     min-height: 34rem;
@@ -1006,17 +1043,25 @@ p {
         justify-content: space-between;
     }
 
+    #team .person .person__portrait {
+        position: static;
+        width: 90%;
+        margin-bottom: 1.2rem; /* optional: adds breathing room */
+    }
+
     #team .person .person__portrait .social-links {
-        justify-self: center;
         position: static;
         justify-content: center;
+        align-items: center;
+        gap: 1.2rem;
+        margin-top: -1.6rem; /* ⬅ pulls it up closer to the portrait */
         margin-bottom: 2.4rem;
-        gap: 2.4rem;
-        padding: 1.2rem 2rem;
+        padding: 0.8rem 1.6rem;
     }
 
     #team .person .person__portrait .social-links img {
         width: 2.4rem;
+        height: 2.4rem;
     }
 }
 
@@ -1756,7 +1801,7 @@ p {
     background: none;
     border: none;
     text-align: left;
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     font-weight: 600;
     padding: 15px;
     cursor: pointer;
@@ -1825,3 +1870,12 @@ p {
 	cursor: pointer;
 }
 
+.event-card.confirmed {
+  background-color: #d1e7dd; /* Light green */
+  border-left: 4px solid #28a745; /* Green border */
+}
+
+.event-card.tentative {
+  background-color: #fff3cd; /* Light yellow */
+  border-left: 4px solid #ffc107; /* Yellow border */
+}
