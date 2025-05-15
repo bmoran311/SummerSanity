@@ -30,7 +30,7 @@ class AuthController extends Controller
             return redirect()->intended('/my-dashboard/');
         }        
           
-        return redirect('/#login')->withErrors([            
+        return redirect('/')->withErrors([            
             'email' => 'The provided credentials do not match our records.',
         ]);
     }
