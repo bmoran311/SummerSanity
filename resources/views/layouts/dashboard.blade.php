@@ -13,6 +13,7 @@
                     <li class="nav__link"><a href="/campers">My Kids</a></li>
                     <li class="nav__link"><a href="/friends">Friends</a></li>
                     <li id="invitation-link" class="nav__link"><a href="#">Invitation</a></li>
+                    <li class="nav__link"><a href="/profile">Profile</a></li>
                 </ul>
                 <div class="profile">
                     <span>{{ Auth::guard('guardian')->user()->first_name }} {{ Auth::guard('guardian')->user()->last_name }}</span>

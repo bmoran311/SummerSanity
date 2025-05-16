@@ -60,7 +60,20 @@ Route::middleware('auth:guardian')->group(function ()
 	Route::get('/enrollment/{id}/edit', 'App\Http\Controllers\CalendarController@edit_enrollment')->name('enrollment_front_end.edit');
 	Route::put('/calendar/enrollment/{id}', [FrontEndCalendarController::class, 'update_enrollment'])->name('calendar.update_enrollment');
 	Route::delete('/camp_enrollment/{group_id}', [FrontEndCalendarController::class, 'delete_enrollment'])->name('camp_enrollment_fe.destroy');
+    Route::get('/profile/', 'App\Http\Controllers\CalendarController@profile')->name('profile.index');
 });
+
+Route::get('/impersonate/guardian/{id}', function ($id) {
+    if (!Auth::guard('web')->check() ) {
+        abort(403, 'Only admins can impersonate');
+    }
+
+    session()->put('impersonator_user_id', Auth::guard('web')->id());
+
+    Auth::guard('guardian')->loginUsingId($id);
+
+    return redirect('/my-dashboard'); // or wherever your guardian dashboard lives
+})->name('admin.impersonate_guardian');
 
 
 Route::get('/friends/accept', [FrontEndCalendarController::class, 'accept'])
@@ -79,10 +92,6 @@ Route::post('/guardian/logout', function (Request $request) {
     $request->session()->regenerateToken();
     return redirect('/#login');
 })->name('guardian.logout');
-
-
-
-
 
 
 Route::get('/dashboard', function () {

@@ -47,7 +47,10 @@
                         </th>  
                         <th class="min-w-[180px]  xl:pl-11">
                             Active?
-                        </th>                                               
+                        </th>   
+                        <th class="min-w-[180px]  xl:pl-11">
+                            Impersonate
+                        </th>                                             
                         <th class="no-sort">
                             Actions
                         </th>
@@ -67,7 +70,10 @@
                             </td>  
                             <td class="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
                                 <h5 class="font-medium text-black dark:text-white">{{ $guardian->active ? 'Yes' : 'No' }}</h5>
-                            </td>                                                   
+                            </td>   
+                            <td class="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
+                                <h5 class="font-medium text-black dark:text-white"><a href="{{ route('admin.impersonate_guardian', ['id' => $guardian->id]) }}">Impersonate</></h5>
+                            </td>                                                      
                             <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                                 <div class="flex items-center space-x-3.5">
                                     <button class="hover:text-primary">

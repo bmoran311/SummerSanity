@@ -454,4 +454,11 @@ class CalendarController extends Controller
 
         return redirect()->route('dashboard.index')->with('success', 'Friend request accepted! You’re now connected.');
     }
+
+    public function profile()
+    {
+        $guardian = Auth::guard('guardian')->user();
+
+        return view('profile.index', compact('guardian'));
+    }
 }
