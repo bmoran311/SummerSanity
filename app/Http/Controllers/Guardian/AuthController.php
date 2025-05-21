@@ -12,6 +12,9 @@ use App\Models\Invitation;
 use App\Mail\RegistrationConfirmation;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -118,5 +121,81 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+	
+	public function editProfile(Request $request)
+	{			
+		$guardian = Auth::guard('guardian')->user();
+
+		$request->validate([
+			'first_name' => 'required|string|max:255',
+			'last_name' => 'required|string|max:255',
+			'email' => 'required|string|email|max:255|unique:guardian,email,' . $guardian->id,
+			'phone_number' => 'required|string|max:255',
+			'zip_code' => 'required|string|max:50',			
+			'password' => 'nullable|string|confirmed|max:50',
+		]);
+
+		$guardian->first_name = $request->input('first_name');
+		$guardian->last_name = $request->input('last_name');
+		$guardian->email = $request->input('email');
+		$guardian->phone_number = $request->input('phone_number');
+		$guardian->zip_code = $request->input('zip_code');
+		$guardian->communication_preference = $request->input('communication_preference');
+
+		if ($request->filled('password')) {
+			$guardian->password = Hash::make($request->input('password'));
+		}
+
+		$guardian->save();
+
+		return redirect()->route('dashboard.index')->with('success', 'Profile updated successfully!');
+	}
+
+    public function sendResetLinkEmail(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:guardian,email',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $status = Password::broker('guardians')->sendResetLink(
+            $request->only('email')
+        );
+
+        return back()->with('success', 'We emailed your password reset link!');
+    }
+
+    public function showResetForm(Request $request, $token)
+    {
+        return view('profile.reset-password', [
+            'token' => $token,
+            'email' => $request->query('email'),
+        ]);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|string|confirmed|min:8',
+        ]);
+
+        $status = Password::broker('guardians')->reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($guardian, $password) {
+                $guardian->password = Hash::make($password);
+                $guardian->setRememberToken(Str::random(60));
+                $guardian->save();
+            }
+        );
+
+        return $status === Password::PASSWORD_RESET
+            ? redirect()->route('home')->with('success', 'Your password has been reset!')
+            : back()->withErrors(['email' => __($status)]);
     }
 }

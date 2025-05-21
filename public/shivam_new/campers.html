@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <!-- "Overpass" Google Font -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
+        <!-- CSS Stylesheet -->
+        <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator.min.css" rel="stylesheet" />
+
+        <!-- Calendar UI External Library "Flatpickr" -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/airbnb.css" />
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/weekSelect/weekSelect.js"></script>
+
+        <link rel="stylesheet" href="tabulator.css" />
+        <link rel="stylesheet" href="style.css" />
+        <link rel="stylesheet" href="calendar.css" />
+        <title>Dashboard - Summer Sanity</title>
+    </head>
+    <body>
+        <div class="dashboard">
+            <nav class="nav nav--dashboard">
+                <div class="logo">
+                    <a href="/"><img src="assets/logo.svg" alt="Summer Sanity Logo" /></a>
+                </div>
+                <ul class="nav__links">
+                    <li class="nav__link"><a href="/dashboard.html">Dashboard</a></li>
+                    <li id="campers-link" class="nav__link"><a href="/campers.html">Campers</a></li>
+                    <li id="invitation-link" class="nav__link"><a href="#">Invitation</a></li>
+                </ul>
+                <div class="profile">
+                    <img src="assets/megan-p-profile-pic.jpg" alt="User Profile Picture" />
+                    <span>Megan Petrik</span>
+                </div>
+            </nav>
+            <div class="container campers-page-container">
+                <div class="camper-header">
+                    <h4>Your Kids</h4>
+                    <button id="add-kid-btn" class="btn btn--sm">Add New Kid</button>
+                </div>
+                <div class="camper-items">
+                    <!-- Table Header-->
+                    <div class="camper-item table-header">
+                        <span class="column-title">Camper Name</span>
+                        <span class="column-title">Birth Date</span>
+                    </div>
+                    <!--  -->
+                    <!-- Camper Item -->
+                    <div class="camper-item card">
+                        <div class="input__field">
+                            <input type="text" placeholder="Camper Name" value="My Kid 1" name="camper" />
+                        </div>
+                        <div class="input__field">
+                            <input id="date-picker" placeholder="Camper Birthdate" value="April 15, 2025" />
+                        </div>
+                        <img src="assets/icons/delete.svg" alt="Delete Icon" />
+                    </div>
+                    <!--  -->
+                    <!-- Camper Item -->
+                    <div class="camper-item card">
+                        <div class="input__field">
+                            <input type="text" placeholder="Camper Name" value="My Kid 2" name="camper" />
+                        </div>
+                        <div class="input__field">
+                            <input id="date-picker" placeholder="Camper Birthdate" value="April 15, 2025" />
+                        </div>
+                        <img src="assets/icons/delete.svg" alt="Delete Icon" />
+                    </div>
+                    <!--  -->
+                    <!-- Camper Item -->
+                    <div class="camper-item card">
+                        <div class="input__field">
+                            <input type="text" placeholder="Camper Name" value="My Kid 3" name="camper" />
+                        </div>
+                        <div class="input__field">
+                            <input id="date-picker" placeholder="Camper Birthdate" value="April 15, 2025" />
+                        </div>
+                        <img src="assets/icons/delete.svg" alt="Delete Icon" />
+                    </div>
+                    <!--  -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Add New Kid Modal -->
+        <div id="add-kid-modal-overlay" class="modal-overlay hide">
+            <div class="card modal modal--sm add-kid__modal">
+                <div class="gradient"></div>
+                <div class="close-btn"><img src="assets/icons/close.svg" /></div>
+                <div class="header">
+                    <img src="assets/icons/register.svg" alt="Register Icon" />
+                    <h4>Add New Kid</h4>
+                </div>
+                <div class="modal__main">
+                    <form class="add-kid__form">
+                        <div class="add-kid__form-main">
+                            <div>
+                                <label class="field__label" for="emails">Kid Name</label>
+                                <div class="input__field">
+                                    <input type="text" placeholder="Camper Name" name="camper" />
+                                </div>
+                            </div>
+                            <div>
+                                <label class="field__label" for="emails">Birth Date</label>
+                                <div class="input__field">
+                                    <input id="date-picker" placeholder="Camper Birthdate" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn btn--secondary btn--sm">Cancel</button>
+                            <button type="submit" class="btn btn--sm">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
+        <script type="module" src="script.js"></script>
+    </body>
+</html>

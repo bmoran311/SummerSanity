@@ -115,10 +115,10 @@ class Authenticate implements AuthenticatesRequests
     protected function redirectTo(Request $request)
     {
         if (! $request->expectsJson()) {
-            session()->flash('success', 'Your session has expired. Please log in again.');
-			return route('home');
-		}
+            return route('login'); 
+        }
     }
+
 
     /**
      * Specify the callback that should be used to generate the redirect path.

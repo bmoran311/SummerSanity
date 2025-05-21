@@ -166,11 +166,11 @@
             : "";
 
         const editButton = data.userChild
-            ? `<div class="edit-btn" data-id="${data.enrollment_id}"><img src="assets/icons/edit.svg" alt="Edit Icon" /></div>`
+            ? `<div class="edit-btn"><img src="assets/icons/edit.svg" alt="Edit Icon" /></div>`
             : "";
 
         return `
-            <div class="event-card ${bookingClass}">
+            <div class="event-card ${bookingClass}" data-id="${data.enrollment_id}">
                 <img src="/assets/icons/${iconName}.svg" alt="${data.eventType} icon" />
                 <div class="card__content">
                     <span class="event-name">${data.eventName}</span>
@@ -212,18 +212,17 @@
                         if (cellValue) {
                             // Existing logic to handle click on populated cell (Edit)
                             const isMobileOrTablet = window.matchMedia("(max-width: 1024px)").matches;
-                            let targetElement = null;
-
-                            if (isMobileOrTablet) {
-                                const eventBlock = e.target.closest(".event-card");
-                                if (eventBlock) {
-                                    targetElement = eventBlock;
-                                }
-                            } else {
-                                if (e.target.classList.contains("edit-btn")) {
-                                    targetElement = e.target;
+                            
+                            const eventBlock = e.target.closest(".event-card");
+                            if (eventBlock) 
+                            {
+                                const dataId = eventBlock.getAttribute("data-id");
+                                if (dataId) {
+                                    window.location.href = '/enrollment/' + dataId + '/edit';
+                                    return;
                                 }
                             }
+
 
                             if (targetElement) {
                                 const dataId = targetElement.getAttribute("data-id");

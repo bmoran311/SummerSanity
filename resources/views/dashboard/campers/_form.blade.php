@@ -1,7 +1,7 @@
-<form action="{{ isset($c) ? route('camper.update', $c->id) : route('camper.store') }}" method="POST">
+<form action="{{ isset($c) ? route('camper_front_end.update', $c->id) : route('camper_front_end.create') }}" method="POST">
     @csrf
     @if(isset($c))
-        @method('PUT')
+        @method('POST')
     @else
         @method('POST')
     @endif

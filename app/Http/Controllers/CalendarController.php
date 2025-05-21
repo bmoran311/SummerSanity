@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 class CalendarController extends Controller
 {
     public function dashboard(Request $request)
-    {
+    {        
         $guardian_id = Auth::guard('guardian')->user()->id;
 
         $campers = Camper::where('guardian_id', $guardian_id )->orderBy('last_name')->orderBy('first_name')->get();
@@ -314,28 +314,27 @@ class CalendarController extends Controller
 
         $camper = new Camper();
 
-        $birth_date = \Carbon\Carbon::createFromFormat('M d, Y', $request->birth_date)->format('Y-m-d');
-
         $camper->first_name = $request->input('first_name');
         $camper->guardian_id = Auth::guard('guardian')->user()->id;
         $camper->last_name = $request->input('last_name');
-        $camper->birth_date = $birth_date;
+        $camper->birth_date = $request->birth_date;
         $camper->save();
 
         return back()->with('success', 'Camper Created');
     }
 
-    public function update(Request $request, Camper $camper)
+    public function update_camper(Request $request, Camper $camper)
     {
         if ($camper->guardian_id !== Auth::guard('guardian')->id()) {
             abort(403);
         }
 
         $camper->first_name = $request->input('first_name');
+        $camper->last_name = $request->input('last_name');
         $camper->birth_date = $request->input('birth_date');
         $camper->save();
 
-        return back()->with('success', 'Camper updated!');
+        return redirect()->route('dashboard.campers')->with('success', 'Camper updated!');
     }
 
     public function destroy(camper $camper)
@@ -457,8 +456,23 @@ class CalendarController extends Controller
 
     public function profile()
     {
+		$guardian_id = Auth::guard('guardian')->id();
+		
         $guardian = Auth::guard('guardian')->user();
+		
+		$friendIds = Friend::where('guardian_id1', $guardian_id)
+            ->pluck('guardian_id2')
+            ->merge(Friend::where('guardian_id2', $guardian_id)->pluck('guardian_id1'))
+            ->unique();
 
-        return view('profile.index', compact('guardian'));
+       
+        $friends = Guardian::whereIn('id', $friendIds)
+            ->orderBy('last_name')
+            ->orderBy('first_name')
+            ->get();
+
+        $pending_invitations = Invitation::where('guardian_id', Auth::guard('guardian')->id())->where('status', 'pending')->get();
+
+        return view('profile.index', compact('guardian', 'friends', 'pending_invitations'));
     }
 }

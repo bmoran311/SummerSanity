@@ -99,8 +99,45 @@
                 <img src="/assets/icons/password.svg" alt="Password icon">
                 <input type="password" name="password" placeholder="Password" class="input__first">
             </div>
+            <p style="text-align:center; margin: 0.5rem 0;">
+                <a href="#" onclick="showForgotPasswordModal()" style="font-size: 1.3rem; text-decoration: underline;">Forgot your password?</a>
+            </p>
             <br>
             <button type="submit" class="btn btn--sm">Login</button>
         </form>
     </div>
 </div>
+
+<div id="forgot-password-modal" class="modal-overlay-login hide">
+    <div class="card register-card login-modal">
+        <div class="gradient"></div>
+        <div class="close-btn" onclick="hideForgotPasswordModal()">
+            <img src="/assets/icons/close.svg" />
+        </div>
+        <div class="header">
+            <img src="/assets/icons/register.svg" alt="Forgot Password Icon" />
+            <h4>Reset Password</h4>  
+            <p>Enter your email and we’ll send reset instructions</p>             
+        </div>
+        <form method="POST" action="/guardian/password/email">                
+            <input type="hidden" name="_token" value="{{ csrf_token() }}" autocomplete="off">
+            <div class="input__field">
+                <img src="/assets/icons/email.svg" alt="Email icon">
+                <input type="email" name="email" placeholder="Email" class="input__email" required>
+            </div>
+            <br>
+            <button type="submit" class="btn btn--sm">Send Reset Link</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function showForgotPasswordModal() {
+        document.getElementById("login-modal-overlay").classList.add("hide");
+        document.getElementById("forgot-password-modal").classList.remove("hide");
+    }
+
+    function hideForgotPasswordModal() {
+        document.getElementById("forgot-password-modal").classList.add("hide");
+    }
+</script>

@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\CalendarController;
 use App\Http\Controllers\CalendarController as FrontEndCalendarController;
 use App\Http\Controllers\Admin\InvitationController;
 use App\Http\Controllers\Guardian\AuthController;
+use App\Http\Controllers\Guardian\ForgotPasswordController;
 use App\Http\Controllers\Site\PageController;
 
 use Illuminate\Http\Request;
@@ -54,14 +55,21 @@ Route::middleware('auth:guardian')->group(function ()
 	Route::delete('/delete_camper/{camper}', [App\Http\Controllers\CalendarController::class, 'destroy'])->name('camper_front_end.destroy');
 	Route::delete('/delete_friend/{friend}', [App\Http\Controllers\CalendarController::class, 'destroy_friendship'])->name('friend_front_end.destroy');
 	Route::get('/edit_camper/{camper}', 'App\Http\Controllers\CalendarController@edit_camper')->name('camper_front_end.edit');
-	Route::patch('/update_camper/{camper}', [CalendarController::class, 'update'])->name('camper_front_end.update');
+	Route::post('/update_camper/{camper}', [\App\Http\Controllers\CalendarController::class, 'update_camper'])->name('camper_front_end.update');
 	Route::post('/invite/friends', 'App\Http\Controllers\CalendarController@sendInvites')->name('invite.friends');
 	Route::post('/friendship/request', 'App\Http\Controllers\CalendarController@requestFriendship')->name('friendship.request');
 	Route::get('/enrollment/{id}/edit', 'App\Http\Controllers\CalendarController@edit_enrollment')->name('enrollment_front_end.edit');
 	Route::put('/calendar/enrollment/{id}', [FrontEndCalendarController::class, 'update_enrollment'])->name('calendar.update_enrollment');
 	Route::delete('/camp_enrollment/{group_id}', [FrontEndCalendarController::class, 'delete_enrollment'])->name('camp_enrollment_fe.destroy');
-    Route::get('/profile/', 'App\Http\Controllers\CalendarController@profile')->name('profile.index');
+    Route::get('/edit_profile/', 'App\Http\Controllers\CalendarController@profile')->name('profile.index');
+	Route::put('/profile', [AuthController::class, 'editProfile'])->name('guardian.profile.update');
+    Route::post('/send-invites', [FrontEndCalendarController::class, 'sendInvites'])->name('send-invites');    
 });
+
+Route::post('/guardian/password/email', [AuthController::class, 'sendResetLinkEmail'])->name('guardian.password.email');
+Route::get('/guardian/password/reset/{token}', [AuthController::class, 'showResetForm'])->name('guardian.password.reset');
+Route::post('/guardian/password/reset', [AuthController::class, 'resetPassword'])->name('guardian.password.update');
+
 
 Route::get('/impersonate/guardian/{id}', function ($id) {
     if (!Auth::guard('web')->check() ) {
@@ -110,7 +118,7 @@ Route::get('/dashboard/tables', function () {
     return view('tables');
 })->middleware(['auth', 'verified'])->name('tables');
 
-Route::middleware('auth')->group(function () {
+//Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -147,13 +155,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/calendar_only/index/{guardian_id}', 'App\Http\Controllers\Admin\CalendarController@index_only')->name('calendar.index_only');
 
     Route::post('/upload-screenshot', [CalendarController::class, 'uploadScreenshot']);
-    Route::get('/invite-friends', [CalendarController::class, 'showInvitePage']);
-    Route::post('/send-invites', [FrontEndCalendarController::class, 'sendInvites'])->name('send-invites');
+    Route::get('/invite-friends', [CalendarController::class, 'showInvitePage']);    
 
     Route::get('/guardian/friends/{guardian_id}', 'App\Http\Controllers\Admin\GuardianController@friends')->name('guardian.friends');
     Route::post('/guardian/friends/{guardian_id}', 'App\Http\Controllers\Admin\GuardianController@assign_friends')->name('guardian.assign_friends');
     
-});
+//});
 
 
 
