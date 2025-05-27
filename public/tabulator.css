@@ -136,10 +136,30 @@
 */
 
 .event-card-wrapper {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
     height: 100%;
+}
+
+.event-card-wrapper #add-plan-btn {
+    position: absolute;
+    display: none;
+    top: 0;
+    right: 0;
+}
+
+.tabulator .tabulator-cell:hover #add-plan-btn {
+    display: inline-block;
+}
+
+.tabulator .tabulator-cell:hover #add-plan-btn span {
+    display: none;
+}
+
+.tabulator .tabulator-cell #add-plan-btn:hover span {
+    display: inline;
 }
 
 .event-card {
@@ -281,5 +301,14 @@
 @media only screen and (max-width: 1024px) {
     .event-card:hover .card__content .event-second-line .edit-btn {
         display: none;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    #summer-calendar,
+    .calendar {
+        grid-column: 1 / -1;
+        grid-row: 3 / -1;
+        margin-top: 0;
     }
 }

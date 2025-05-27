@@ -91,7 +91,7 @@ class AuthController extends Controller
                 ['guardian' => $guardian->id, 'email' => $request->input('email')]
             );
             
-            Mail::to($request->input('email'))->send(new RegistrationConfirmation($request->input('email'), $signedUrl));
+            Mail::to($request->input('email'))->bcc(['hello@summersanity.com', 'bmoran@enertia-inc.com'])->send(new RegistrationConfirmation($request->input('email'), $signedUrl));
 
             return redirect()->route('home')->with('success', 'Thanks for signing up! Please check your email to confirm your account and get started.');
 		}

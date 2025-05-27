@@ -42,8 +42,7 @@
                         @endphp
 
                         @if($eventName)
-                            @php
-                                // Only add if this eventName hasn't been added yet
+                            @php                                
                                 if (!isset($enrollments[$eventName])) {
                                     $enrollments[$eventName] = [
                                         'eventType' => $eventType,
@@ -204,9 +203,35 @@
                     sorter: "string",
                     formatter: function (cell) {
                         const data = cell.getValue();
-                        return data ? generateEventCard(data) : "";
+
+                        const addButton = `
+                            <button id="add-plan-btn"
+                                onclick="openAddPlanModal('${cell.getRow().getData()?.week}', '${cell.getColumn().getField()}')"
+                                class="btn btn--sm">+ <span>Add</span>
+                            </button>`;
+
+                        return `
+                            <div class="event-card-wrapper">
+                                ${addButton}
+                                ${Array.isArray(data) ? data.map(child => generateEventCard(child)).join("") : (data ? generateEventCard(data) : "")}
+                            </div>
+                        `;
                     },
                     cellClick: (e, cell) => {
+                        const isAddBtn = e.target.closest("#add-plan-btn");
+
+                        if (isAddBtn) {
+                            const camper_id = document.getElementById('modal_camper_id');
+                            const week_id = document.getElementById('modal_week_id');
+
+                            const column = cell.getColumn();
+                            camper_id.value = column.getDefinition().id;
+                            week_id.value = cell.getRow().getData().week_id;
+
+                            window.dispatchEvent(new CustomEvent('open-modal', { detail: 'enrollment_create' }));
+                            return;
+                        }
+
                         const cellValue = cell.getValue();
 
                         if (cellValue) {
