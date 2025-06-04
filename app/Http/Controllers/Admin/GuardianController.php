@@ -139,4 +139,49 @@ class GuardianController extends Controller
 
          return back()->with('danger', 'Guardian Deleted');
     }
+
+    public function exportCsv()
+    {
+        $filename = 'guardians.csv';
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$filename\"",
+        ];
+
+        $guardians = Guardian::select(
+            'id', 'first_name', 'last_name', 'email',
+            'phone_number', 'zip_code', 'communication_preference',
+            'active', 'created_at'
+        )->get();
+
+        $callback = function () use ($guardians) {
+            $file = fopen('php://output', 'w');
+
+            // Add headers
+            fputcsv($file, [
+                'ID', 'First Name', 'Last Name', 'Email',
+                'Phone Number', 'Zip Code', 'Comm Pref',
+                'Active', 'Created At'
+            ]);
+
+            // Add rows
+            foreach ($guardians as $g) {
+                fputcsv($file, [
+                    $g->id,
+                    $g->first_name,
+                    $g->last_name,
+                    $g->email,
+                    $g->phone_number,
+                    $g->zip_code,
+                    $g->communication_preference,
+                    $g->active ? 'Yes' : 'No',
+                    $g->created_at->toDateTimeString(),
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
 }

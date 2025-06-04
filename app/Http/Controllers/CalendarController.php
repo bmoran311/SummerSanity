@@ -43,6 +43,8 @@ class CalendarController extends Controller
         $camp_enrollment_type_array = [];
         $camp_enrollment_id_array = [];
         $camp_enrollment_color_array = [];
+        $camp_enrollment_url_array = [];
+        $camp_enrollment_notes_array = [];
 
         $camp_names = DB::select("
             SELECT
@@ -77,6 +79,8 @@ class CalendarController extends Controller
                     $camp_enrollment_group_id_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->group_id : "";
                     $camp_enrollment_id_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->id : "";
                     $camp_enrollment_type_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->type : "";
+                    $camp_enrollment_url_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->registration_url : "";
+                    $camp_enrollment_notes_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->notes : "";
                     $camp_enrollment_color_array[$camper->id][$time_slot][$week->week_number] =
                         ($enrollment && $enrollment->booked) ? "yellow" :
                         (($enrollment && $enrollment->camp_name) ? "#F8E5A6" : "");
@@ -99,12 +103,14 @@ class CalendarController extends Controller
                     $camp_enrollment_group_id_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->group_id : "";
                     $camp_enrollment_id_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->id : "";
                     $camp_enrollment_type_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->type : "";
+                    $camp_enrollment_url_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->registration_url : "";
+                    $camp_enrollment_notes_array[$camper->id][$time_slot][$week->week_number] = $enrollment ? $enrollment->notes : "";
                     $camp_enrollment_color_array[$camper->id][$time_slot][$week->week_number] =
                         ($enrollment && $enrollment->booked) ? "yellow" :
                         (($enrollment && $enrollment->camp_name) ? "#F8E5A6" : "");
                 }
             }
-        }
+        }        
 
         $guardianId = Auth::guard('guardian')->id();
 
@@ -117,7 +123,7 @@ class CalendarController extends Controller
             ->whereRaw('guardian_id1 = '.$guardianId.' OR guardian_id2 = '.$guardianId);
         })->select('first_name', 'last_name', 'email')->get();
 
-        $pending_invitations = Invitation::where('guardian_id', Auth::guard('guardian')->id())->where('status', 'pending')->get();
+        $pending_invitations = Invitation::where('guardian_id', Auth::guard('guardian')->id())->where('status', 'pending')->get();               
 
         return view('dashboard.index', compact( 'campers',
                                                 'camp_names',
@@ -128,6 +134,8 @@ class CalendarController extends Controller
                                                 'weeks',
                                                 'pending_invitations',
                                                 'camp_enrollment_id_array',
+                                                'camp_enrollment_url_array',
+                                                'camp_enrollment_notes_array',
                                                 'camp_enrollment_type_array',
                                                 'camp_enrollment_array',
                                                 'camp_enrollment_group_id_array',
@@ -196,6 +204,8 @@ class CalendarController extends Controller
                             'end_day' => $request->input('end_day'),
                             'start_time' => $request->input('start_time'),
                             'end_time' => $request->input('end_time'),
+                            'registration_url' => $request->input('registration_url'),
+                            'notes' => $request->input('notes'),
                             'created_at' => now(),
                             'updated_at' => now(),
                         ];

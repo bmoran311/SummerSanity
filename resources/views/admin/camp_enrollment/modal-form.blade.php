@@ -1,4 +1,10 @@
 
+    <style>
+        .grid.grid-cols-1 {
+            font-family: 'Overpass', sans-serif;
+        }
+    </style>
+    
     <input type="hidden" name="guardian_id" value="{{$guardian->id}}">
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -28,7 +34,7 @@
                 class="w-full rounded-md border border-gray-300 p-2"
                 list="camp_name_list"
                 >
-        </div>
+        </div>        
         <datalist id="camp_name_list">
             @foreach($camp_names as $camp)
                 <option value="{{ $camp->camp_fill }}" data-camp-name="{{ $camp->camp_name }}"></option>
@@ -50,8 +56,7 @@
                     });
                 });
             });
-        </script>
-
+        </script>        
         <div>
             <label for="time_slot" class="block text-sm font-medium text-gray-700">Time Slot</label>
             <select multiple name="time_slot[]" id="modal_time_slot" required class="w-full rounded-md border border-gray-300 p-2">
@@ -122,5 +127,18 @@
                 <input type="time" name="end_time" class="w-full rounded-md border border-gray-300 p-2" value="{{ old('end_time', '15:00') }}" />
             </div>
         </div>
+        <div class="col-span-2">
+            <label for="registration_url" class="block text-sm font-medium text-gray-700">Registration URL (optional)</label>
+            <input type="text" name="registration_url" id="registration_url"
+                value="{{ old('registration_url', isset($camp_enrollment) ? $camp_enrollment->registration_url : '') }}"
+                class="w-full rounded-md border border-gray-300 p-2"
+            >
+        </div>
+        <div class="col-span-2">
+            <label for="notes" class="block text-sm font-medium text-gray-700">Notes</label>
+            <textarea name="notes" id="notes" rows="10"
+                class="w-full rounded-md border border-gray-300 p-2"
+            ></textarea>
+        </div> 
     </div>
 

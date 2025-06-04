@@ -19,7 +19,7 @@
             <li>
                 <a class="font-medium" href="{{ route('dashboard') }}">Dashboard /</a>
             </li>
-            <li class="font-medium text-primary">Guardians</li>
+            <li class="font-medium text-primary">Members</li>
         </ol>
     </nav>
 </div>

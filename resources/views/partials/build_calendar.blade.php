@@ -39,6 +39,8 @@
                             $bookingColor = $camp_enrollment_color_array[$camper->id][$time_slot][$week->week_number] ?? null;
                             $groupId = $camp_enrollment_group_id_array[$camper->id][$time_slot][$week->week_number] ?? null;
                             $enrollmentId = $camp_enrollment_id_array[$camper->id][$time_slot][$week->week_number] ?? null;
+                            $registrationURL = $camp_enrollment_url_array[$camper->id][$time_slot][$week->week_number] ?? null;
+                            $notes = $camp_enrollment_notes_array[$camper->id][$time_slot][$week->week_number] ?? null;
                         @endphp
 
                         @if($eventName)
@@ -49,6 +51,8 @@
                                         'bookingColor' => $bookingColor,
                                         'groupId' => $groupId,
                                         'enrollmentId' => $enrollmentId,
+                                        'registrationURL' => $registrationURL,
+                                        'notes' => $notes,
                                     ];
                                 }
                             @endphp
@@ -75,6 +79,8 @@
                                         eventType: EventType.BABYSITTER,
                                     @endif
                                     eventTypeLabel: "{{ $details['eventType'] }}",
+                                    registrationURL: {!! json_encode($details['registrationURL']) !!},
+                                    notes: {!! json_encode(mb_convert_encoding($details['notes'], 'UTF-8', 'UTF-8')) !!},
                                     bookingType: {{ ($details['bookingColor'] ?? '') === 'yellow' ? 'BookingType.CONFIRMED' : 'BookingType.TENTATIVE' }},
                                     userChild: true,
                                 },
@@ -94,6 +100,8 @@
                             $eventName = $camp_enrollment_array[$friends_camper->id][$time_slot][$week->week_number] ?? null;
                             $eventType = $camp_enrollment_type_array[$friends_camper->id][$time_slot][$week->week_number] ?? null;
                             $bookingColor = $camp_enrollment_color_array[$friends_camper->id][$time_slot][$week->week_number] ?? null;
+                            $registrationURL = $camp_enrollment_url_array[$friends_camper->id][$time_slot][$week->week_number] ?? null;
+                            $notes = $camp_enrollment_notes_array[$friends_camper->id][$time_slot][$week->week_number] ?? null;
                         @endphp
 
                         @if($eventName)
@@ -101,6 +109,8 @@
                                 if (!isset($enrollments[$eventName])) {
                                     $enrollments[$eventName] = [
                                         'eventType' => $eventType,
+                                        'registrationURL' => $registrationURL,
+                                        'notes' => $notes,
                                         'bookingColor' => $bookingColor,
                                     ];
                                 }
@@ -127,7 +137,10 @@
                                         eventType: EventType.BABYSITTER,
                                     @endif
                                     eventTypeLabel: "{{ $details['eventType'] }}",
+                                    registrationURL: {!! json_encode($details['registrationURL']) !!},
+                                    notes: {!! json_encode(mb_convert_encoding($details['notes'], 'UTF-8', 'UTF-8')) !!},
                                     bookingType: {{ ($details['bookingColor'] ?? '') === 'yellow' ? 'BookingType.CONFIRMED' : 'BookingType.TENTATIVE' }},
+                                    userChild: false,
                                 },
                             @endforeach
                         ],
@@ -145,7 +158,17 @@
         window.location.href = "/my-dashboard";
     });
 
-    const generateEventCard = (data) => {
+    const escapeHtml = (unsafe) => {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    };
+
+    const generateEventCard = (data) => {              
+
         if (Array.isArray(data)) {
             // Multiple plans in the same cell
             return data.map(generateEventCard).join("");
@@ -166,6 +189,21 @@
 
         const editButton = data.userChild
             ? `<div class="edit-btn"><img src="assets/icons/edit.svg" alt="Edit Icon" /></div>`
+            : "";             
+        
+        const registerLink = (!data.userChild && data.registrationURL)
+            ? `<a href="${data.registrationURL}" target="_blank" class="register-link">
+                <img src="/assets/icons/www.png" alt="Register" style="width: 16px; height: 16px;" />
+            </a>`
+            : "";    
+            
+        const hasNotes = data.notes && data.notes.trim().length > 0;
+        const notesEscaped = escapeHtml(data.notes || "");
+
+        const notesIcon = (!data.userChild && hasNotes)
+            ? `<div class="notes-icon" data-notes="${notesEscaped.replace(/"/g, '&quot;')}" onclick="handleNotesClick(event)">
+                    <img src="/assets/icons/notes.png" alt="Notes" style="width: 16px; height: 16px;" />
+                </div>`
             : "";
 
         return `
@@ -176,6 +214,8 @@
                     <div class="event-second-line">
                         ${eventTypeLabel}
                         ${editButton}
+                        ${registerLink}
+                        ${notesIcon}
                     </div>
                 </div>
             </div>

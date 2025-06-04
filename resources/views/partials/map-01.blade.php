@@ -1,37 +1,42 @@
 @push('foot')
 <script src="/js/map-example/us-aea-en.js"></script>
-<script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function () {
-        const mapOne = new jsVectorMap({
+<script>
+    window.addEventListener('load', function () {
+        const mapElement = document.getElementById('mapOne');
+        if (!mapElement) return;
+
+        const zipMarkers = @json($zipCoordinates);
+
+        new jsVectorMap({
             selector: "#mapOne",
             map: "us_aea_en",
             zoomButtons: true,
 
-            regionStyle: {
+            markers: zipMarkers.map(location => ({
+                name: location.zip,
+                coords: [location.lat, location.lng],
+            })),
+
+            markerStyle: {
                 initial: {
-                fill: "#C8D0D8",
+                    fill: "#3056D3",
+                    stroke: "#fff",
+                    r: 5
                 },
                 hover: {
-                fillOpacity: 1,
-                fill: "#3056D3",
-                },
-            },
-            regionLabelStyle: {
-                initial: {
-                //fontFamily: "Satoshi",
-                fontWeight: "semibold",
-                fill: "#fff",
-                },
-                hover: {
-                cursor: "pointer",
+                    fill: "#FF5722",
+                    stroke: "#fff",
+                    cursor: "pointer"
                 },
             },
 
-            labels: {
-                regions: {
-                render(code) {
-                    return code.split("-")[1];
+            regionStyle: {
+                initial: {
+                    fill: "#C8D0D8",
                 },
+                hover: {
+                    fillOpacity: 1,
+                    fill: "#3056D3",
                 },
             },
         });

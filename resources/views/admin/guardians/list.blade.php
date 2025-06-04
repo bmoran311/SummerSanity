@@ -3,32 +3,30 @@
 <div class="mb-8">
     <div class="bg-yellow-50 text-center border border-yellow-200 p-4 shadow-lg shadow-slate-200 max-w-5xl mx-auto" role="alert">
         <p class="text-sm leading-5 text-yellow-700">
-        A <b>Guardian</b> provides a summary of an individual's professional background, achievements, and expertise. This information is essential for <br>
-        showcasing qualifications, experience, and unique strengths to clients and colleagues.<br><br>
-
-        When writing a guardian, you'll select the attorney's Practice Area, Education, Admission, Language, <br>
-        Level, Membership, License, Awards, News, Engagements and Multimedia.
+        A <b>member</b> is a parent, guardian or caretaker subscribed to the Summer Sanity dashboard service who schedules summer activities for children in their care.
         </p>
     </div>
 </div>
 
 <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
     <h2 class="text-title-md2 font-bold text-black dark:text-white">
-    Guardians
+    Members
     </h2>
     <nav>
         <ol class="flex items-center gap-2">
             <li>
                 <a class="font-medium" href="{{ route('dashboard') }}">Dashboard /</a>
             </li>
-            <li class="font-medium text-primary">Guardians</li>
+            <li class="font-medium text-primary">Members</li>
         </ol>
     </nav>
 </div>
 
-<section class="flex justify-end mb-4">
-    <x-create-button href="{{ route('guardian.create') }}">Add New Guardian</x-create-button>
+<section class="flex justify-end mb-4 space-x-4">
+    <x-create-button href="{{ route('guardian.create') }}">Add New Member</x-create-button>
+    <x-create-button href="{{ route('admin.guardians.export') }}">Export Members</x-create-button>
 </section>
+
 
 <div class="flex flex-col gap-10">
     <div class="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">

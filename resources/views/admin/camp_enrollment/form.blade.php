@@ -116,7 +116,20 @@
                     <option value="Vacation" {{ isset($camp_enrollment) && $camp_enrollment->type == "Vacation" ? 'selected' : '' }}>Vacation</option>
                     <option value="Babysitter Coverage" {{ isset($camp_enrollment) && $camp_enrollment->type == "Babysitter Coverage" ? 'selected' : '' }}>Babysitter Coverage</option>
                 </select>
+            </div>            
+            <div>
+                <label for="registration_url" class="block text-sm font-medium text-gray-700">Registration URL (optional)</label>
+                <input type="text" name="registration_url" id="registration_url"
+                    value="{{ old('registration_url', isset($camp_enrollment) ? $camp_enrollment->registration_url : '') }}"
+                    class="w-full rounded-md border border-gray-300 p-2"
+                >
             </div>
+            <div>
+                <label for="notes" class="block text-sm font-medium text-gray-700">Notes</label>
+                <textarea name="notes" id="notes" rows="4"
+                    class="w-full rounded-md border border-gray-300 p-2"
+                >{{ old('notes', isset($camp_enrollment) ? $camp_enrollment->notes : '') }}</textarea>
+            </div>            
         </div>       
 
         <!-- Submit Button -->

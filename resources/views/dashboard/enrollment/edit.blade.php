@@ -19,6 +19,12 @@
 
         <title>Dashboard - Summer Sanity</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <style>
+            body, .dashboard {
+                font-family: 'Overpass', sans-serif !important;
+            }
+        </style>
     </head>
     <body>
 
@@ -124,7 +130,7 @@
                                     });
                                 });
                             });
-                        </script>
+                        </script>                        
                         <div>
                             <label for="time_slot" class="block text-2xl font-medium text-gray-700">Time Slot</label>
                             <select multiple name="time_slot[]" id="time_slot" required class="w-full rounded-md border border-gray-300 p-2 text-xl">
@@ -197,9 +203,21 @@
                                 value="{{ old('end_time', isset($camp_enrollment) ? $camp_enrollment->end_time : '') }}"
                                 class="w-full rounded-md border border-gray-300 p-2 text-xl"
                                  >
-                        </div>                                          
+                        </div>   
+                        <div class="col-span-2">
+                            <label for="registration_url" class="block text-2xl font-medium text-gray-700">Registration URL (optional)</label>
+                            <input type="text" name="registration_url" id="registration_url"
+                                value="{{ old('registration_url', isset($camp_enrollment) ? $camp_enrollment->registration_url : '') }}"
+                                class="w-full rounded-md border border-gray-300 p-2"
+                            >
+                        </div>                             
+                        <div class="col-span-2">
+                            <label for="notes" class="block text-2xl font-medium text-gray-700">Notes</label>
+                            <textarea name="notes" id="notes" rows="10"
+                                class="w-full rounded-md border border-gray-300 p-2"
+                            >{{ old('notes', isset($camp_enrollment) ? $camp_enrollment->notes : '') }}</textarea>
+                        </div>                                    
                     </div>
-
                     <!-- Submit Button -->
                     <div class="mt-6 flex justify-end space-x-4">
                         <a href="{{ route('dashboard.index') }}" class="px-4 py-2 text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300 text-2xl">
@@ -211,10 +229,6 @@
                     </div>
                 </form>
             </div>
-
-
-    </div>
-</div>
-
+        </div>
     </body>
 </html>

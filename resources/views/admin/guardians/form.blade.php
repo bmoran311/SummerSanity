@@ -1,14 +1,14 @@
 <x-app-layout>
 <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
     <h2 class="text-title-md2 font-bold text-black dark:text-white">
-        Guardians
+        Members
     </h2>
     <nav>
     <ol class="flex items-center gap-2">
         <li>
         <a class="font-medium" href="{{ route('dashboard') }}">Dashboard /</a>
         </li>
-        <li class="font-medium text-primary"><a class="font-medium" href="{{ route('guardian.index') }}">Guardians</a></li>
+        <li class="font-medium text-primary"><a class="font-medium" href="{{ route('guardian.index') }}">Members</a></li>
     </ol>
     </nav>
 </div>
@@ -18,7 +18,7 @@
         <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
             <div class="border-b border-stroke px-7 py-4 dark:border-strokedark">
                 <h3 class="font-medium text-black dark:text-white">
-                {{ isset($bio) ? 'Edit' : 'Create' }} Guardian
+                {{ isset($bio) ? 'Edit' : 'Create' }} Member
                 </h3>
             </div>
             <div class="p-7">

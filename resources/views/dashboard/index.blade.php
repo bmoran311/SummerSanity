@@ -27,6 +27,36 @@
 
     <div id="summer-calendar"></div>
 
-	@include('partials.create_enrollment_modal')
+    <!-- Notes Modal Overlay -->
+    <div id="notesModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full shadow-lg relative">
+            <div class="mb-4">
+                <span id="notesText" class="whitespace-pre-wrap block text-gray-800"></span>
+            </div>
+            <div class="text-right">
+                <button onclick="closeNotesModal()" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showNotesModal(text) {
+            document.getElementById('notesText').textContent = text.replace(/\\n/g, '\n');
+            document.getElementById('notesModal').classList.remove('hidden');
+        }
+
+        function closeNotesModal() {
+            document.getElementById('notesModal').classList.add('hidden');
+        }
+
+        function handleNotesClick(e) {
+            const notes = e.currentTarget.getAttribute('data-notes') || '';
+            showNotesModal(notes.replace(/\\n/g, '\n'));
+        }
+    </script>
+
+    @include('partials.create_enrollment_modal')
     @include('partials.build_calendar')
 @endsection

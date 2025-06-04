@@ -32,6 +32,7 @@ use App\Http\Controllers\Admin\InvitationController;
 use App\Http\Controllers\Guardian\AuthController;
 use App\Http\Controllers\Guardian\ForgotPasswordController;
 use App\Http\Controllers\Site\PageController;
+use App\Http\Controllers\Admin\DashboardController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,6 +41,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 use Spatie\Honeypot\ProtectAgainstSpam;
+
+//require_once app_path('Support/BugsnagBootstrap.php');
 
 Route::get('/', function () {
     return view('welcome');
@@ -101,10 +104,10 @@ Route::post('/guardian/logout', function (Request $request) {
     return redirect('/#login');
 })->name('guardian.logout');
 
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/dashboard/form-elements', function () {
     return view('form-elements');
@@ -159,6 +162,8 @@ Route::get('/dashboard/tables', function () {
 
     Route::get('/guardian/friends/{guardian_id}', 'App\Http\Controllers\Admin\GuardianController@friends')->name('guardian.friends');
     Route::post('/guardian/friends/{guardian_id}', 'App\Http\Controllers\Admin\GuardianController@assign_friends')->name('guardian.assign_friends');
+    Route::get('/admin/guardians/export', [GuardianController::class, 'exportCsv'])->name('admin.guardians.export');
+
     
 //});
 

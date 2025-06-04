@@ -44,12 +44,12 @@
 
 					<div class="mb-5.5 grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-							<x-label>Guardian</x-label>
+							<x-label>Member</x-label>
                             @php
                                 $selected_guardian_id = old('guardian_id', $camper->guardian_id ?? request('guardian_id'));
                             @endphp
 							<select name="guardian_id" id="guardian_id" required class="w-full rounded-md border border-gray-300 p-2">     
-                                <option value="">Select Guardian</option>               
+                                <option value="">Select Member</option>               
                                 @foreach($guardians as $guardian)
                                 <option value="{{ $guardian->id }}" 
                                     {{ $selected_guardian_id == $guardian->id ? 'selected' : '' }}>

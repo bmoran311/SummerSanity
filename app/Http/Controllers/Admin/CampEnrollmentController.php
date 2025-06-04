@@ -75,6 +75,8 @@ class CampEnrollmentController extends Controller
                         'end_day' => $request->input('end_day'),
                         'start_time' => $request->input('start_time'),
                         'end_time' => $request->input('end_time'),
+                        'registration_url' => $request->input('registration_url'),
+                        'notes' => $request->input('notes'),
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
@@ -143,6 +145,8 @@ class CampEnrollmentController extends Controller
                             'end_day' => $request->input('end_day'),
                             'start_time' => $request->input('start_time'),
                             'end_time' => $request->input('end_time'),
+                            'registration_url' => $request->input('registration_url'),
+                            'notes' => $request->input('notes'),
                             'created_at' => now(),
                             'updated_at' => now(),
                         ];
