@@ -80,7 +80,11 @@
                                     @endif
                                     eventTypeLabel: "{{ $details['eventType'] }}",
                                     registrationURL: {!! json_encode($details['registrationURL']) !!},
-                                    notes: {!! json_encode(mb_convert_encoding($details['notes'], 'UTF-8', 'UTF-8')) !!},
+                                    notes: {!! json_encode(
+										isset($details['notes']) && $details['notes'] !== null
+											? mb_convert_encoding($details['notes'], 'UTF-8', 'UTF-8')
+											: null
+									) !!},
                                     bookingType: {{ ($details['bookingColor'] ?? '') === 'yellow' ? 'BookingType.CONFIRMED' : 'BookingType.TENTATIVE' }},
                                     userChild: true,
                                 },
@@ -138,7 +142,11 @@
                                     @endif
                                     eventTypeLabel: "{{ $details['eventType'] }}",
                                     registrationURL: {!! json_encode($details['registrationURL']) !!},
-                                    notes: {!! json_encode(mb_convert_encoding($details['notes'], 'UTF-8', 'UTF-8')) !!},
+                                    notes: {!! json_encode(
+										isset($details['notes']) && $details['notes'] !== null
+											? mb_convert_encoding($details['notes'], 'UTF-8', 'UTF-8')
+											: null
+									) !!},
                                     bookingType: {{ ($details['bookingColor'] ?? '') === 'yellow' ? 'BookingType.CONFIRMED' : 'BookingType.TENTATIVE' }},
                                     userChild: false,
                                 },

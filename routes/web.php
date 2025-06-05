@@ -87,9 +87,11 @@ Route::get('/impersonate/guardian/{id}', function ($id) {
 })->name('admin.impersonate_guardian');
 
 
-Route::get('/friends/accept', [FrontEndCalendarController::class, 'accept'])
-    ->name('friends.accept')
-    ->middleware('signed');
+Route::get('/friends/accept', [FrontEndCalendarController::class, 'accept'])->name('friends.accept')->middleware('signed');
+Route::post('/friends/accept', [FrontEndCalendarController::class, 'accept'])->name('friends.accept');
+Route::post('/friends/reject', [FrontEndCalendarController::class, 'reject'])->name('friends.reject');
+
+
 Route::get('/confirm/{guardian}', [AuthController::class, 'confirmEmail'])->name('guardian.confirm')->middleware('signed');
 
 Route::post('/guardian/login', [AuthController::class, 'loginWithEmail'])->name('guardian.login');
@@ -166,8 +168,6 @@ Route::get('/dashboard/tables', function () {
 
     
 //});
-
-
 
 Route::get('/blog_category/order/{direction}/{id}/{currPos}', 'App\Http\Controllers\Admin\BlogCategoryController@sort')->name('orderBlogCategory');
 Route::get('/faq_category/order/{direction}/{id}/{currPos}', 'App\Http\Controllers\Admin\FaqCategoryController@sort')->name('orderFaqCategory');

@@ -123,7 +123,11 @@ class CalendarController extends Controller
             ->whereRaw('guardian_id1 = '.$guardianId.' OR guardian_id2 = '.$guardianId);
         })->select('first_name', 'last_name', 'email')->get();
 
-        $pending_invitations = Invitation::where('guardian_id', Auth::guard('guardian')->id())->where('status', 'pending')->get();               
+        $pending_invitations = Invitation::where('guardian_id', Auth::guard('guardian')->id())->where('status', 'pending')->get();  
+        
+        $pending_friend_requests = Invitation::where('email', Auth::guard('guardian')->user()->email)->where('status', 'pending')->get();            
+        $guardian_ids = $pending_friend_requests->pluck('guardian_id')->filter()->unique();
+        $pending_friend_requests = $guardian_ids->isNotEmpty() ? Guardian::whereIn('id', $guardian_ids)->get() : collect();  
 
         return view('dashboard.index', compact( 'campers',
                                                 'camp_names',
@@ -133,6 +137,7 @@ class CalendarController extends Controller
                                                 'friends_campers',
                                                 'weeks',
                                                 'pending_invitations',
+                                                'pending_friend_requests',
                                                 'camp_enrollment_id_array',
                                                 'camp_enrollment_url_array',
                                                 'camp_enrollment_notes_array',
@@ -249,10 +254,14 @@ class CalendarController extends Controller
 
         $pending_invitations = Invitation::where('guardian_id', Auth::guard('guardian')->id())->where('status', 'pending')->get();
 
+        $pending_friend_requests = Invitation::where('email', Auth::guard('guardian')->user()->email)->where('status', 'pending')->get();            
+        $guardian_ids = $pending_friend_requests->pluck('guardian_id')->filter()->unique();
+        $pending_friend_requests = $guardian_ids->isNotEmpty() ? Guardian::whereIn('id', $guardian_ids)->get() : collect();  
+
         $campers = Camper::where('guardian_id', $guardian_id )->orderBy('last_name')->orderBy('first_name')->get();
         $guardian = Guardian::find( $guardian_id );
 
-        return view('dashboard.campers.index', compact( 'campers', 'friends', 'pending_invitations', 'guardian_id') );
+        return view('dashboard.campers.index', compact( 'campers', 'friends', 'pending_invitations', 'pending_friend_requests', 'guardian_id') );
     }
 
     public function friends(Request $request)
@@ -271,7 +280,11 @@ class CalendarController extends Controller
             ->get();
             
         $pending_invitations = Invitation::where('guardian_id', Auth::guard('guardian')->id())->where('status', 'pending')->get();
-            
+
+        $pending_friend_requests = Invitation::where('email', Auth::guard('guardian')->user()->email)->where('status', 'pending')->get();            
+        $guardian_ids = $pending_friend_requests->pluck('guardian_id')->filter()->unique();
+        $pending_friend_requests = $guardian_ids->isNotEmpty() ? Guardian::whereIn('id', $guardian_ids)->get() : collect();                     
+
         $searchResults = collect();
         if ($request->filled('first_name') || $request->filled('last_name')) {
             $searchResults = Guardian::where('id', '!=', $guardian_id)
@@ -283,7 +296,7 @@ class CalendarController extends Controller
                 ->get();            
         }
 
-        return view('dashboard.friends.index', compact( 'friends', 'pending_invitations', 'guardian_id', 'searchResults') );
+        return view('dashboard.friends.index', compact( 'friends', 'pending_friend_requests', 'pending_invitations', 'guardian_id', 'searchResults') );
     }
 
     public function edit_camper(Request $request, Camper $camper)
@@ -311,7 +324,11 @@ class CalendarController extends Controller
 
         $pending_invitations = Invitation::where('guardian_id', Auth::guard('guardian')->id())->where('status', 'pending')->get();
 
-        return view('dashboard.campers.index', compact('c', 'guardian_id', 'friends', 'campers', 'pending_invitations'));
+        $pending_friend_requests = Invitation::where('email', Auth::guard('guardian')->user()->email)->where('status', 'pending')->get();            
+        $guardian_ids = $pending_friend_requests->pluck('guardian_id')->filter()->unique();
+        $pending_friend_requests = $guardian_ids->isNotEmpty() ? Guardian::whereIn('id', $guardian_ids)->get() : collect();   
+
+        return view('dashboard.campers.index', compact('c', 'guardian_id', 'friends', 'campers', 'pending_invitations', 'pending_friend_requests'));
     }
 
     public function create_camper(Request $request)
@@ -430,22 +447,38 @@ class CalendarController extends Controller
         // Send the friendship request email
         Mail::to($toGuardian->email)->send(new FriendRequest($fromGuardian, $toGuardian));
 
+        Invitation::create([
+            'guardian_id' => Auth::guard('guardian')->id(),
+            'email' => $toGuardian->email,
+            'status' => 'pending',
+        ]);    
+
         return back()->with('success', 'Friendship request sent!');
     }
 
     public function accept(Request $request)
-    {
-        // Validate that this link is signed (handled via middleware in routes)
-        $fromId = $request->query('from');
-        $toId = $request->query('to');
-
+    {       
+        $fromId = $request->input('from') ?? $request->query('from');
         $from = Guardian::findOrFail($fromId);
-        $to = Guardian::findOrFail($toId);
+       
+        if (Auth::guard('guardian')->check()) {
+            // In-app request: use logged-in user
+            $toId = Auth::guard('guardian')->id();
+        } else {
+            // Email link: use `to` from signed URL
+            $toId = $request->query('to');
+            if (!$toId || !$request->hasValidSignature()) {
+                abort(403, 'Invalid or missing signed link.');
+            }
 
-        // Prevent duplicate friendships
-        $alreadyFriends = Friend::where(function($q) use ($fromId, $toId) {
+            Auth::guard('guardian')->loginUsingId($toId); // Auto-login
+        }
+
+        $to = Guardian::findOrFail($toId);
+       
+        $alreadyFriends = Friend::where(function ($q) use ($fromId, $toId) {
             $q->where('guardian_id1', $fromId)->where('guardian_id2', $toId);
-        })->orWhere(function($q) use ($fromId, $toId) {
+        })->orWhere(function ($q) use ($fromId, $toId) {
             $q->where('guardian_id1', $toId)->where('guardian_id2', $fromId);
         })->exists();
 
@@ -456,12 +489,30 @@ class CalendarController extends Controller
             ]);
         }
 
-        // Optional: auto-login the user if not already authenticated
-        if (!Auth::guard('guardian')->check()) {
-            Auth::guard('guardian')->loginUsingId($toId);
-        }
+        Invitation::where('guardian_id', $fromId)->where('email', $to->email)->where('status', 'pending')->update(['status' => 'accepted']);
 
         return redirect()->route('dashboard.index')->with('success', 'Friend request accepted! You’re now connected.');
+    }
+
+    public function reject(Request $request)
+    {
+        if (!Auth::guard('guardian')->check()) {
+            abort(403, 'Unauthorized');
+        }
+
+        $currentGuardian = Auth::guard('guardian')->user();
+        $fromId = $request->input('from');        
+        
+        $deleted = Invitation::where('guardian_id', $fromId)
+            ->where('email', $currentGuardian->email)
+            ->where('status', 'pending')
+            ->delete();
+
+        
+
+        $message = $deleted ? 'Friend request rejected successfully.' : 'No matching pending invitation found.';
+
+        return redirect()->route('dashboard.friends')->with('success', $message);
     }
 
     public function profile()
@@ -482,7 +533,11 @@ class CalendarController extends Controller
             ->get();
 
         $pending_invitations = Invitation::where('guardian_id', Auth::guard('guardian')->id())->where('status', 'pending')->get();
+        
+        $pending_friend_requests = Invitation::where('email', Auth::guard('guardian')->user()->email)->where('status', 'pending')->get();            
+        $guardian_ids = $pending_friend_requests->pluck('guardian_id')->filter()->unique();
+        $pending_friend_requests = $guardian_ids->isNotEmpty() ? Guardian::whereIn('id', $guardian_ids)->get() : collect();  
 
-        return view('profile.index', compact('guardian', 'friends', 'pending_invitations'));
+        return view('profile.index', compact('guardian', 'friends', 'pending_invitations', 'pending_friend_requests'));
     }
 }

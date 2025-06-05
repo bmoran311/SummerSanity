@@ -1,6 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
     @include('partials.dashboard-head')
+    <style>
+    .badge {
+        display: inline-block;
+        min-width: 18px;
+        padding: 2px 6px;
+        font-size: 12px;
+        font-weight: bold;
+        color: #fff;
+        background-color: #e3342f; /* Red */
+        border-radius: 9999px;
+        text-align: center;
+        line-height: 1;
+        vertical-align: middle;
+    }
+    </style>
     <body>
         <div class="dashboard">
             {{-- Navigation --}}
@@ -11,7 +26,11 @@
                 <ul class="nav__links">
                     <li class="nav__link"><a href="/my-dashboard">Dashboard</a></li>
                     <li class="nav__link"><a href="/campers">My Kids</a></li>
-                    <li class="nav__link"><a href="/friends">Friends</a></li>
+                    <li class="nav__link"><a href="/friends">Friends                        
+                        @if(isset($pending_friend_requests) && $pending_friend_requests->count() > 0)
+                            <span class="badge">{{ $pending_friend_requests->count() }}</span>
+                        @endif                      
+                    </a></li>
                     <li id="invitation-link" class="nav__link"><a href="#">Invitation</a></li>
                     <li class="nav__link"><a href="/edit_profile">Profile</a></li>
                 </ul>
