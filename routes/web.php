@@ -123,7 +123,7 @@ Route::get('/dashboard/tables', function () {
     return view('tables');
 })->middleware(['auth', 'verified'])->name('tables');
 
-//Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -167,7 +167,7 @@ Route::get('/dashboard/tables', function () {
     Route::get('/admin/guardians/export', [GuardianController::class, 'exportCsv'])->name('admin.guardians.export');
 
     
-//});
+});
 
 Route::get('/blog_category/order/{direction}/{id}/{currPos}', 'App\Http\Controllers\Admin\BlogCategoryController@sort')->name('orderBlogCategory');
 Route::get('/faq_category/order/{direction}/{id}/{currPos}', 'App\Http\Controllers\Admin\FaqCategoryController@sort')->name('orderFaqCategory');
