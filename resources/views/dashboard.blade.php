@@ -1,5 +1,5 @@
 <x-app-layout>
-<div class="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">          
+<div class="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
 	<div class="rounded-sm border border-stroke bg-white px-7.5 py-6 shadow-default dark:border-strokedark dark:bg-boxdark">
 		<div class="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4">
 			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 fill-primary dark:fill-white" viewBox="0 0 24 24" fill="currentColor">
@@ -12,7 +12,7 @@
 				<span class="text-sm font-medium">Members</span>
 			</div>
 		</div>
-	</div>          
+	</div>
 	<div class="rounded-sm border border-stroke bg-white px-7.5 py-6 shadow-default dark:border-strokedark dark:bg-boxdark">
 		<div class="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4">
 			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 fill-primary dark:fill-white" viewBox="0 0 24 24" fill="currentColor">
@@ -25,7 +25,7 @@
 				<span class="text-sm font-medium">Campers</span>
 			</div>
 		</div>
-	</div>          
+	</div>
 	<div class="rounded-sm border border-stroke bg-white px-7.5 py-6 shadow-default dark:border-strokedark dark:bg-boxdark">
 		<div class="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4">
 			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 fill-primary dark:fill-white" viewBox="0 0 24 24" fill="currentColor">
@@ -38,7 +38,7 @@
 				<span class="text-sm font-medium">Friendships</span>
 			</div>
 		</div>
-	</div>          
+	</div>
 	<div class="rounded-sm border border-stroke bg-white px-7.5 py-6 shadow-default dark:border-strokedark dark:bg-boxdark">
 		<div class="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4">
 			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 fill-primary dark:fill-white" viewBox="0 0 24 24" fill="currentColor">
@@ -56,11 +56,11 @@
 
 <div class="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
 	<!-- ====== Chart Three Start -->
-	@include('partials.chart-03')
+	@include('partials.admin.chart-03')
 	<!-- ====== Chart Three End -->
 
 	<!-- ====== Map One Start -->
-	@include('partials.map-01')	
+	@include('partials.admin.map-01')
 	<!-- ====== Map One End -->
 </div>
 </x-app-layout>
